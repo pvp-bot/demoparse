@@ -6,7 +6,7 @@ import powers
 
 ms = 0          # time in ms
 t = 0           # time in seconds
-tick = 8        # tick rate to determine time stamps/time grouping
+tick = 16        # tick rate to determine time stamps/time grouping
 
 player_names = []
 player_ids   = []
@@ -17,7 +17,9 @@ players = ''
 pos_blue = [0,0] # red and blue are arbitrary, probably makes sense to be team 1 and 2
 match_map = ""
 
-targetwindow = 5 # seconds
+crey = 'DRAW_PISTOL'
+
+targetwindow = 4 # seconds
 targetcooldown = 10 # seconds
 targetminattacks = 3 # minimum ppl on target to count as attack
 targetminattackers = 2 # minimum attacks on target to count as attack
@@ -42,6 +44,8 @@ class Player:
 		self.lasthp = 0
 		self.deathtotal = 0
 		self.maxhp = 0.0
+
+		self.crey = 0
 		
 		self.action = ''
 		self.target = ''
@@ -92,7 +96,7 @@ with open(sys.argv[1],'r') as fp:
 	line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 	count = 0
 
-	# initializing line loop
+	# initializing line loop - players, teams, 
 	while line and count < 20000:
 		try:
 			pid = int(line[1])
@@ -159,7 +163,7 @@ with open(sys.argv[1],'r') as fp:
 						players[pid].deathtotal = players[pid].deathtotal + 1
 					players[pid].lasthp = hp
 
-				elif action == "FX" and line[3] == "OneShot" and pid in player_ids:
+				elif action == "FX" and pid in player_ids:
 					action = next(substring for substring in powers.plist if substring in line[5])
 					if any(substring for substring in powers.preverse if substring in line[5]):
 						players[pid].reverse = True
@@ -175,11 +179,16 @@ with open(sys.argv[1],'r') as fp:
 								players[tid].target = players[pid].name
 								players[tid].action = players[pid].action
 								players[pid].action = ''
+								players[pid].reverse = False
 							else:
 								players[pid].target = players[tid].name
 							
 							if players[pid].team != players[tid].team:
 								players[tid].targetcount(t,pid)
+								
+				elif action == "MOV":
+					if line[3] == crey:
+						players[pid].crey = players[pid].crey + 1
 
 
 
