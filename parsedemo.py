@@ -20,7 +20,7 @@ match_map = ""
 crey = 'DRAW_PISTOL'
 
 targetwindow = 4 # seconds
-targetcooldown = 10 # seconds
+targetcooldown = 8 # seconds
 targetminattacks = 3 # minimum ppl on target to count as attack
 targetminattackers = 2 # minimum attacks on target to count as attack
 
@@ -111,6 +111,9 @@ with open(sys.argv[1],'r') as fp:
 			if pid not in player_ids and line[3] not in powers.name_filter:
 				player_ids.append(pid)
 				player_list.append(Player(line[3],pid))
+		if line[2] == "NPC" and line[3] == "Arena_Camera":
+			del player_ids[-1]
+			del player_list[-1]
 		
 		try:
 			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
@@ -129,9 +132,19 @@ with open(sys.argv[1],'r') as fp:
 		csvw.writerow(headers)
 
 	# main parsing loop
-	while line:
-		with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
-			csvw = csv.writer(csvfile, delimiter=',')
+	with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
+		csvw = csv.writer(csvfile, delimiter=',')
+		while line:
+			ms = ms + int(line[0]) # running demo time
+			t2 = round(ms*tick/1000)/tick # time in s rounded to the nearest server tick (manually set)
+			if t2 > t:
+				for key, p in players.items():
+					csv_line = [t,p.name,p.hp,p.death,p.team,p.action,p.target]
+					if p.hp != '' or p.death != '' or p.action  != '':
+						csvw.writerow(csv_line)
+					p.reset()
+			t = t2
+
 			# print(count)
 			action = line[2]
 			try:
@@ -164,7 +177,7 @@ with open(sys.argv[1],'r') as fp:
 					players[pid].lasthp = hp
 
 				elif action == "FX" and pid in player_ids:
-					action = next(substring for substring in powers.plist if substring in line[5])
+					action = next(substring for substring in powers.pdict.keys() if substring in line[5])
 					if any(substring for substring in powers.preverse if substring in line[5]):
 						players[pid].reverse = True
 					if any(substring for substring in powers.pemp if substring in line[5]):
@@ -173,12 +186,13 @@ with open(sys.argv[1],'r') as fp:
 
 				elif action == "TARGET" and players[pid].action != '':
 					tid = int(line[4])
-					if tid in player_ids:
-						if tid != pid:
+					if tid in player_ids: # if target is a player
+						if tid != pid: # if target is not actor
 							if players[pid].reverse: # if the receiver is listed as the actor
-								players[tid].target = players[pid].name
+								players[tid].target = players[pid].name #
 								players[tid].action = players[pid].action
 								players[pid].action = ''
+								players[pid].target = ''
 								players[pid].reverse = False
 							else:
 								players[pid].target = players[tid].name
@@ -197,16 +211,6 @@ with open(sys.argv[1],'r') as fp:
 				# print(count)
 				pass
 
-			ms = ms + int(line[0]) # running demo time
-			t2 = round(ms*tick/1000)/tick # time in s rounded to the nearest server tick (manually set)
-			
-			if t2 > t:
-				for key, p in players.items():
-					csv_line = [t,p.name,p.hp,p.death,p.team,p.action,p.target]
-					if p.hp != '' or p.death != '' or p.action  != '':
-						csvw.writerow(csv_line)
-					p.reset()
-			t = t2
 			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 			count = count + 1
 		
