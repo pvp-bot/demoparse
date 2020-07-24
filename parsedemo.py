@@ -96,7 +96,7 @@ with open(sys.argv[1],'r') as fp:
 	count = 0
 
 	# initializing line loop - players, teams, 
-	while line and count < 10000: # 10k should be enough to find all players
+	while line and count < 30000: # 30k should be enough to find all players
 		try:
 			pid = int(line[1]) # player ID
 		except:
@@ -108,8 +108,8 @@ with open(sys.argv[1],'r') as fp:
 			if pid not in player_ids and line[3] not in powers.name_filter:
 				player_ids.append(pid)
 				player_list.append(Player(line[3],pid))
-		if line[2] in powers.npc and pid in player_ids: # don't count self if recording from obs
-		# if line[2] in powers.npc "NPC" and pid in player_ids: # don't count self if recording from obs
+		if line[2] in powers.npc and pid in player_ids: # 
+		# if line[2] == "NPC" and pid in player_ids: # don't count self if recording from obs
 			del player_ids[-1]
 			del player_list[-1]
 		try:
