@@ -21,7 +21,7 @@ targetminattacks = 3   # minimum atks on target to count as attack
 targetminattackers = 2 # minimum ppl on target to count as attack
 # getting good numbers comparing to vods with these values
 
-headers = ['time','actor','hp','deaths','team','action','target']
+headers = ['time','actor','hp','deaths','team','action','target','targeted']
 
 class Player:
 	def __init__(self, name, pid):
@@ -49,6 +49,7 @@ class Player:
 		self.targetattackers = []
 		self.targeted = 0
 		self.targetlock = False
+		self.targetinstance = 0
 
 	def reset(self):
 		self.hp = ''
@@ -56,6 +57,7 @@ class Player:
 		self.target = ''
 		self.death = ''
 		self.reverse = False
+		self.targetinstance = 0
 
 	def targetcount(self, t, aid):
 		if (self.targetstart == -1 or 					# first target
@@ -75,6 +77,7 @@ class Player:
 				self.attackercounter = self.attackercounter + 1 #increment the #attackers on target
 			if self.attackcounter >= targetminattacks and self.attackercounter >= targetminattackers:
 				self.targeted = self.targeted + 1
+				self.targetinstance = 1
 				self.targetlock = True
 
 
@@ -177,8 +180,8 @@ with open(sys.argv[1],'r') as fp:
 			t2 = round(ms*tick/1000)/tick # time in s rounded to the nearest server tick to organize data - user input tick
 			if t2 > t:
 				for key, p in players.items():
-					csv_line = [t,p.name,p.hp,p.death,p.team,p.action,p.target]
-					if p.hp != '' or p.death != '' or p.action  != '':
+					csv_line = [t,p.name,p.hp,p.death,p.team,p.action,p.target,p.targetinstance]
+					if p.hp != '' or p.death != '' or p.action  != '' or p.targetinstance == 1:
 						csvw.writerow(csv_line)
 					p.reset()
 			t = t2
@@ -232,10 +235,12 @@ with open(sys.argv[1],'r') as fp:
 				elif action == "MOV":
 					mov = line[3]
 
-					# this should hopefully catch most instarespawn deaths w/o hp = 0
+					# this should hopefully catch most insta-respawn deaths w/o hp = 0
 					if mov == 'PLAYER_HITDEATH' and players[pid].lasthp != 0:
 						players[pid].death = 1
 						players[pid].deathtotal = players[pid].deathtotal + 1
+						players[pid].hp = 0
+						players[pid].lasthp = 0
 					
 					# think this may be more accurate than the FX crey
 					# doesn't catch villain crey yet
