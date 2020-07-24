@@ -32,7 +32,7 @@ pdict = {
 # pain
 # 'SOOTH_ATTACK.FX':'soothe',
 # 'SHAREPAIN_ATTACK.FX':'share pain',
-'SOOTH_ATTACK.FX':'heal other',
+'SOOTH_ATTACK.FX':'heal other', # same thing
 'SHAREPAIN_ATTACK.FX':'absorb pain',
 
 # psn
@@ -42,7 +42,7 @@ pdict = {
 
 # ill
 'ILLUSDECOY.FX':'phantom army',
-'ILLUSIONCONTROL/ILLUSBLIND.FX':'blind', # attack and target?
+'ILLUSIONCONTROL/ILLUSBLIND.FX':'blind', # attack and target? need to match up w/ MOV MOUTH
 
 # plant
 'THORNS/BUILDUP_ATTACK.FX':'toxins',
@@ -61,15 +61,13 @@ pdict = {
 'CORROSIVESAP.FX':'corrosive enzyme',
 
 # epics
-'MENTALPOWERS/COMMAND2.FX':'dominate',
-'MINDCONTROL/COMMAND2.FX':'dominate',
-'SPIRTSHARKJAWS_CONDITIONAL.FX':'ssj',
+'/COMMAND2.FX':'dominate',
 '/SCHOOLOFSHARKS_HIT.FX':'ssj',
 'V_MAKO_SPIRITSHARK_CIRCLE_HIT':'ssj',
 '/HIBERNATE.FX':'hibernate',
 '/HIBERNATE_CONTINUING.FX':'hibernate',
 'FIRECONTROL/SOOT.FX':'char',
-'/EMBERSHITSOOTANDCINDERS.FX':'char', #??
+# '/EMBERSHITSOOTANDCINDERS.FX':'char', # hit?
 
 # pools
 'JAUNT_ATTACK.FX':'jaunt',
@@ -80,64 +78,90 @@ pdict = {
 'PHASESHIFT_ATTACK.FX':'phase shift',
 'MEDICINE/MAID.FX':'aid other',
 
-# misc
-'ALIGNMENT_JUSTICE.FX':'call to justice',
-'AIM.FX':'aim',
-# 'FOLLOWUPHIT4.FX':'fiery embrace',
-'FOLLOWUPHIT4.FX':'build up',
-'AIM_ACTIVATION.FX':'aim',
+# misc powerset
 'FOSSILIZEHANDS.FX':'fossilize',
-'WEAPONS/LASER_PISTOL_1.FX':'crey pistol',
+'AIM.FX':'aim',
+'FOLLOWUPHIT4.FX':'build up', #'fiery embrace',
+'AIM_ACTIVATION.FX':'aim',
 '/THUNDEROUSBLAST.FX':'thunderous blast',
-'/STAMINA.FX':'respite', # or other insp?
+
+
+# misc generic
+'ALIGNMENT_JUSTICE.FX':'call to justice',
+# 'WEAPONS/LASER_PISTOL_1.FX':'crey pistol', # using MOV count
 'GEASTHEKINDONESCONTINUING.FX':'geas',
+'/STAMINA.FX':'respite', # or other insp?
 
 
 # temp
 'WEBGRENADETHROW.FX':'web nade',
 '/SKYRAIDERJETS.FX':'raptor pack', # num toggle ons - not time
-
 }
 
 
 
 
-pmov = { # prepend with 'A_' for flighing version 
+pmov = { # prepend with 'A_' for flying version 
 'DRAW_PISTOL':'crey pistol',
 'WALL':'ssj',
 'MOUTH':'blind',
-]
+#'PLAYER_HITDEATH' # death anim
+}
 
 
 
 
-
-
+# generic FX by the actor - usage determined by target's FX
 preverse = [
 # buffs
 'ENDURANCE.FX',
 'MINDWALL.FX',
 'FORTITUDE.FX',
 
-#attacks
+#attacks - note this means misses for these powers don't get counted
 'PLANTCONTROL/PLANTCONTROLHIT.FX',
-'SPIRTSHARKJAWS_CONDITIONAL.FX',
 '/SCHOOLOFSHARKS_HIT.FX',
 'V_MAKO_SPIRITSHARK_CIRCLE_HIT',
-'/EMBERSHITSOOTANDCINDERS.FX',
 ]
 
-pemp = [
+buffs = [
 'HEALINGHANDS.FX',
 'ABSORBPAIN.FX',
 'STRENGTHHANDS2.FX',
+'ENDURANCE.FX',
+'MINDWALL.FX',
+'FORTITUDE.FX',
+'REJUVENATINGCIRCUITATK.FX',
+'EMPOWERINGCIRCUITATK.FX',
+'INSULATINGCIRCUITATK.FX',
+'AMPUPATTACK.FX',
 ]
 
-pattack = [ # discern between atk and receive w/ same indicator
-'ILLUSIONCONTROL/ILLUSBLIND.FX', # attack and target?'
+# common attacks - unused for anything atm
+atks = [
+'BLAZE_ATTACK.FX',
+'FIREBALL.FX',
+'BLAZINGBOLT_ATTACK.FX',
+'/INFERNOBOLT.FX',
+'BITTERFREEZERAY.FX',
+'BITTERICEBOLT.FX',
+'BITTERFREEZEBOLT.FX',
+'ICEBLAST.FX',
+'FREEZERAY.FX',
+'BEAMRIFLE_DISINTEGRATE.FX',
+'BEAMRIFLE_CHARGEDSHOT.FX',
+'BEAMRIFLE_LANCERSHOT.FX',
+'/COMMAND2.FX',
+]
+
+
+npc = [
+'NPC',
+'EntTypeFile',
 ]
 
 # filter out non-player entities - issues if player name = one of these
+# probably a better way to do this
 name_filter  = [
 'Mu Guardian',
 'Phantasm',
@@ -161,4 +185,9 @@ name_filter  = [
 'Spectral Terror',
 'Coralax Red Hybrid',
 'Faraday Cage',
+'Architect Entertainment Instructor',
+'Architect Contact',
+'Spirit Panther',
+'Ticket Vendor',
+'Architect Entertainment Greeter',
 ]
