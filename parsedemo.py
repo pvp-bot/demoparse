@@ -15,7 +15,8 @@ players      = ''
 match_map = ""
 
 # in seconds
-targetwindow = 4   # time window for min attacks to count a spike 
+targetwindow = 4   # time window for min attacks to count a spike
+cleanspike = 0.5 # time window for a spike to be considered clean
 targetcooldown = 8 # time after spike started to ignore new attacks as a spike
 targetminattacks = 3   # minimum atks on target to count as attack
 targetminattackers = 2 # minimum ppl on target to count as attack
@@ -36,20 +37,26 @@ class Player:
 		self.maxhp = 0.0
 
 		self.crey = 0
-		
+
 		self.action = ''
 		self.target = ''
 		self.reverse = False
-		self.emp = False	
+		self.emp = False
 
 		self.targetstart = -1
 		self.targetcooldown = 0
 		self.attackcounter = 0
-		self.attackercounter = 0
 		self.targetattackers = []
 		self.targeted = 0
 		self.targetlock = False
 		self.targetinstance = 0
+		self.cleanspiked = 0
+
+		self.ontime = 0
+		self.late = 0
+		self.spiketiming = []
+		self.attacks = 0
+		self.first = 0
 
 	def reset(self):
 		self.hp = ''
@@ -59,26 +66,48 @@ class Player:
 		self.reverse = False
 		self.targetinstance = 0
 
-	def targetcount(self, t, aid):
+	def _update_ontarget(self, t, aid, players):
+		timing = (t - self.targetstart)
+		if self.targetlock: # its actually a spike
+			players[aid].spiketiming.append(timing)
+			if self.targetattackers[0][0] == aid:
+				players[aid].first += 1
+
+			if timing <= cleanspike:
+				players[aid].ontime += 1
+			else:
+				players[aid].late += 1
+
+	def targetcount(self, t, aid, players):
 		if (self.targetstart == -1 or 					# first target
 			(t - self.targetstart) > targetcooldown or	# cooldown timer has elapsed
-			(self.attackcounter<targetminattacks and (t - self.targetstart) > targetwindow and self.attackercounter < targetminattackers and not self.targetlock) # or previous attack was rogue damage from 1 person
-			): 
+			(self.attackcounter<targetminattacks and (t - self.targetstart) > targetwindow and len(self.targetattackers) < targetminattackers and not self.targetlock) # or previous attack was rogue damage from 1 person
+			):
 			self.targetstart = t #start timer
 			self.attackcounter = 0
 			self.targetattackers = []
 			self.targetlock = False
 
-		# print(self.attackcounter)
-		if (t - self.targetstart) < targetwindow and not self.targetlock: #if within targeting window
+		timing = (t - self.targetstart)
+		if timing < targetwindow: #if within targeting window
 			self.attackcounter = self.attackcounter + 1 #increase the #attacks on
-			if aid not in self.targetattackers:
-				self.targetattackers.append(aid) #add the actor to the attacker list
-				self.attackercounter = self.attackercounter + 1 #increment the #attackers on target
-			if self.attackcounter >= targetminattacks and self.attackercounter >= targetminattackers:
+			if self.targetlock:
+				players[aid].attacks += 1
+
+			if aid not in [i[0] for i in self.targetattackers]:
+				self.targetattackers.append([aid, t]) #add the actor to the attacker list
+				self._update_ontarget(t, aid, players)
+
+			if self.attackcounter >= targetminattacks and len(self.targetattackers) >= targetminattackers and not self.targetlock:
 				self.targeted = self.targeted + 1
 				self.targetinstance = 1
 				self.targetlock = True
+				if timing <= cleanspike:
+					self.cleanspiked += 1
+
+				for attacker, time in self.targetattackers:
+					self._update_ontarget(time, attacker, players)
+					players[attacker].attacks += 1
 
 
 
@@ -95,7 +124,7 @@ with open(sys.argv[1],'r') as fp:
 	line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 	count = 0
 
-	# initializing line loop - players, teams, 
+	# initializing line loop - players, teams,
 	while line and count < 30000: # 30k should be enough to find all players
 		try:
 			pid = int(line[1]) # player ID
@@ -108,7 +137,7 @@ with open(sys.argv[1],'r') as fp:
 			if pid not in player_ids and line[3] not in powers.name_filter:
 				player_ids.append(pid)
 				player_list.append(Player(line[3],pid))
-		if line[2] in powers.npc and pid in player_ids: # 
+		if line[2] in powers.npc and pid in player_ids: #
 		# if line[2] == "NPC" and pid in player_ids: # don't count self if recording from obs
 			del player_ids[-1]
 			del player_list[-1]
@@ -119,7 +148,7 @@ with open(sys.argv[1],'r') as fp:
 		count = count + 1
 
 	players = dict(zip(player_ids,player_list))
-	
+
 
 
 
@@ -138,9 +167,9 @@ with open(sys.argv[1],'r') as fp:
 		try:
 			pid = int(line[1])
 		except:
-			pid = 0 # ignore special 
+			pid = 0 # ignore special
 		action = line[2]
-		
+
 		if action == 'FX' and pid in player_ids:
 			if any(substring for substring in powers.buffs if substring in line[5]):
 				buff_count = count
@@ -148,7 +177,7 @@ with open(sys.argv[1],'r') as fp:
 			tid = int(line[4]) # target player id
 			if tid in player_ids:
 				if pid in player_ids and players[pid].team == '': # if  the buffer doesn't have a team
-					count_players = count_players + 1 
+					count_players = count_players + 1
 					players[pid].team = count_players
 				if players[tid].team == '':
 					players[tid].team = players[pid].team
@@ -157,12 +186,12 @@ with open(sys.argv[1],'r') as fp:
 					players[pid].team = min(players[pid].team,players[tid].team)
 					players[tid].team = min(players[pid].team,players[tid].team)
 		count = count + 1
-		line = shlex.split(fp.readline().replace('\\','').replace('\'',''))	
-	
+		line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
+
 	for key, p in players.items():
 		if p.team == 1:
 			p.team = 'BLU'
-		else: 
+		else:
 			p.team = 'RED'
 
 
@@ -190,20 +219,20 @@ with open(sys.argv[1],'r') as fp:
 			try:
 				pid = int(line[1])
 			except:
-				pid = 0 # ignore special 
-	
+				pid = 0 # ignore special
 
-			try: # 
+
+			try: #
 				if action == "POS" and pid in player_ids and players[pid].team == '':
 					pass # todo use starting pos to get end of buff cycle
 
 				elif action == "HP" and pid in player_ids:
 					hp  = float(line[3])
 					players[pid].hp = hp
-					
+
 					# you can have insta respawn deaths where the person doesn't go down to 0, happens a couple times a night, caught by MOV hopefully
 					# also deaths like 2 jaunts up probably aren't counted
-					if hp == 0 and players[pid].lasthp != 0: 
+					if hp == 0 and players[pid].lasthp != 0:
 						players[pid].death = 1
 						players[pid].deathtotal = players[pid].deathtotal + 1
 					players[pid].lasthp = hp
@@ -228,10 +257,10 @@ with open(sys.argv[1],'r') as fp:
 								players[pid].reverse = False
 							else:
 								players[pid].target = players[tid].name
-							
+
 							if players[pid].team != players[tid].team:
-								players[tid].targetcount(t,pid)
-								
+								players[tid].targetcount(t, pid, players)
+
 				elif action == "MOV":
 					mov = line[3]
 
@@ -241,7 +270,7 @@ with open(sys.argv[1],'r') as fp:
 						players[pid].deathtotal = players[pid].deathtotal + 1
 						players[pid].hp = 0
 						players[pid].lasthp = 0
-					
+
 					# think this may be more accurate than the FX crey
 					# doesn't catch villain crey yet
 					if mov == 'DRAW_PISTOL' or mov == 'A_DRAW_PISTOL':
@@ -257,7 +286,7 @@ with open(sys.argv[1],'r') as fp:
 
 			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 			count = count + 1
-		
+
 
 
 
@@ -266,21 +295,56 @@ t_min = round(t/60,2)
 print("demo time " + str(t_min) + " seconds")
 print("map: " + match_map)
 print("")
+print('legend:')
+print(f'targeted: attacked by {targetminattacks} attacks spread across at least {targetminattackers} attackers in less than {targetwindow} seconds')
+print(f'clean: same as targeted except over {cleanspike} seconds')
+print(f'ontime: number of spikes joined within {cleanspike} seconds')
+print(f'late: number of spikes joined after {cleanspike} seconds')
+print(f'timing: average time joining in on a spike')
+print(f'first: number of times player is the first to attack a target')
+print(f'apspike: short for attacks per spike, the average number of attacks the player throws on target')
+print('')
 
 score1 = 0
+clean1 = 0
 score2 = 0
+clean2 = 0
 targets1 = 0
 targets2 = 0
+
+
+
+console_headers = ['team', '{:<20}'.format('name'), 'deaths', 'targeted', 'clean', 'ontime', 'late', 'timing', 'first', 'apspike']
+header_str = ' | '.join([i.center(8) for i in console_headers])
+print(header_str)
+print('|'.join([('-' * len(i)) for i in header_str.split('|')]))
+
 for key, p in players.items():
 	if p.team == 'BLU':
 		score2 = score2 + p.deathtotal
+		clean2 = clean2 + p.cleanspiked
 		targets2 = targets2 + p.targeted
 	else:
 		score1 = score1 + p.deathtotal
+		clean1 = clean1 + p.cleanspiked
 		targets1 = targets1 + p.targeted
 	# print("[TEAM " + str(p.team) + "]"+"[PID "+str(p.id)+"] " + p.name + " deaths: " + str(p.deathtotal))
-	print("[" + str(p.team) + "] "+ "{:<20}".format(p.name) + " deaths: " + "{:<8}".format(str(p.deathtotal))+ "targeted: " + str(p.targeted))
-	
+
+	output = [
+		"[" + p.team + "]",
+		'{:<20}'.format(p.name),
+		p.deathtotal,
+		p.targeted,
+		p.cleanspiked,
+		p.ontime,
+		p.late,
+		str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4],
+		p.first,
+		str(p.attacks / max(p.ontime + p.late, 1))[:4]
+	]
+	print(' | '.join([str(i).center(8) for i in output]))
+
 print("")
 print("SCORE: " + str(score1) + "-" + str(score2))
 print("TARGETS CALLED: " + str(targets1) + "-" + str(targets2))
+print('CLEAN SPIKES: ' + str(clean1) + '-' + str(clean2))
