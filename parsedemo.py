@@ -43,7 +43,6 @@ class Player:
 		self.action = ''
 		self.target = ''
 		self.reverse = False
-		self.emp = False
 
 		self.targetstart = -1
 		self.targetcooldown = 0
@@ -59,6 +58,9 @@ class Player:
 		self.spiketiming = []
 		self.attacks = 0
 		self.first = 0
+
+		self.poison = False
+		self.emp = False
 
 	def reset(self):
 		self.hp = ''
@@ -230,21 +232,23 @@ with open(sys.argv[1],'r') as fp:
 					np.sqrt(np.sum((posstart[posids[0]]-posstart[posids[2]])**2)) > maxdist and
 					np.sqrt(np.sum((posstart[posids[1]]-posstart[posids[2]])**2)) > maxdist
 				):
-					starttime = ms/1000
+					starttime = ms
+					if starttime < 1000:
+						starttime = 0
 		line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 
 
 
 	# back to start of file
 	fp.seek(0)
-	ms = 0
+	ms = -starttime
 	count = 0
 	line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 
 	# main parsing loop
 	with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		csvw = csv.writer(csvfile, delimiter=',')
-		while line:
+		while line and t < 600: # ignore data after match end
 			ms = ms + int(line[0]) # running demo time
 			t2 = round(ms*tick/1000)/tick # time in s rounded to the nearest server tick to organize data - user input tick
 			if t2 > t:
@@ -327,13 +331,10 @@ with open(sys.argv[1],'r') as fp:
 
 
 
-print("")
-t_min = round(t/60,2)
-print("demo time " + str(t_min) + " minutes")
-print(f'end of buff phase @ {round(starttime/60,2)} minutes')
+print("\ndemo time " + str(round(t/60,2)) + " minutes")
 print("map: " + match_map)
-print("")
-print('legend:')
+
+print('\nlegend:')
 print(f'targeted: attacked by {targetminattacks} attacks spread across at least {targetminattackers} attackers in less than {targetwindow} seconds')
 print(f'clean: same as targeted except over {cleanspike} seconds')
 print(f'ontime: number of spikes joined within {cleanspike} seconds')
