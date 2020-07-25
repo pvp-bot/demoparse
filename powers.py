@@ -136,7 +136,7 @@ hit = { # fx on target from actor (includes buffs)
 
 
 
-pmov = { # prepend with 'A_' for flying version 
+pmov = { # prepend with 'A_' for flying version
 'DRAW_PISTOL':'crey pistol',
 'WALL':'ssj',
 'MOUTH':'blind',
