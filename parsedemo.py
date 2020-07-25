@@ -3,6 +3,7 @@ import shlex
 import sys
 import math
 import powers
+import numpy as np
 
 ms = 0          # demo time in ms
 t = 0           # demo time in seconds
@@ -13,6 +14,7 @@ player_list  = []
 players      = ''
 
 match_map = ""
+starttime = 0 # in seconds
 
 # in seconds
 targetwindow = 4   # time window for min attacks to count a spike
@@ -194,9 +196,49 @@ with open(sys.argv[1],'r') as fp:
 			p.team = 'RED'
 
 
+	# back to start of file
+	fp.seek(0)
+	line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
+
+	# loop for determining start of match/end of buffs
+	# determine when 3 players on the same team are at least 20 yd from each other
+	# method won't work if people are jaunting at the start I guess
+	posstart = {}
+	posids = []
+	posteam = ''
+	maxdist = 15 # 15 yards? < gather radius
+	while line and starttime == 0:
+		ms = ms + int(line[0]) # running demo time
+		try:
+			pid = int(line[1])
+		except:
+			pid = 0 # ignore special
+		action = line[2]
+
+		if action == 'POS' and pid in player_ids:
+			if len(posstart) == 0:
+				posstart[pid] = np.array([float(line[3]),float(line[5]),float(line[4])]) # swapping game x,z,y to typical x,y,z
+				posids.append(pid)
+				posteam = players[pid].team
+			elif players[pid].team == posteam and pid not in posids and len(posids) < 3: # use 3 players on a team to determine
+				posstart[pid] = np.array([float(line[3]),float(line[5]),float(line[4])]) 
+				posids.append(pid)
+			elif pid in posids and len(posids) == 3:
+				posstart[pid] = np.array([float(line[3]),float(line[5]),float(line[4])])
+				if (
+					np.sqrt(np.sum((posstart[posids[0]]-posstart[posids[1]])**2)) > maxdist and
+					np.sqrt(np.sum((posstart[posids[0]]-posstart[posids[2]])**2)) > maxdist and
+					np.sqrt(np.sum((posstart[posids[1]]-posstart[posids[2]])**2)) > maxdist
+				):
+					starttime = ms/1000
+					print(starttime)
+		line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
+
+
 
 	# back to start of file
 	fp.seek(0)
+	ms = 0
 	count = 0
 	line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 
@@ -237,10 +279,10 @@ with open(sys.argv[1],'r') as fp:
 					players[pid].lasthp = hp
 
 				elif action == "FX" and pid in player_ids:
-					action = next(substring for substring in powers.pdict.keys() if substring in line[5])
+					action = next(substring for substring in powers.atk.keys() if substring in line[5])
 					if any(substring for substring in powers.preverse if substring in line[5]):
 						players[pid].reverse = True
-					players[pid].action = powers.pdict[action]
+					players[pid].action = powers.atk[action]
 
 				elif action == "TARGET" and players[pid].action != '':
 					tid = int(line[4])
@@ -288,7 +330,7 @@ with open(sys.argv[1],'r') as fp:
 
 print("")
 t_min = round(t/60,2)
-print("demo time " + str(t_min) + " seconds")
+print("demo time " + str(t_min) + " minutes")
 print("map: " + match_map)
 print("")
 print('legend:')

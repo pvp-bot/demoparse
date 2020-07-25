@@ -1,103 +1,138 @@
-pdict = {
+atk = { # fx from actor to target (includes buffs)
 
-# fire
-'BLAZE_ATTACK.FX':'blaze',
-'FIREBALL.FX':'blaze',
-'BLAZINGBOLT_ATTACK.FX':'blazing bolt',
-'/INFERNOBOLT.FX':'blazing bolt',
+	# fire
+	'BLAZE_ATTACK.FX':'blaze',
+	'FIREBALL.FX':'blaze',
+	'BLAZINGBOLT_ATTACK.FX':'blazing bolt',
+	'/INFERNOBOLT.FX':'blazing bolt',
 
-# ice
-'BITTERFREEZERAY.FX':'bib',
-'BITTERICEBOLT.FX':'bfr',
-'BITTERFREEZEBOLT.FX':'bfr',
-'ICEBLAST.FX':'ice blast',
-'FREEZERAY.FX':'freeze ray',
+	# ice
+	'BITTERFREEZERAY.FX':'bib',
+	'BITTERICEBOLT.FX':'bfr',
+	'BITTERFREEZEBOLT.FX':'bfr',
+	'ICEBLAST.FX':'ice blast',
+	'FREEZERAY.FX':'freeze ray',
 
-# BEAMRIFLE_DISINTEGRATE
-'BEAMRIFLE_DISINTEGRATE.FX':'disintegrate',
-'BEAMRIFLE_CHARGEDSHOT.FX':'penetrating ray/charged shot',
-'BEAMRIFLE_LANCERSHOT.FX':'lancer',
+	# BEAMRIFLE_DISINTEGRATE
+	'BEAMRIFLE_DISINTEGRATE.FX':'disintegrate',
+	'BEAMRIFLE_CHARGEDSHOT.FX':'penetrating ray/charged shot',
+	'BEAMRIFLE_LANCERSHOT.FX':'lancer',
 
-# emp
-'HEALINGHANDS.FX':'heal other',
-'ABSORBPAIN.FX':'absorb pain',
-# 'STRENGTHHANDS2.FX':,
-'EMPATHY/RADIATIONEMISSION.FX':'healing aura',
-'MINDWALL.FX':'clear mind',
-'ENDURANCE.FX':'adreneline boost',
-'FORTITUDE.FX':'fortitude',
-'EMPATHYCUREWOUNDS.FX':'regen aura',
-'ADRENALINEFLOW.FX':'recovery aura',
+	# emp
+	'HEALINGHANDS.FX':'heal other',
+	'ABSORBPAIN.FX':'absorb pain',
+	# 'STRENGTHHANDS2.FX':,
+	'EMPATHY/RADIATIONEMISSION.FX':'healing aura',
+	'MINDWALL.FX':'clear mind',
+	'ENDURANCE.FX':'adreneline boost',
+	'FORTITUDE.FX':'fortitude',
+	'EMPATHYCUREWOUNDS.FX':'regen aura',
+	'ADRENALINEFLOW.FX':'recovery aura',
 
-# pain
-# 'SOOTH_ATTACK.FX':'soothe',
-# 'SHAREPAIN_ATTACK.FX':'share pain',
-'SOOTH_ATTACK.FX':'heal other', # same thing
-'SHAREPAIN_ATTACK.FX':'absorb pain',
+	# pain
+	# 'SOOTH_ATTACK.FX':'soothe',
+	# 'SHAREPAIN_ATTACK.FX':'share pain',
+	'SOOTH_ATTACK.FX':'heal other', # same thing
+	'SHAREPAIN_ATTACK.FX':'absorb pain',
 
-# psn
-'/POISONLIQUIDPROJECTILE.FX':'envenom',
-'/PALMPOISONLIQUIDPROJECTILE.FX':'weaken',
-
-
-# ill
-'ILLUSDECOY.FX':'phantom army',
-'ILLUSIONCONTROL/ILLUSBLIND.FX':'blind', # attack and target? need to match up w/ MOV MOUTH
-
-# plant
-'THORNS/BUILDUP_ATTACK.FX':'toxins',
-'THORNS/BUILDUP_ATTACK.FX':'build up',
-'PLANTCONTROL/PLANTCONTROLHIT.FX':'strangler',
-
-# elec
-'REJUVENATINGCIRCUITATK.FX':'rejuvenating circuit',
-'EMPOWERINGCIRCUITATK.FX':'empowering circuit',
-'INSULATINGCIRCUITATK.FX':'insulating circuit',
-'AMPUPATTACK.FX':'amp up',
-'WITCHESLIGHTNINGBOLTMEGA.FX':'shock',#?
-'ENERGYSINKCASTATTACK.FX':'shock',
-
-#nature
-'CORROSIVESAP.FX':'corrosive enzyme',
-
-# epics
-'/COMMAND2.FX':'dominate',
-'/SCHOOLOFSHARKS_HIT.FX':'ssj',
-'V_MAKO_SPIRITSHARK_CIRCLE_HIT':'ssj',
-'/HIBERNATE.FX':'hibernate',
-'/HIBERNATE_CONTINUING.FX':'hibernate',
-'FIRECONTROL/SOOT.FX':'char',
-# '/EMBERSHITSOOTANDCINDERS.FX':'char', # hit?
-
-# pools
-'JAUNT_ATTACK.FX':'jaunt',
-'SPIRITWARD.FX':'spirit ward',
-'FLIGHT/NONCOMBATFLIGHT':'mystic/flight',
-'MYSTICFLIGHT.FX':'mystic/flight',
-'/INVISPHASE_FASTCAST.FX':'phase shift',
-'PHASESHIFT_ATTACK.FX':'phase shift',
-'MEDICINE/MAID.FX':'aid other',
-
-# misc powerset
-'FOSSILIZEHANDS.FX':'fossilize',
-'AIM.FX':'aim',
-'FOLLOWUPHIT4.FX':'build up', #'fiery embrace',
-'AIM_ACTIVATION.FX':'aim',
-'/THUNDEROUSBLAST.FX':'thunderous blast',
+	# psn
+	'/POISONLIQUIDPROJECTILE.FX':'envenom',
+	'/PALMPOISONLIQUIDPROJECTILE.FX':'weaken',
 
 
-# misc generic
-'ALIGNMENT_JUSTICE.FX':'call to justice',
-# 'WEAPONS/LASER_PISTOL_1.FX':'crey pistol', # using MOV count
-'GEASTHEKINDONESCONTINUING.FX':'geas',
-'/STAMINA.FX':'respite', # or other insp?
+	# ill
+	'ILLUSDECOY.FX':'phantom army',
+	'ILLUSIONCONTROL/ILLUSBLIND.FX':'blind', # attack and target? need to match up w/ MOV MOUTH
+
+	# plant
+	'THORNS/BUILDUP_ATTACK.FX':'toxins',
+	'THORNS/BUILDUP_ATTACK.FX':'build up',
+	'PLANTCONTROL/PLANTCONTROLHIT.FX':'strangler',
+
+	# elec
+	'REJUVENATINGCIRCUITATK.FX':'rejuvenating circuit',
+	'EMPOWERINGCIRCUITATK.FX':'empowering circuit',
+	'INSULATINGCIRCUITATK.FX':'insulating circuit',
+	'AMPUPATTACK.FX':'amp up',
+	'WITCHESLIGHTNINGBOLTMEGA.FX':'shock',#?
+	'ENERGYSINKCASTATTACK.FX':'shock',
+
+	#nature
+	'CORROSIVESAP.FX':'corrosive enzyme',
+
+	# epics
+	'/COMMAND2.FX':'dominate',
+	'/SCHOOLOFSHARKS_HIT.FX':'ssj',
+	'V_MAKO_SPIRITSHARK_CIRCLE_HIT':'ssj',
+	'/HIBERNATE.FX':'hibernate',
+	'/HIBERNATE_CONTINUING.FX':'hibernate',
+	'FIRECONTROL/SOOT.FX':'char',
+	# '/EMBERSHITSOOTANDCINDERS.FX':'char', # hit?
+
+	# pools
+	'JAUNT_ATTACK.FX':'jaunt',
+	'SPIRITWARD.FX':'spirit ward',
+	'FLIGHT/NONCOMBATFLIGHT':'mystic/flight',
+	'MYSTICFLIGHT.FX':'mystic/flight',
+	'/INVISPHASE_FASTCAST.FX':'phase shift',
+	'PHASESHIFT_ATTACK.FX':'phase shift',
+	'MEDICINE/MAID.FX':'aid other',
+
+	# misc powerset
+	'FOSSILIZEHANDS.FX':'fossilize',
+	'AIM.FX':'aim',
+	'FOLLOWUPHIT4.FX':'build up', #'fiery embrace',
+	'AIM_ACTIVATION.FX':'aim',
+	'/THUNDEROUSBLAST.FX':'thunderous blast',
 
 
-# temp
-'WEBGRENADETHROW.FX':'web nade',
-'/SKYRAIDERJETS.FX':'raptor pack', # num toggle ons - not time
+	# misc generic
+	'ALIGNMENT_JUSTICE.FX':'call to justice',
+	# 'WEAPONS/LASER_PISTOL_1.FX':'crey pistol', # using MOV count
+	'GEASTHEKINDONESCONTINUING.FX':'geas',
+	'/STAMINA.FX':'respite', # or other insp?
+
+
+	# temp
+	'WEBGRENADETHROW.FX':'web nade',
+	'/SKYRAIDERJETS.FX':'raptor pack', # num toggle ons - not time
 }
 
+
+hit = { # fx on target from actor (includes buffs)
+
+
+# nature
+'CORROSIVESAP_HIT.FX':'corrosive enzyme',
+
+# fire
+'BLAZE_HIT.FX':'blaze',
+'FIREBALLHITNO_RING.FX':'blaze',
+'BLAZINGBOLT_HIT.FX':'blazing bolt',
+
+# ice
+'ICEBOLTHIT.FX':'bfr',
+
+# plant
+'PLANTCONTROLHIT.FX':'strangler',
+
+# poison
+'POISONHITQUICK.FX':'envenom', # or weaken
+
+# elec
+'INSULATINGCIRCUITHIT.FX':'insulating circuit',
+'DNASIPHON_HIT.FX':'shock', #?
+
+# epics
+'MINDCONTROLHIT.FX':'dominate',
+'CINDERSHIT.FX':'char',
+'EMBERSHITSOOTANDCINDERS.FX':'char',
+'SCHOOLOFSHARKS_HIT.FX':'ssj',
+'V_MAKO_SPIRITSHARK_CIRCLE_HIT.FX':'ssj',
+
+# pools
+'SPIRITWARD_HIT.FX':'spirit ward',
+}
 
 
 
