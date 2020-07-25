@@ -138,7 +138,6 @@ with open(sys.argv[1],'r') as fp:
 				player_ids.append(pid)
 				player_list.append(Player(line[3],pid))
 		if line[2] in powers.npc and pid in player_ids: #
-		# if line[2] == "NPC" and pid in player_ids: # don't count self if recording from obs
 			del player_ids[-1]
 			del player_list[-1]
 		try:
@@ -241,8 +240,6 @@ with open(sys.argv[1],'r') as fp:
 					action = next(substring for substring in powers.pdict.keys() if substring in line[5])
 					if any(substring for substring in powers.preverse if substring in line[5]):
 						players[pid].reverse = True
-					# if any(substring for substring in powers.pemp if substring in line[5]):
-						# players[pid].emp = True
 					players[pid].action = powers.pdict[action]
 
 				elif action == "TARGET" and players[pid].action != '':
@@ -281,7 +278,6 @@ with open(sys.argv[1],'r') as fp:
 
 
 			except:
-				# print(count)
 				pass
 
 			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
@@ -319,16 +315,20 @@ header_str = ' | '.join([i.center(8) for i in console_headers])
 print(header_str)
 print('|'.join([('-' * len(i)) for i in header_str.split('|')]))
 
+first_red = True
+
 for key, p in players.items():
 	if p.team == 'BLU':
 		score2 = score2 + p.deathtotal
 		clean2 = clean2 + p.cleanspiked
 		targets2 = targets2 + p.targeted
 	else:
+		if first_red:
+			print('|'.join([('-' * len(i)) for i in header_str.split('|')]))
+			first_red = False
 		score1 = score1 + p.deathtotal
 		clean1 = clean1 + p.cleanspiked
 		targets1 = targets1 + p.targeted
-	# print("[TEAM " + str(p.team) + "]"+"[PID "+str(p.id)+"] " + p.name + " deaths: " + str(p.deathtotal))
 
 	output = [
 		"[" + p.team + "]",
