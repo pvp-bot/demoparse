@@ -53,6 +53,9 @@ with open(sys.argv[1],'r') as fp:
 			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 		except:
 			print(count) # find broken lines
+		if len(player_list) == 16: # assuming 8v8 at most
+			print(f'found 16 players after {count} lines')
+			break
 		count = count + 1
 
 	players = dict(zip(player_ids,player_list))
