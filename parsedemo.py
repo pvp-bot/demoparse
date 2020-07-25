@@ -231,7 +231,6 @@ with open(sys.argv[1],'r') as fp:
 					np.sqrt(np.sum((posstart[posids[1]]-posstart[posids[2]])**2)) > maxdist
 				):
 					starttime = ms/1000
-					print(starttime)
 		line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 
 
@@ -331,6 +330,7 @@ with open(sys.argv[1],'r') as fp:
 print("")
 t_min = round(t/60,2)
 print("demo time " + str(t_min) + " minutes")
+print(f'end of buff phase @ {round(starttime/60,2)} minutes')
 print("map: " + match_map)
 print("")
 print('legend:')
@@ -364,27 +364,40 @@ for key, p in players.items():
 		score2 = score2 + p.deathtotal
 		clean2 = clean2 + p.cleanspiked
 		targets2 = targets2 + p.targeted
-	else:
-		if first_red:
-			print('|'.join([('-' * len(i)) for i in header_str.split('|')]))
-			first_red = False
+		output = [
+			"[" + p.team + "]",
+			'{:<20}'.format(p.name),
+			p.deathtotal,
+			p.targeted,
+			p.cleanspiked,
+			p.ontime,
+			p.late,
+			str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4],
+			p.first,
+			str(p.attacks / max(p.ontime + p.late, 1))[:4]
+		]
+		print(' | '.join([str(i).center(8) for i in output]))
+
+print('|'.join([('-' * len(i)) for i in header_str.split('|')]))
+
+for key, p in players.items():
+	if p.team == 'RED':
 		score1 = score1 + p.deathtotal
 		clean1 = clean1 + p.cleanspiked
 		targets1 = targets1 + p.targeted
-
-	output = [
-		"[" + p.team + "]",
-		'{:<20}'.format(p.name),
-		p.deathtotal,
-		p.targeted,
-		p.cleanspiked,
-		p.ontime,
-		p.late,
-		str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4],
-		p.first,
-		str(p.attacks / max(p.ontime + p.late, 1))[:4]
-	]
-	print(' | '.join([str(i).center(8) for i in output]))
+		output = [
+			"[" + p.team + "]",
+			'{:<20}'.format(p.name),
+			p.deathtotal,
+			p.targeted,
+			p.cleanspiked,
+			p.ontime,
+			p.late,
+			str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4],
+			p.first,
+			str(p.attacks / max(p.ontime + p.late, 1))[:4]
+		]
+		print(' | '.join([str(i).center(8) for i in output]))
 
 print("")
 print("SCORE: " + str(score1) + "-" + str(score2))

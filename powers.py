@@ -100,7 +100,7 @@ atk = { # fx from actor to target (includes buffs)
 
 
 hit = { # fx on target from actor (includes buffs)
-
+# not used yet
 
 # nature
 'CORROSIVESAP_HIT.FX':'corrosive enzyme',
