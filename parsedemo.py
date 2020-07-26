@@ -174,11 +174,11 @@ with open(sys.argv[1],'r') as fp:
 				pid = 0 # ignore special
 
 
-			try: #
-				if action == "POS" and pid in player_ids and players[pid].team == '':
+			if pid in players:
+				if action == "POS" and players[pid].team == '':
 					pass # todo use starting pos to get end of buff cycle
 
-				elif action == "HP" and pid in player_ids:
+				elif action == "HP":
 					hp  = float(line[3])
 					players[pid].hp = hp
 
@@ -189,15 +189,16 @@ with open(sys.argv[1],'r') as fp:
 						players[pid].deathtotal = players[pid].deathtotal + 1
 					players[pid].lasthp = hp
 
-				elif action == "FX" and pid in player_ids:
-					action = next(substring for substring in atk.keys() if substring in line[5])
-					if any(substring for substring in preverse if substring in line[5]):
-						players[pid].reverse = True
-					players[pid].action = atk[action]
+				elif action == "FX":
+					action = next((substring for substring in atk.keys() if substring in line[5]), None)
+					if action is not None:
+						if any(substring for substring in preverse if substring in line[5]):
+							players[pid].reverse = True
+						players[pid].action = atk[action]
 
-				elif action == "TARGET" and players[pid].action != '' and int(line[4]) != pid:
+				elif action == "TARGET" and line[3] == 'ENT' and players[pid].action != '':
 					tid = int(line[4])
-					if tid in player_ids: # if target is a player
+					if tid != pid and tid in player_ids: # if target is a player
 
 						if players[pid].team != players[tid].team:
 							players[tid].targetcount(t, pid, players)
@@ -231,12 +232,6 @@ with open(sys.argv[1],'r') as fp:
 						players[pid].crey = players[pid].crey + 1
 						players[pid].action = 'crey pistol'
 
-
-
-
-			except:
-				# print("Unexpected error:", sys.exc_info()[0])
-				pass
 
 			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 			count = count + 1
