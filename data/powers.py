@@ -48,6 +48,7 @@ atk = { # fx from actor to target (includes buffs)
 	'THORNS/BUILDUP_ATTACK.FX':'toxins',
 	'THORNS/BUILDUP_ATTACK.FX':'build up',
 	'PLANTCONTROL/PLANTCONTROLHIT.FX':'strangler',
+	'STRANGLERROOTS.FX': 'strangler',
 
 	# elec
 	'REJUVENATINGCIRCUITATK.FX':'rejuvenating circuit',
@@ -64,6 +65,7 @@ atk = { # fx from actor to target (includes buffs)
 	'/COMMAND2.FX':'dominate',
 	'/SCHOOLOFSHARKS_HIT.FX':'ssj',
 	'V_MAKO_SPIRITSHARK_CIRCLE_HIT':'ssj',
+	'SPIRTSHARKJAWS_CONDITIONAL.FX': 'ssj',
 	'/HIBERNATE.FX':'hibernate',
 	'/HIBERNATE_CONTINUING.FX':'hibernate',
 	'FIRECONTROL/SOOT.FX':'char',
@@ -115,6 +117,7 @@ hit = { # fx on target from actor (includes buffs)
 
 # plant
 'PLANTCONTROLHIT.FX':'strangler',
+'STRANGLERROOTS.FX': 'strangler',
 
 # poison
 'POISONHITQUICK.FX':'envenom', # or weaken
@@ -129,6 +132,7 @@ hit = { # fx on target from actor (includes buffs)
 'EMBERSHITSOOTANDCINDERS.FX':'char',
 'SCHOOLOFSHARKS_HIT.FX':'ssj',
 'V_MAKO_SPIRITSHARK_CIRCLE_HIT.FX':'ssj',
+'SPIRTSHARKJAWS_CONDITIONAL.FX': 'ssj',
 
 # pools
 'SPIRITWARD_HIT.FX':'spirit ward',
@@ -157,6 +161,8 @@ preverse = [
 'PLANTCONTROL/PLANTCONTROLHIT.FX',
 '/SCHOOLOFSHARKS_HIT.FX',
 'V_MAKO_SPIRITSHARK_CIRCLE_HIT',
+'SPIRTSHARKJAWS_CONDITIONAL.FX',
+'STRANGLERROOTS.FX'
 ]
 
 buffs = [
@@ -200,6 +206,9 @@ atks = [
 'BEAMRIFLE_CHARGEDSHOT.FX',
 'BEAMRIFLE_LANCERSHOT.FX',
 '/COMMAND2.FX',
+'/SCHOOLOFSHARKS_HIT.FX',
+'V_MAKO_SPIRITSHARK_CIRCLE_HIT',
+'PLANTCONTROL/PLANTCONTROLHIT.FX'
 ]
 
 

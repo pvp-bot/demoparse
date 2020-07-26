@@ -195,24 +195,26 @@ with open(sys.argv[1],'r') as fp:
 						players[pid].reverse = True
 					players[pid].action = atk[action]
 
-				elif action == "TARGET" and players[pid].action != '':
+				elif action == "TARGET" and players[pid].action != '' and int(line[4]) != pid:
 					tid = int(line[4])
 					if tid in player_ids: # if target is a player
 						if tid != pid: # if target is not actor
-							if players[pid].reverse: # if the receiver is listed as the actor
-								players[tid].target = players[pid].name #
-								players[tid].action = players[pid].action
-								players[pid].action = ''
-								players[pid].target = ''
-								players[pid].reverse = False
-							else:
-								players[pid].target = players[tid].name
 
 							if players[pid].team != players[tid].team:
 								players[tid].targetcount(t, pid, players)
 							else:
 								if players[pid].action in heals:
 									players[pid].healcount(t, players[tid])
+
+				elif action == 'PREVTARGET' and players[pid].reverse:
+					# strangler, ssj etc are dumb
+					aid = int(line[4])
+					if aid in player_ids and aid != pid:
+						players[aid].target = players[pid].name
+						players[aid].action = players[pid].action
+
+						if players[pid].team != players[aid].team:
+							players[pid].targetcount(t, aid, players)
 
 				elif action == "MOV":
 					mov = line[3]
