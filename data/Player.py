@@ -88,13 +88,10 @@ class Player:
 				self.targetattackers.append([aid, t]) #add the actor to the attacker list
 				self._update_ontarget(t, aid, players)
 
-			temp_absorbs = []
 			for time, hid in self.absorbed:
 				if (self.targetstart - time) < predictspiketime: # absorb was fired before the spike
 					players[hid].predicts += 1
-				else:
-					temp_absorbs.append([time, hid])
-			self.absorbed = temp_absorbs
+			self.absorbed = []
 
 			if self.attackcounter >= targetminattacks and len(self.targetattackers) >= targetminattackers and not self.targetlock:
 				self.targeted = self.targeted + 1
