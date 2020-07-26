@@ -212,7 +212,6 @@ with open(sys.argv[1],'r') as fp:
 								players[tid].targetcount(t, pid, players)
 							else:
 								if players[pid].action in heals:
-									# players[pid].healcount(players[tid].targettime(t), players[tid].istargeted(t))
 									players[pid].healcount(t, players[tid])
 
 				elif action == "MOV":
