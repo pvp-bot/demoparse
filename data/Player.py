@@ -37,6 +37,7 @@ class Player:
 		self.spiketiming = []
 		self.attacks = 0
 		self.first = 0
+		self.healedby = []
 
 		# healing peeps
 		self.ontargetheals = 0
@@ -77,6 +78,7 @@ class Player:
 			self.attackcounter = 0
 			self.targetattackers = []
 			self.targetlock = False
+			self.healedby = []
 
 		timing = self.targettime(t)
 		if timing < targetwindow: #if within targeting window
@@ -109,7 +111,10 @@ class Player:
 
 	def healcount(self, t, targetplayer):
 		if targetplayer.istargeted(t):
-			self.healtiming.append(targetplayer.targettime(t))
+			if self.id not in targetplayer.healedby:
+				targetplayer.healedby.append(self.id)
+				self.healtiming.append(targetplayer.targettime(t))
+
 			self.ontargetheals += 1
 		else:
 			self.topups += 1
