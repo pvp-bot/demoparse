@@ -106,6 +106,9 @@ class Player:
 				for attacker, time in self.targetattackers:
 					self._update_ontarget(time, attacker, players)
 					players[attacker].attacks += 1
+		elif timing < targetcooldown and self.targetlock:
+			# count trash damage vs non-evaders as attacks on target
+			players[aid].attacks += 1
 
 	def healcount(self, t, targetplayer):
 		if targetplayer.istargeted(t):
