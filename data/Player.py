@@ -120,7 +120,7 @@ class Player:
 			targetplayer.absorbed.append([t, self.id])
 
 	def istargeted(self, t):
-		return self.targettime(t) < targetwindow
+		return self.targetstart != -1 and self.targettime(t) < targetwindow
 
 	def targettime(self, t):
 		return t - self.targetstart
