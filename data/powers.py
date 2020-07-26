@@ -172,6 +172,19 @@ buffs = [
 'AMPUPATTACK.FX',
 ]
 
+heals = [
+'heal other',
+'absorb pain',
+'rejuvenating circuit',
+'insulating circuit',
+'spirit ward'
+]
+
+absorbs = [
+'insulating circuit',
+'spirit ward'
+]
+
 # common attacks - unused for anything atm
 atks = [
 'BLAZE_ATTACK.FX',

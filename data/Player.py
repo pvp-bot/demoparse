@@ -1,3 +1,4 @@
+from data.powers import absorbs
 from data.config import *
 
 class Player:
@@ -19,6 +20,7 @@ class Player:
 		self.reverse = False
 		self.emp = False
 
+		# being spiked
 		self.targetstart = -1
 		self.targetcooldown = 0
 		self.attackcounter = 0
@@ -27,12 +29,21 @@ class Player:
 		self.targetlock = False
 		self.targetinstance = 0
 		self.cleanspiked = 0
+		self.absorbed = [] # List[[time, pid]] where time is when the absorb was placed, pid was the player who placed it
 
+		# spiking someone else
 		self.ontime = 0
 		self.late = 0
 		self.spiketiming = []
 		self.attacks = 0
 		self.first = 0
+
+		# healing peeps
+		self.ontargetheals = 0
+		self.healtiming = []
+		self.topups = 0
+		self.aps = 0 # absorb pain
+		self.predicts = 0 # predicted the spike target and gave an absorb
 
 		self.poison = False
 		self.emp = False
@@ -67,7 +78,7 @@ class Player:
 			self.targetattackers = []
 			self.targetlock = False
 
-		timing = (t - self.targetstart)
+		timing = self.targettime(t)
 		if timing < targetwindow: #if within targeting window
 			self.attackcounter = self.attackcounter + 1 #increase the #attacks on
 			if self.targetlock:
@@ -76,6 +87,10 @@ class Player:
 			if aid not in [i[0] for i in self.targetattackers]:
 				self.targetattackers.append([aid, t]) #add the actor to the attacker list
 				self._update_ontarget(t, aid, players)
+
+			for time, hid in self.absorbed:
+				if (self.targetstart - time) < predictspiketime: # absorb was fired before the spike
+					players[hid].predicts += 1
 
 			if self.attackcounter >= targetminattacks and len(self.targetattackers) >= targetminattackers and not self.targetlock:
 				self.targeted = self.targeted + 1
@@ -87,3 +102,21 @@ class Player:
 				for attacker, time in self.targetattackers:
 					self._update_ontarget(time, attacker, players)
 					players[attacker].attacks += 1
+
+	def healcount(self, t, targetplayer):
+		if targetplayer.istargeted(t):
+			self.healtiming.append(targetplayer.targettime(t))
+			self.ontargetheals += 1
+		else:
+			self.topups += 1
+
+		if self.action == 'absorb pain':
+			self.aps += 1
+		elif self.action in absorbs:
+			targetplayer.absorbed.append([t, self.id])
+
+	def istargeted(self, t):
+		return self.targettime(t) < targetwindow
+
+	def targettime(self, t):
+		return t - self.targetstart

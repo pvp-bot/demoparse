@@ -2,9 +2,9 @@ import csv
 import shlex
 import sys
 import math
-import powers
 import numpy as np
 
+from data.powers import atk, preverse, heals, npc, name_filter, buffs
 from data.config import *
 from data.Player import Player
 
@@ -43,10 +43,10 @@ with open(sys.argv[1],'r') as fp:
 			match_map = line[3]
 			match_map = match_map.split('/')[-1]
 		if line[2] == "NEW":
-			if pid not in player_ids and line[3] not in powers.name_filter:
+			if pid not in player_ids and line[3] not in name_filter:
 				player_ids.append(pid)
 				player_list.append(Player(line[3],pid))
-		if line[2] in powers.npc and pid in player_ids: #
+		if line[2] in npc and pid in player_ids: #
 			del player_ids[-1]
 			del player_list[-1]
 		try:
@@ -82,7 +82,7 @@ with open(sys.argv[1],'r') as fp:
 		action = line[2]
 
 		if action == 'FX' and pid in player_ids:
-			if any(substring for substring in powers.buffs if substring in line[5]):
+			if any(substring for substring in buffs if substring in line[5]):
 				buff_count = count
 		elif action == 'TARGET' and count < (buff_count+5) and pid in player_ids:
 			tid = int(line[4]) # target player id
@@ -190,10 +190,10 @@ with open(sys.argv[1],'r') as fp:
 					players[pid].lasthp = hp
 
 				elif action == "FX" and pid in player_ids:
-					action = next(substring for substring in powers.atk.keys() if substring in line[5])
-					if any(substring for substring in powers.preverse if substring in line[5]):
+					action = next(substring for substring in atk.keys() if substring in line[5])
+					if any(substring for substring in preverse if substring in line[5]):
 						players[pid].reverse = True
-					players[pid].action = powers.atk[action]
+					players[pid].action = atk[action]
 
 				elif action == "TARGET" and players[pid].action != '':
 					tid = int(line[4])
@@ -210,6 +210,10 @@ with open(sys.argv[1],'r') as fp:
 
 							if players[pid].team != players[tid].team:
 								players[tid].targetcount(t, pid, players)
+							else:
+								if players[pid].action in heals:
+									# players[pid].healcount(players[tid].targettime(t), players[tid].istargeted(t))
+									players[pid].healcount(t, players[tid])
 
 				elif action == "MOV":
 					mov = line[3]
@@ -231,6 +235,7 @@ with open(sys.argv[1],'r') as fp:
 
 
 			except:
+				# print("Unexpected error:", sys.exc_info()[0])
 				pass
 
 			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
@@ -260,53 +265,62 @@ targets1 = 0
 targets2 = 0
 
 
+def print_table(headers, content):
+	first_red = True
+	header_str = ' | '.join([i.center(8) for i in headers])
+	print(header_str)
+	print('|'.join([('-' * len(i)) for i in header_str.split('|')]))
 
-console_headers = ['team', '{:<20}'.format('name'), 'deaths', 'targeted', 'clean', 'ontime', 'late', 'timing', 'first', 'apspike']
-header_str = ' | '.join([i.center(8) for i in console_headers])
-print(header_str)
-print('|'.join([('-' * len(i)) for i in header_str.split('|')]))
+	for row in content:
+		if first_red and '[RED]' in row[0]:
+			print('|'.join([('-' * len(i)) for i in header_str.split('|')]))
+			first_red = False
+		print(' | '.join([str(i).center(8) for i in row]))
 
-first_red = True
+	print('')
 
-for key, p in players.items():
+offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'targeted', 'clean', 'ontime', 'late', 'timing', 'first', 'apspike']
+offence_content = []
+healer_headers = ['team', '{:<20}'.format('name'), 'ontarget', 'timing', 'topups', "AP's", 'predicts']
+healer_content = []
+
+
+for p in sorted(players.values(), key=lambda i: i.team):
 	if p.team == 'BLU':
 		score2 = score2 + p.deathtotal
 		clean2 = clean2 + p.cleanspiked
 		targets2 = targets2 + p.targeted
-		output = [
-			"[" + p.team + "]",
-			'{:<20}'.format(p.name),
-			p.deathtotal,
-			p.targeted,
-			p.cleanspiked,
-			p.ontime,
-			p.late,
-			str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4],
-			p.first,
-			str(p.attacks / max(p.ontime + p.late, 1))[:4]
-		]
-		print(' | '.join([str(i).center(8) for i in output]))
-
-print('|'.join([('-' * len(i)) for i in header_str.split('|')]))
-
-for key, p in players.items():
-	if p.team == 'RED':
+	else:
 		score1 = score1 + p.deathtotal
 		clean1 = clean1 + p.cleanspiked
 		targets1 = targets1 + p.targeted
-		output = [
+
+	offence_content.append([
+		"[" + p.team + "]",
+		'{:<20}'.format(p.name),
+		p.deathtotal,
+		p.targeted,
+		p.cleanspiked,
+		p.ontime,
+		p.late,
+		str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4],
+		p.first,
+		str(p.attacks / max(p.ontime + p.late, 1))[:4]
+	])
+
+	if p.ontargetheals or p.topups:
+		healer_content.append([
 			"[" + p.team + "]",
 			'{:<20}'.format(p.name),
-			p.deathtotal,
-			p.targeted,
-			p.cleanspiked,
-			p.ontime,
-			p.late,
-			str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4],
-			p.first,
-			str(p.attacks / max(p.ontime + p.late, 1))[:4]
-		]
-		print(' | '.join([str(i).center(8) for i in output]))
+			p.ontargetheals,
+			str(sum(p.healtiming) / max(len(p.healtiming), 1))[:4],
+			p.topups,
+			p.aps,
+			p.predicts
+		])
+
+print_table(offence_headers, offence_content)
+print_table(healer_headers, healer_content)
 
 print("")
 print("SCORE: " + str(score1) + "-" + str(score2))
