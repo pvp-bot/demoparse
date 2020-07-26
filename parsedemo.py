@@ -198,13 +198,12 @@ with open(sys.argv[1],'r') as fp:
 				elif action == "TARGET" and players[pid].action != '' and int(line[4]) != pid:
 					tid = int(line[4])
 					if tid in player_ids: # if target is a player
-						if tid != pid: # if target is not actor
 
-							if players[pid].team != players[tid].team:
-								players[tid].targetcount(t, pid, players)
-							else:
-								if players[pid].action in heals:
-									players[pid].healcount(t, players[tid])
+						if players[pid].team != players[tid].team:
+							players[tid].targetcount(t, pid, players)
+						else:
+							if players[pid].action in heals:
+								players[pid].healcount(t, players[tid])
 
 				elif action == 'PREVTARGET' and players[pid].reverse:
 					# strangler, ssj etc are dumb
