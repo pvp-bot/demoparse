@@ -39,6 +39,9 @@ atk = { # fx from actor to target (includes buffs)
 	'/POISONLIQUIDPROJECTILE.FX':'envenom',
 	'/PALMPOISONLIQUIDPROJECTILE.FX':'weaken',
 
+	# rad
+	# this is actually the onhit animation as the activation animation EVERVATINGFIELDHANDS doesnt have target info for some reason
+	'ENERVATINGFIELDCONTINUING.FX': 'enervating field',
 
 	# ill
 	'ILLUSDECOY.FX':'phantom army',
@@ -122,6 +125,9 @@ hit = { # fx on target from actor (includes buffs)
 # poison
 'POISONHITQUICK.FX':'envenom', # or weaken
 
+# rad
+'ENERVATINGFIELDCONTINUING.FX': 'enervating field',
+
 # elec
 'INSULATINGCIRCUITHIT.FX':'insulating circuit',
 'DNASIPHON_HIT.FX':'shock', #?
@@ -162,7 +168,8 @@ preverse = [
 '/SCHOOLOFSHARKS_HIT.FX',
 'V_MAKO_SPIRITSHARK_CIRCLE_HIT',
 'SPIRTSHARKJAWS_CONDITIONAL.FX',
-'STRANGLERROOTS.FX'
+'STRANGLERROOTS.FX',
+'ENERVATINGFIELDCONTINUING.FX'
 ]
 
 buffs = [
