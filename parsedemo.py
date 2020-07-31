@@ -125,6 +125,12 @@ with open(sys.argv[1],'r') as fp:
 			pid = 0 # ignore special
 		action = line[2]
 
+		# first jump action of the game also works pretty well, usually before the POS check
+		if action == 'MOV' and pid in player_ids:
+			if 'JUMP' in line[3]:
+				starttime = ms
+						starttime = 0
+
 		if action == 'POS' and pid in player_ids:
 			if len(posstart) == 0:
 				posstart[pid] = np.array([float(line[3]),float(line[5]),float(line[4])]) # swapping game x,z,y to typical x,y,z
@@ -143,6 +149,7 @@ with open(sys.argv[1],'r') as fp:
 					starttime = ms
 					if starttime < 1000:
 						starttime = 0
+
 		line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 
 
@@ -156,7 +163,7 @@ with open(sys.argv[1],'r') as fp:
 	# main parsing loop
 	with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		csvw = csv.writer(csvfile, delimiter=',')
-		while line and t < 600: # ignore data after match end
+		while line and t < 605: # ignore data after match end with small buffer time
 			ms = ms + int(line[0]) # running demo time
 			t2 = round(ms*tick/1000)/tick # time in s rounded to the nearest server tick to organize data - user input tick
 			if t2 > t:
