@@ -39,6 +39,9 @@ atk = { # fx from actor to target (includes buffs)
 	'/POISONLIQUIDPROJECTILE.FX':'envenom',
 	'/PALMPOISONLIQUIDPROJECTILE.FX':'weaken',
 
+	# rad
+	# this is actually the onhit animation as the activation animation EVERVATINGFIELDHANDS doesnt have target info for some reason
+	'ENERVATINGFIELDCONTINUING.FX': 'enervating field',
 
 	# ill
 	'ILLUSDECOY.FX':'phantom army',
@@ -48,6 +51,7 @@ atk = { # fx from actor to target (includes buffs)
 	'THORNS/BUILDUP_ATTACK.FX':'toxins',
 	'THORNS/BUILDUP_ATTACK.FX':'build up',
 	'PLANTCONTROL/PLANTCONTROLHIT.FX':'strangler',
+	'STRANGLERROOTS.FX': 'strangler',
 
 	# elec
 	'REJUVENATINGCIRCUITATK.FX':'rejuvenating circuit',
@@ -64,6 +68,7 @@ atk = { # fx from actor to target (includes buffs)
 	'/COMMAND2.FX':'dominate',
 	'/SCHOOLOFSHARKS_HIT.FX':'ssj',
 	'V_MAKO_SPIRITSHARK_CIRCLE_HIT':'ssj',
+	'SPIRTSHARKJAWS_CONDITIONAL.FX': 'ssj',
 	'/HIBERNATE.FX':'hibernate',
 	'/HIBERNATE_CONTINUING.FX':'hibernate',
 	'FIRECONTROL/SOOT.FX':'char',
@@ -115,9 +120,13 @@ hit = { # fx on target from actor (includes buffs)
 
 # plant
 'PLANTCONTROLHIT.FX':'strangler',
+'STRANGLERROOTS.FX': 'strangler',
 
 # poison
 'POISONHITQUICK.FX':'envenom', # or weaken
+
+# rad
+'ENERVATINGFIELDCONTINUING.FX': 'enervating field',
 
 # elec
 'INSULATINGCIRCUITHIT.FX':'insulating circuit',
@@ -129,6 +138,7 @@ hit = { # fx on target from actor (includes buffs)
 'EMBERSHITSOOTANDCINDERS.FX':'char',
 'SCHOOLOFSHARKS_HIT.FX':'ssj',
 'V_MAKO_SPIRITSHARK_CIRCLE_HIT.FX':'ssj',
+'SPIRTSHARKJAWS_CONDITIONAL.FX': 'ssj',
 
 # pools
 'SPIRITWARD_HIT.FX':'spirit ward',
@@ -136,7 +146,7 @@ hit = { # fx on target from actor (includes buffs)
 
 
 
-pmov = { # prepend with 'A_' for flying version 
+pmov = { # prepend with 'A_' for flying version
 'DRAW_PISTOL':'crey pistol',
 'WALL':'ssj',
 'MOUTH':'blind',
@@ -157,6 +167,9 @@ preverse = [
 'PLANTCONTROL/PLANTCONTROLHIT.FX',
 '/SCHOOLOFSHARKS_HIT.FX',
 'V_MAKO_SPIRITSHARK_CIRCLE_HIT',
+'SPIRTSHARKJAWS_CONDITIONAL.FX',
+'STRANGLERROOTS.FX',
+'ENERVATINGFIELDCONTINUING.FX'
 ]
 
 buffs = [
@@ -170,6 +183,19 @@ buffs = [
 'EMPOWERINGCIRCUITATK.FX',
 'INSULATINGCIRCUITATK.FX',
 'AMPUPATTACK.FX',
+]
+
+heals = [
+'heal other',
+'absorb pain',
+'rejuvenating circuit',
+'insulating circuit',
+'spirit ward'
+]
+
+absorbs = [
+'insulating circuit',
+'spirit ward'
 ]
 
 # common attacks - unused for anything atm
@@ -187,6 +213,9 @@ atks = [
 'BEAMRIFLE_CHARGEDSHOT.FX',
 'BEAMRIFLE_LANCERSHOT.FX',
 '/COMMAND2.FX',
+'/SCHOOLOFSHARKS_HIT.FX',
+'V_MAKO_SPIRITSHARK_CIRCLE_HIT',
+'PLANTCONTROL/PLANTCONTROLHIT.FX'
 ]
 
 
