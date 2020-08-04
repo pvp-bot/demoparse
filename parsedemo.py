@@ -129,9 +129,10 @@ with open(sys.argv[1],'r') as fp:
 		if action == 'MOV' and pid in player_ids:
 			if 'JUMP' in line[3]:
 				starttime = ms
+				if starttime < 1000:
 						starttime = 0
 
-		if action == 'POS' and pid in player_ids:
+		elif action == 'POS' and pid in player_ids:
 			if len(posstart) == 0:
 				posstart[pid] = np.array([float(line[3]),float(line[5]),float(line[4])]) # swapping game x,z,y to typical x,y,z
 				posids.append(pid)
@@ -206,12 +207,18 @@ with open(sys.argv[1],'r') as fp:
 				elif action == "TARGET" and line[3] == 'ENT' and players[pid].action != '':
 					tid = int(line[4])
 					if tid != pid and tid in player_ids: # if target is a player
-
+						players[pid].target = players[tid].name
 						if players[pid].team != players[tid].team:
 							players[tid].targetcount(t, pid, players)
 						else:
 							if players[pid].action in heals:
 								players[pid].healcount(t, players[tid])
+						if players[pid].reverse:
+							players[tid].target = players[pid].name
+							players[tid].action = players[pid].action
+							players[pid].action = ''
+							players[pid].target = ''
+							players[pid].reverse = False
 
 				elif action == 'PREVTARGET' and players[pid].reverse:
 					# strangler, ssj etc are dumb
