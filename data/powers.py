@@ -45,6 +45,7 @@ atk = { # fx from actor to target (includes buffs)
 
 	# ill
 	'ILLUSDECOY.FX':'phantom army',
+	'/SPECTRALTERROR/ILLUSTERRORCONTINUING.FX':'spectral terror',
 	'ILLUSIONCONTROL/ILLUSBLIND.FX':'blind', # attack and target? need to match up w/ MOV MOUTH
 
 	# plant
@@ -58,11 +59,14 @@ atk = { # fx from actor to target (includes buffs)
 	'EMPOWERINGCIRCUITATK.FX':'empowering circuit',
 	'INSULATINGCIRCUITATK.FX':'insulating circuit',
 	'AMPUPATTACK.FX':'amp up',
-	'WITCHESLIGHTNINGBOLTMEGA.FX':'shock',#?
+	'WITCHESLIGHTNINGBOLTMEGA.FX':'energizing circuit',#?
 	'ENERGYSINKCASTATTACK.FX':'shock',
 
 	#nature
 	'CORROSIVESAP.FX':'corrosive enzyme',
+	'/WILDBASTION.FX':'wild bastion',
+	'/OVERGROWTH.FX':'overgrowth',
+	'/REGROWTH2.FX':'regrowth',
 
 	# epics
 	'/COMMAND2.FX':'dominate',
@@ -71,7 +75,7 @@ atk = { # fx from actor to target (includes buffs)
 	'SPIRTSHARKJAWS_CONDITIONAL.FX': 'ssj',
 	'/HIBERNATE.FX':'hibernate',
 	'/HIBERNATE_CONTINUING.FX':'hibernate',
-	'FIRECONTROL/SOOT.FX':'char',
+	'/SOOT.FX':'char',
 	# '/EMBERSHITSOOTANDCINDERS.FX':'char', # hit?
 
 	# pools
@@ -85,11 +89,15 @@ atk = { # fx from actor to target (includes buffs)
 
 	# misc powerset
 	'FOSSILIZEHANDS.FX':'fossilize',
+	'/SHIVER.FX':'shiver',
+	'/CHILLBLAINSHANDS.FX':'chilblain',
+	'/THUNDEROUSBLAST.FX':'thunderous blast',
+	'/KININERTIALREDUCTIONS.FX':'ir',
+	'/KINSIPHONSPEED.FX':'siphon speed',
+
 	'AIM.FX':'aim',
 	'FOLLOWUPHIT4.FX':'build up', #'fiery embrace',
 	'AIM_ACTIVATION.FX':'aim',
-	'/THUNDEROUSBLAST.FX':'thunderous blast',
-
 
 	# misc generic
 	'ALIGNMENT_JUSTICE.FX':'call to justice',
