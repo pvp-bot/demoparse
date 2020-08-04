@@ -242,7 +242,7 @@ with open(sys.argv[1],'r') as fp:
 
 					# think this may be more accurate than the FX crey
 					# doesn't catch villain crey yet
-					if mov == 'DRAW_PISTOL' or mov == 'A_DRAW_PISTOL':
+					if 'DRAW_PISTOL' in mov or 'DRAW_WEAPONBACK' in mov: # WEAPONBACK might be shared with some other sets
 						players[pid].crey = players[pid].crey + 1
 						players[pid].action = 'crey pistol'
 

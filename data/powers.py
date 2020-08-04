@@ -34,6 +34,7 @@ atk = { # fx from actor to target (includes buffs)
 	# 'SHAREPAIN_ATTACK.FX':'share pain',
 	'SOOTH_ATTACK.FX':'heal other', # same thing
 	'SHAREPAIN_ATTACK.FX':'absorb pain',
+	'PAINBRINGER_ATTACK.FX':'painbringer',
 
 	# psn
 	'/POISONLIQUIDPROJECTILE.FX':'envenom',
@@ -46,6 +47,7 @@ atk = { # fx from actor to target (includes buffs)
 	# ill
 	'ILLUSDECOY.FX':'phantom army',
 	'/SPECTRALTERROR/ILLUSTERRORCONTINUING.FX':'spectral terror',
+	'/ILLUSDECIEVE.FX':'confuse',
 	'ILLUSIONCONTROL/ILLUSBLIND.FX':'blind', # attack and target? need to match up w/ MOV MOUTH
 
 	# plant
@@ -76,6 +78,7 @@ atk = { # fx from actor to target (includes buffs)
 	'/HIBERNATE.FX':'hibernate',
 	'/HIBERNATE_CONTINUING.FX':'hibernate',
 	'/SOOT.FX':'char',
+	'/BUILDUPPOWERBOOST.FX':'power boost',
 	# '/EMBERSHITSOOTANDCINDERS.FX':'char', # hit?
 
 	# pools
@@ -94,6 +97,9 @@ atk = { # fx from actor to target (includes buffs)
 	'/THUNDEROUSBLAST.FX':'thunderous blast',
 	'/KININERTIALREDUCTIONS.FX':'ir',
 	'/KINSIPHONSPEED.FX':'siphon speed',
+	'/KINTRANSFERENCE.FX':'transference',
+	'/EXECUTIONERSSHOT_ATTACK.FX':'executioner shot',
+	'/PIERCINGROUNDS_ATTACK.FX':'piercing rounds',
 
 	'AIM.FX':'aim',
 	'FOLLOWUPHIT4.FX':'build up', #'fiery embrace',
@@ -102,8 +108,11 @@ atk = { # fx from actor to target (includes buffs)
 	# misc generic
 	'ALIGNMENT_JUSTICE.FX':'call to justice',
 	# 'WEAPONS/LASER_PISTOL_1.FX':'crey pistol', # using MOV count
+	# '/STOLLEN_IMOBILIZER_PISTOL.FX':'crey pistol', #  'stollen'
 	'GEASTHEKINDONESCONTINUING.FX':'geas',
 	'/STAMINA.FX':'respite', # or other insp?
+	'/ALIGNMENT_FRENZY.FX':'frenzy', # or other insp?
+	'/TELEPORT_ATTACK.FX':'translocation', # MOV A_\TRANSLOCATION
 
 
 	# temp
@@ -156,6 +165,7 @@ hit = { # fx on target from actor (includes buffs)
 
 pmov = { # prepend with 'A_' for flying version
 'DRAW_PISTOL':'crey pistol',
+'DRAW_WEAPONBACK':'crey pistol', # vill
 'WALL':'ssj',
 'MOUTH':'blind',
 #'PLAYER_HITDEATH' # death anim
