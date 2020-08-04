@@ -223,10 +223,13 @@ with open(sys.argv[1],'r') as fp:
 				elif action == 'PREVTARGET' and players[pid].reverse:
 					# strangler, ssj etc are dumb
 					aid = int(line[4])
-					if aid in player_ids and aid != pid:
+					if players[aid].action != 'strangler': # if already reversed from the other hit marker, # or 'ssj'?
+						players[pid].action = ''
+					elif aid in player_ids and aid != pid:
 						players[aid].target = players[pid].name
 						players[aid].action = players[pid].action
-
+						players[pid].action = ''
+						
 						if players[pid].team != players[aid].team:
 							players[pid].targetcount(t, aid, players)
 
