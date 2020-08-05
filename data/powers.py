@@ -13,6 +13,11 @@ atk = { # fx from actor to target (includes buffs)
 	'ICEBLAST.FX':'ice blast',
 	'FREEZERAY.FX':'freeze ray',
 
+	# psi
+	'WILLDOMINATION.FX':'will dom',
+	'TELEKINETICBLAST.FX':'tk blast',
+	'PSIONICLANCEBLASTQUICK.FX':'psi lance',
+
 	# BEAMRIFLE_DISINTEGRATE
 	'BEAMRIFLE_DISINTEGRATE.FX':'disintegrate',
 	'BEAMRIFLE_CHARGEDSHOT.FX':'penetrating ray/charged shot',
@@ -49,6 +54,11 @@ atk = { # fx from actor to target (includes buffs)
 	'/SPECTRALTERROR/ILLUSTERRORCONTINUING.FX':'spectral terror',
 	'/ILLUSDECIEVE.FX':'confuse',
 	'ILLUSIONCONTROL/ILLUSBLIND.FX':'blind', # attack and target? need to match up w/ MOV MOUTH
+
+	# grav
+	'/GCDISTORTION.FX':'gravity distortion',
+	'/GCCRUSH_SINGULARITY.FX':'crush',
+	'/GCDIMENSIONSHIFT.FX':'dimension shift', # toggle on
 
 	# plant
 	# 'THORNS/BUILDUP_ATTACK.FX':'toxins',
@@ -101,6 +111,7 @@ atk = { # fx from actor to target (includes buffs)
 	'/KINTRANSFERENCE.FX':'transference',
 	'/EXECUTIONERSSHOT_ATTACK.FX':'executioner shot',
 	'/PIERCINGROUNDS_ATTACK.FX':'piercing rounds',
+	'/FORCEBOLT.FX':'force bolt',
 
 	'AIM.FX':'aim',
 	'FOLLOWUPHIT4.FX':'build up', #'fiery embrace',
@@ -188,7 +199,7 @@ preverse = [
 '/PLANTCONTROLHIT.FX',
 # '/SCHOOLOFSHARKS_HIT.FX',
 '/V_MAKO_SPIRITSHARK_CIRCLE_HIT',
-# 'SPIRTSHARKJAWS_CONDITIONAL.FX',
+'SPIRTSHARKJAWS_CONDITIONAL.FX',
 'STRANGLERROOTS.FX',
 'ENERVATINGFIELDCONTINUING.FX'
 ]
