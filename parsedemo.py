@@ -16,6 +16,8 @@ player_ids   = []
 player_list  = []
 players      = ''
 
+targets      = []
+
 match_map = ""
 starttime = 0 # in seconds
 
@@ -223,7 +225,7 @@ with open(sys.argv[1],'r') as fp:
 				elif action == 'PREVTARGET' and players[pid].reverse:
 					# strangler, ssj etc are dumb
 					aid = int(line[4])
-					if players[aid].action != 'strangler': # if already reversed from the other hit marker, # or 'ssj'?
+					if aid in player_ids and players[aid].action != 'strangler': # if already reversed from the other hit marker, # or 'ssj'?
 						players[pid].action = ''
 					elif aid in player_ids and aid != pid:
 						players[aid].target = players[pid].name
@@ -248,6 +250,8 @@ with open(sys.argv[1],'r') as fp:
 					if 'DRAW_PISTOL' in mov or 'DRAW_WEAPONBACK' in mov: # WEAPONBACK might be shared with some other sets
 						players[pid].crey = players[pid].crey + 1
 						players[pid].action = 'crey pistol'
+					# if 'WALL' in mov and players[pid].action == '':
+					# 	players[pid].action = 'ssj'
 
 
 			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))

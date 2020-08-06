@@ -71,8 +71,9 @@ atk = { # fx from actor to target (includes buffs)
 	'EMPOWERINGCIRCUITATK.FX':'empowering circuit',
 	'INSULATINGCIRCUITATK.FX':'insulating circuit',
 	'AMPUPATTACK.FX':'amp up',
-	'WITCHESLIGHTNINGBOLTMEGA.FX':'energizing circuit',#?
-	'ENERGYSINKCASTATTACK.FX':'shock',
+	'/ENERGIZINGCIRCUITATK.FX':'energizing circuit',
+	'WITCHESLIGHTNINGBOLTMEGA.FX':'shock',#?
+	'ENERGYSINKCASTATTACK.FX':'shock', #?
 
 	#nature
 	'CORROSIVESAP.FX':'corrosive enzyme',
@@ -82,7 +83,7 @@ atk = { # fx from actor to target (includes buffs)
 
 	# epics
 	'/COMMAND2.FX':'dominate',
-	# '/SCHOOLOFSHARKS_HIT.FX':'ssj', # not sure about this one
+	'/SCHOOLOFSHARKS_HIT.FX':'ssj', # not sure about this one
 	'V_MAKO_SPIRITSHARK_CIRCLE_HIT':'ssj',
 	'SPIRTSHARKJAWS_CONDITIONAL.FX': 'ssj',
 	'/HIBERNATE.FX':'hibernate',
@@ -98,7 +99,7 @@ atk = { # fx from actor to target (includes buffs)
 	'MYSTICFLIGHT.FX':'mystic/flight',
 	'/INVISPHASE_FASTCAST.FX':'phase shift',
 	'PHASESHIFT_ATTACK.FX':'phase shift',
-	'MEDICINE/MAID.FX':'aid other',
+	'MEDICINE/MAID.FX':'aid other', # or aid other
 	'/TELEPORT_ATTACK.FX':'translocation', # MOV A_\TRANSLOCATION
 
 	# misc powerset
@@ -122,9 +123,14 @@ atk = { # fx from actor to target (includes buffs)
 	# 'WEAPONS/LASER_PISTOL_1.FX':'crey pistol', # using MOV count
 	# '/STOLLEN_IMOBILIZER_PISTOL.FX':'crey pistol', #  'stollen'
 	'GEASTHEKINDONESCONTINUING.FX':'geas',
-	'/STAMINA.FX':'respite', # or other insp?
 	'/ALIGNMENT_FRENZY.FX':'frenzy', # or other insp?
 
+	# insps
+	'/STAMINA.FX':'green',
+	'/WILLPOWER.FX':'red',
+	'/INTELLIGENCE.FX':'blue',
+	'/STRENGTH.FX':'purple/orange',
+	'/AGILITY.FX':'yellow',
 
 	# temp
 	'WEBGRENADETHROW.FX':'web nade',
@@ -132,49 +138,59 @@ atk = { # fx from actor to target (includes buffs)
 }
 
 
-hit = { # fx on target from actor (includes buffs)
-# not used yet
+atkhit = { # fx on target from actor (includes buffs)
+	# not used yet
 
-# nature
-'CORROSIVESAP_HIT.FX':'corrosive enzyme',
+	# nature
+	'CORROSIVESAP_HIT.FX':'corrosive enzyme',
 
-# fire
-'BLAZE_HIT.FX':'blaze',
-'FIREBALLHITNO_RING.FX':'blaze',
-'BLAZINGBOLT_HIT.FX':'blazing bolt',
-'/INFERNO_ATTACK.FX':'inferno',
-'/FIREBLAST_ATTACK.FX':'fire blast',
-'/FLARES_ATTACK.FX':'flares',
+	# fire
+	'BLAZE_HIT.FX':'blaze',
+	'FIREBALLHITNO_RING.FX':'blaze',
+	'BLAZINGBOLT_HIT.FX':'blazing bolt',
+	'/INFERNO_ATTACK.FX':'inferno',
+	'/FIREBLAST_ATTACK.FX':'fire blast',
+	'/FLARES_ATTACK.FX':'flares',
 
-# ice
-'ICEBOLTHIT.FX':'bfr',
+	# ice
+	'ICEBOLTHIT.FX':'bfr',
 
-# plant
-'PLANTCONTROLHIT.FX':'strangler', # from TARGET
-'STRANGLERROOTS.FX': 'strangler', # from PREVTARGET
+	# plant
+	'PLANTCONTROLHIT.FX':'strangler', # from TARGET
+	'STRANGLERROOTS.FX': 'strangler', # from PREVTARGET
 
-# poison
-'POISONHITQUICK.FX':'envenom', # or weaken
+	# poison
+	'POISONHITQUICK.FX':'envenom', # or weaken
 
-# rad
-'ENERVATINGFIELDCONTINUING.FX': 'enervating field',
+	# rad
+	'ENERVATINGFIELDCONTINUING.FX': 'enervating field',
 
-# elec
-'INSULATINGCIRCUITHIT.FX':'insulating circuit',
-'DNASIPHON_HIT.FX':'shock', #?
+	# elec
+	'INSULATINGCIRCUITHIT.FX':'insulating circuit',
+	'DNASIPHON_HIT.FX':'shock', #?
 
-# epics
-'MINDCONTROLHIT.FX':'dominate',
-'CINDERSHIT.FX':'char',
-'EMBERSHITSOOTANDCINDERS.FX':'char',
-# 'SCHOOLOFSHARKS_HIT.FX':'ssj',
-'V_MAKO_SPIRITSHARK_CIRCLE_HIT.FX':'ssj',
-# 'SPIRTSHARKJAWS_CONDITIONAL.FX': 'ssj',
+	# epics
+	'MINDCONTROLHIT.FX':'dominate',
+	'CINDERSHIT.FX':'char',
+	'EMBERSHITSOOTANDCINDERS.FX':'char',
+	'SCHOOLOFSHARKS_HIT.FX':'ssj',
+	'V_MAKO_SPIRITSHARK_CIRCLE_HIT.FX':'ssj',
+	# 'SPIRTSHARKJAWS_CONDITIONAL.FX': 'ssj',
 
-# pools
-'SPIRITWARD_HIT.FX':'spirit ward',
 }
 
+healhit = {
+	# emp
+	'EMPATHY/HEALINGDRAINBALL.FX':'absorb pain',
+	'/HEALING.FX':'heal other', # or aid other
+
+	# elec
+	'/INSULATINGCIRCUITHIT.FX':'insulating circuit',
+	'/REJUVENATINGCIRCUITHIT.FX':'rejuvenating circuit',
+
+	# pools
+	'SPIRITWARD_HIT.FX':'spirit ward',
+}
 
 
 pmov = { # prepend with 'A_' for flying version
@@ -197,7 +213,7 @@ preverse = [
 
 #attacks - note this means misses for these powers don't get counted
 '/PLANTCONTROLHIT.FX',
-# '/SCHOOLOFSHARKS_HIT.FX',
+'/SCHOOLOFSHARKS_HIT.FX',
 '/V_MAKO_SPIRITSHARK_CIRCLE_HIT',
 'SPIRTSHARKJAWS_CONDITIONAL.FX',
 'STRANGLERROOTS.FX',
