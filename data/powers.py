@@ -75,6 +75,7 @@ atk = { # fx from actor to target (includes buffs)
 	'/ENERGIZINGCIRCUITATK.FX':'energizing circuit',
 	'WITCHESLIGHTNINGBOLTMEGA.FX':'shock',#?
 	'ENERGYSINKCASTATTACK.FX':'shock', #?
+	'/GALVANICSENTINELSUMMON.FX':'galvanic sentinel', #?
 
 	#nature
 	'CORROSIVESAP.FX':'corrosive enzyme',
@@ -101,11 +102,13 @@ atk = { # fx from actor to target (includes buffs)
 	'/INVISPHASE_FASTCAST.FX':'phase shift',
 	'PHASESHIFT_ATTACK.FX':'phase shift',
 	'MEDICINE/MAID.FX':'aid other', # or aid other
+	'AIDOTHER_ATTACK.FX':'aid other', # or aid other
 	'/TELEPORT_ATTACK.FX':'translocation', # MOV A_\TRANSLOCATION
 
 	# trick arrow
 	'/ARROW_NET.FX':'entangling arrow',
 	'/ARROW_STICKY.FX':'glue arrow',
+	'/ARROW_ACID.FX':'acid arrow',
 
 	# misc powerset
 	'FOSSILIZEHANDS.FX':'fossilize',
