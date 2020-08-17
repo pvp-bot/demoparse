@@ -5,6 +5,7 @@ atk = { # fx from actor to target (includes buffs)
 	'FIREBALL.FX':'blaze',
 	'BLAZINGBOLT_ATTACK.FX':'blazing bolt',
 	'/INFERNOBOLT.FX':'blazing bolt',
+	'FLARES_ATTACK.FX':'flares',
 
 	# ice
 	'BITTERFREEZERAY.FX':'bib', # misleading name
@@ -102,8 +103,13 @@ atk = { # fx from actor to target (includes buffs)
 	'MEDICINE/MAID.FX':'aid other', # or aid other
 	'/TELEPORT_ATTACK.FX':'translocation', # MOV A_\TRANSLOCATION
 
+	# trick arrow
+	'/ARROW_NET.FX':'entangling arrow',
+	'/ARROW_STICKY.FX':'glue arrow',
+
 	# misc powerset
 	'FOSSILIZEHANDS.FX':'fossilize',
+	'/STALAGMITESTOMP.FX':'stalagmites',
 	'/SHIVER.FX':'shiver',
 	'/CHILLBLAINSHANDS.FX':'chilblain',
 	'/THUNDEROUSBLAST.FX':'thunderous blast',
@@ -113,9 +119,13 @@ atk = { # fx from actor to target (includes buffs)
 	'/EXECUTIONERSSHOT_ATTACK.FX':'executioner shot',
 	'/PIERCINGROUNDS_ATTACK.FX':'piercing rounds',
 	'/FORCEBOLT.FX':'force bolt',
+	'/WATERJET.FX':'water jet',
+	'WATERJET_FAST.FX':'water jet',
+	'/DEHYDRATE.FX':'dehydrate',
 
 	'AIM.FX':'aim',
 	'FOLLOWUPHIT4.FX':'build up', #'fiery embrace',
+	'/TIDALFORCES.FX':'aim', #water
 	'AIM_ACTIVATION.FX':'aim',
 
 	# misc generic
@@ -124,6 +134,7 @@ atk = { # fx from actor to target (includes buffs)
 	# '/STOLLEN_IMOBILIZER_PISTOL.FX':'crey pistol', #  'stollen'
 	'GEASTHEKINDONESCONTINUING.FX':'geas',
 	'/ALIGNMENT_FRENZY.FX':'frenzy', # or other insp?
+	'/BRAWL_ATTACK.FX':'brawl',
 
 	# insps
 	'/STAMINA.FX':'green',
@@ -231,6 +242,7 @@ buffs = [
 'EMPOWERINGCIRCUITATK.FX',
 'INSULATINGCIRCUITATK.FX',
 'AMPUPATTACK.FX',
+'PAINBRINGER_ATTACK.FX',
 ]
 
 heals = [

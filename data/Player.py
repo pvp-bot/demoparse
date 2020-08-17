@@ -11,14 +11,18 @@ class Player:
 		self.hp = 0
 		self.lasthp = 0
 		self.deathtotal = 0
+		self.lastdeath = -14000
 		self.maxhp = 0.0
 
 		self.crey = 0
+		self.emote = 0
 
 		self.action = ''
 		self.target = ''
 		self.reverse = False
 		self.emp = False
+
+		self.at = ''
 
 		# being spiked
 		self.targetstart = -1
@@ -69,11 +73,11 @@ class Player:
 			else:
 				players[aid].late += 1
 
-	def targetcount(self, t, aid, players):
+	def targetcount(self, t, aid, players, jaunt=False):
 		if (self.targetstart == -1 or 					# first target
 			(t - self.targetstart) > targetcooldown or	# cooldown timer has elapsed
 			(self.attackcounter<targetminattacks and (t - self.targetstart) > targetwindow and len(self.targetattackers) < targetminattackers and not self.targetlock) # or previous attack was rogue damage from 1 person
-			):
+			) and not jaunt:
 			self.targetstart = t #start timer
 			self.attackcounter = 0
 			self.targetattackers = []
@@ -81,33 +85,39 @@ class Player:
 			self.healedby = []
 
 		timing = self.targettime(t)
-		if timing < targetwindow: #if within targeting window
-			self.attackcounter = self.attackcounter + 1 #increase the #attacks on
-			if self.targetlock:
+		
+		if jaunt and timing < targetwindow and self.attackcounter >= 1 and not self.targetlock:
+			self.targeted = self.targeted + 1
+			self.targetinstance = 1
+			self.targetlock = True
+		elif not jaunt:
+			if timing < targetwindow: #if within targeting window
+				self.attackcounter = self.attackcounter + 1 #increase the #attacks on
+				if self.targetlock:
+					players[aid].attacks += 1
+
+				if aid not in [i[0] for i in self.targetattackers]:
+					self.targetattackers.append([aid, t]) #add the actor to the attacker list
+					self._update_ontarget(t, aid, players)
+
+				for time, hid in self.absorbed:
+					if (self.targetstart - time) < predictspiketime: # absorb was fired before the spike
+						players[hid].predicts += 1
+				self.absorbed = []
+
+				if self.attackcounter >= targetminattacks and len(self.targetattackers) >= targetminattackers and not self.targetlock:
+					self.targeted = self.targeted + 1
+					self.targetinstance = 1
+					self.targetlock = True
+					if timing <= cleanspike:
+						self.cleanspiked += 1
+
+					for attacker, time in self.targetattackers:
+						self._update_ontarget(time, attacker, players)
+						players[attacker].attacks += 1
+			elif timing < targetcooldown and self.targetlock:
+				# count trash damage vs non-evaders as attacks on target
 				players[aid].attacks += 1
-
-			if aid not in [i[0] for i in self.targetattackers]:
-				self.targetattackers.append([aid, t]) #add the actor to the attacker list
-				self._update_ontarget(t, aid, players)
-
-			for time, hid in self.absorbed:
-				if (self.targetstart - time) < predictspiketime: # absorb was fired before the spike
-					players[hid].predicts += 1
-			self.absorbed = []
-
-			if self.attackcounter >= targetminattacks and len(self.targetattackers) >= targetminattackers and not self.targetlock:
-				self.targeted = self.targeted + 1
-				self.targetinstance = 1
-				self.targetlock = True
-				if timing <= cleanspike:
-					self.cleanspiked += 1
-
-				for attacker, time in self.targetattackers:
-					self._update_ontarget(time, attacker, players)
-					players[attacker].attacks += 1
-		elif timing < targetcooldown and self.targetlock:
-			# count trash damage vs non-evaders as attacks on target
-			players[aid].attacks += 1
 
 	def healcount(self, t, targetplayer):
 		if targetplayer.istargeted(t):

@@ -10,7 +10,7 @@ from data.Player import Player
 
 ms = 0          # demo time in ms
 t = 0           # demo time in seconds
-tick = 16       # tick rate to determine time stamps/time grouping, not the actual server ticks
+tick = 32       # tick rate to determine time stamps/time grouping, not the actual server ticks
 
 player_ids   = []
 player_list  = []
@@ -22,7 +22,7 @@ match_map = ""
 starttime = 0 # in seconds
 
 headers = ['time','actor','hp','deaths','team','action','target','targeted']
-
+emotecheck = 0
 
 
 with open(sys.argv[1],'r') as fp:
@@ -55,9 +55,9 @@ with open(sys.argv[1],'r') as fp:
 			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 		except:
 			print(count) # find broken lines
-		if len(player_list) == 16: # assuming 8v8 at most
-			print(f'found 16 players after {count} lines')
-			break
+		# if len(player_list) == 16: # assuming 8v8 at most # problem sometimes if spectating
+		# 	print(f'found 16 players after {count} lines')
+		# 	break
 		count = count + 1
 
 	players = dict(zip(player_ids,player_list))
@@ -194,8 +194,9 @@ with open(sys.argv[1],'r') as fp:
 
 					# you can have insta respawn deaths where the person doesn't go down to 0, happens a couple times a night, caught by MOV hopefully
 					# also deaths like 2 jaunts up probably aren't counted
-					if hp == 0 and players[pid].lasthp != 0:
+					if hp == 0 and players[pid].lasthp != 0  and (ms - players[pid].lastdeath) > 14000:
 						players[pid].death = 1
+						players[pid].lastdeath = ms
 						players[pid].deathtotal = players[pid].deathtotal + 1
 					players[pid].lasthp = hp
 
@@ -206,21 +207,26 @@ with open(sys.argv[1],'r') as fp:
 							players[pid].reverse = True
 						players[pid].action = atk[action]
 
-				elif action == "TARGET" and line[3] == 'ENT' and players[pid].action != '':
-					tid = int(line[4])
-					if tid != pid and tid in player_ids: # if target is a player
-						players[pid].target = players[tid].name
-						if players[pid].team != players[tid].team:
-							players[tid].targetcount(t, pid, players)
-						else:
-							if players[pid].action in heals:
-								players[pid].healcount(t, players[tid])
-						if players[pid].reverse:
-							players[tid].target = players[pid].name
-							players[tid].action = players[pid].action
-							players[pid].action = ''
-							players[pid].target = ''
-							players[pid].reverse = False
+				elif action == "TARGET" and players[pid].action != '':
+					if line[3] == 'ENT':
+						tid = int(line[4])
+						if tid != pid and tid in player_ids: # if target is a player
+							players[pid].target = players[tid].name
+							if players[pid].team != players[tid].team:
+								players[tid].targetcount(t, pid, players)
+							else:
+								if players[pid].action in heals:
+									players[pid].healcount(t, players[tid])
+							if players[pid].reverse:
+								players[tid].target = players[pid].name
+								players[tid].action = players[pid].action
+								players[pid].action = ''
+								players[pid].target = ''
+								players[pid].reverse = False
+								if players[pid].team != players[tid].team:
+									players[pid].targetcount(t, tid, players)
+					elif line[3] == 'POS' and players[pid].action == 'jaunt': # catch cases where you jaunt off 1 attack
+						players[pid].targetcount(t, pid, players, True)
 
 				elif action == 'PREVTARGET' and players[pid].reverse:
 					# strangler, ssj etc are dumb
@@ -239,8 +245,9 @@ with open(sys.argv[1],'r') as fp:
 					mov = line[3]
 
 					# this should hopefully catch most insta-respawn deaths w/o hp = 0
-					if mov == 'PLAYER_HITDEATH' and players[pid].lasthp != 0:
+					if mov == 'PLAYER_HITDEATH' and players[pid].lasthp != 0 and (ms - players[pid].lastdeath) > 14000:
 						players[pid].death = 1
+						players[pid].lastdeath = ms
 						players[pid].deathtotal = players[pid].deathtotal + 1
 						players[pid].hp = 0
 						players[pid].lasthp = 0
@@ -252,6 +259,11 @@ with open(sys.argv[1],'r') as fp:
 						players[pid].action = 'crey pistol'
 					# if 'WALL' in mov and players[pid].action == '':
 					# 	players[pid].action = 'ssj'
+
+					elif 'EMOTE' in mov: # WEAPONBACK might be shared with some other sets
+						players[pid].emote = players[pid].emote + 1
+						players[pid].action = 'emote'
+						emotecheck += 1
 
 
 			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
@@ -342,3 +354,5 @@ print("")
 print("SCORE: " + str(score1) + "-" + str(score2))
 print("TARGETS CALLED: " + str(targets1) + "-" + str(targets2))
 print('CLEAN SPIKES: ' + str(clean1) + '-' + str(clean2))
+if emotecheck > 0:
+	print('CHECK EMOTES: ' + str(emotecheck) + ' were used')
