@@ -79,9 +79,9 @@ with open(sys.argv[1],'r') as fp:
 	while line and count_players < num_players:
 		try:
 			pid = int(line[1])
+			action = line[2] # catches weird lines without anything on it
 		except:
 			pid = 0 # ignore special
-		action = line[2]
 
 		if action == 'FX' and pid in player_ids:
 			if any(substring for substring in buffs if substring in line[5]):
@@ -176,10 +176,11 @@ with open(sys.argv[1],'r') as fp:
 						csvw.writerow(csv_line)
 					p.reset()
 			t = t2
-			action = line[2]
+
 
 			try:
 				pid = int(line[1])
+				action = line[2]
 			except:
 				pid = 0 # ignore special
 

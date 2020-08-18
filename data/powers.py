@@ -75,7 +75,7 @@ atk = { # fx from actor to target (includes buffs)
 	'/ENERGIZINGCIRCUITATK.FX':'energizing circuit',
 	'WITCHESLIGHTNINGBOLTMEGA.FX':'shock',#?
 	'ENERGYSINKCASTATTACK.FX':'shock', #?
-	'/GALVANICSENTINELSUMMON.FX':'galvanic sentinel', #?
+	'/GALVANICSENTINELSUMMON.FX':'galvanic sentinel',
 
 	#nature
 	'CORROSIVESAP.FX':'corrosive enzyme',
@@ -232,6 +232,7 @@ preverse = [
 'SPIRTSHARKJAWS_CONDITIONAL.FX',
 'STRANGLERROOTS.FX',
 'ENERVATINGFIELDCONTINUING.FX'
+'/DEHYDRATE.FX',
 ]
 
 buffs = [
