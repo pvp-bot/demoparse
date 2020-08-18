@@ -214,7 +214,7 @@ with open(sys.argv[1],'r') as fp:
 						if tid != pid and tid in player_ids: # if target is a player
 							players[pid].target = players[tid].name
 							if players[pid].team != players[tid].team:
-								players[tid].targetcount(t, pid, players)
+								players[tid].targetcount(t, pid, players,players[pid].action)
 							else:
 								if players[pid].action in heals:
 									players[pid].healcount(t, players[tid])
@@ -225,9 +225,9 @@ with open(sys.argv[1],'r') as fp:
 								players[pid].target = ''
 								players[pid].reverse = False
 								if players[pid].team != players[tid].team:
-									players[pid].targetcount(t, tid, players)
+									players[pid].targetcount(t, tid, players,players[tid].action)
 					elif line[3] == 'POS' and players[pid].action == 'jaunt': # catch cases where you jaunt off 1 attack
-						players[pid].targetcount(t, pid, players, True)
+						players[pid].targetcount(t, pid, players, players[pid].action)
 
 				elif action == 'PREVTARGET' and players[pid].reverse:
 					# strangler, ssj etc are dumb
@@ -240,7 +240,7 @@ with open(sys.argv[1],'r') as fp:
 						players[pid].action = ''
 						
 						if players[pid].team != players[aid].team:
-							players[pid].targetcount(t, aid, players)
+							players[pid].targetcount(t, aid, players,players[aid].action)
 
 				elif action == "MOV":
 					mov = line[3]
@@ -278,9 +278,9 @@ print("map: " + match_map)
 
 print('\nlegend:')
 print(f'targeted: attacked by {targetminattacks} attacks spread across at least {targetminattackers} attackers in less than {targetwindow} seconds')
-print(f'clean: same as targeted except over {cleanspike} seconds')
-print(f'ontime: number of spikes joined within {cleanspike} seconds')
-print(f'late: number of spikes joined after {cleanspike} seconds')
+print(f'clean: same as targeted except over {cleanspiketime} seconds')
+print(f'ontime: number of spikes joined within {cleanspiketime} seconds')
+print(f'late: number of spikes joined after {cleanspiketime} seconds')
 print(f'timing: average time joining in on a spike')
 print(f'first: number of times player is the first to attack a target')
 print(f'apspike: short for attacks per spike, the average number of attacks the player throws on target')

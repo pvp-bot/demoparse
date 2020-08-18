@@ -1,4 +1,5 @@
 from data.powers import absorbs
+from data.powers import primaryattacks
 from data.config import *
 
 class Player:
@@ -28,6 +29,7 @@ class Player:
 		self.targetstart = -1
 		self.targetcooldown = 0
 		self.attackcounter = 0
+		self.primaryattackcounter = 0
 		self.targetattackers = []
 		self.targeted = 0
 		self.targetlock = False
@@ -68,31 +70,35 @@ class Player:
 			if self.targetattackers[0][0] == aid:
 				players[aid].first += 1
 
-			if timing <= cleanspike:
+			if timing <= cleanspiketime:
 				players[aid].ontime += 1
 			else:
 				players[aid].late += 1
 
-	def targetcount(self, t, aid, players, jaunt=False):
+	def targetcount(self, t, aid, players, action = ''):
 		if (self.targetstart == -1 or 					# first target
 			(t - self.targetstart) > targetcooldown or	# cooldown timer has elapsed
 			(self.attackcounter<targetminattacks and (t - self.targetstart) > targetwindow and len(self.targetattackers) < targetminattackers and not self.targetlock) # or previous attack was rogue damage from 1 person
-			) and not jaunt:
+			) and action != 'jaunt':
 			self.targetstart = t #start timer
 			self.attackcounter = 0
+			self.primaryattackcounter = 0 # to determine spikes only count "primary attacks" and not random extra damage
 			self.targetattackers = []
 			self.targetlock = False
+			self.cleanspikelock = False
 			self.healedby = []
 
 		timing = self.targettime(t)
 		
-		if jaunt and timing < targetwindow and self.attackcounter >= 1 and not self.targetlock:
+		if action == 'jaunt' and timing < targetwindow and self.primaryattackcounter >= 1 and not self.targetlock:
 			self.targeted = self.targeted + 1
 			self.targetinstance = 1
 			self.targetlock = True
-		elif not jaunt:
+		elif action != 'jaunt':
 			if timing < targetwindow: #if within targeting window
-				self.attackcounter = self.attackcounter + 1 #increase the #attacks on
+				self.attackcounter += 1 #increase the #attacks on
+				if action in primaryattacks:
+					self.primaryattackcounter += 1
 				if self.targetlock:
 					players[aid].attacks += 1
 
@@ -105,16 +111,16 @@ class Player:
 						players[hid].predicts += 1
 				self.absorbed = []
 
-				if self.attackcounter >= targetminattacks and len(self.targetattackers) >= targetminattackers and not self.targetlock:
+				if self.primaryattackcounter >= targetminattacks and len(self.targetattackers) >= targetminattackers and not self.targetlock:
 					self.targeted = self.targeted + 1
 					self.targetinstance = 1
 					self.targetlock = True
-					if timing <= cleanspike:
-						self.cleanspiked += 1
 
 					for attacker, time in self.targetattackers:
 						self._update_ontarget(time, attacker, players)
 						players[attacker].attacks += 1
+				if timing <= cleanspiketime and self.attackcounter == cleanspikecount:
+					self.cleanspiked += 1
 			elif timing < targetcooldown and self.targetlock:
 				# count trash damage vs non-evaders as attacks on target
 				players[aid].attacks += 1

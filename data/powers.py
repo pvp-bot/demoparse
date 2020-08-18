@@ -215,8 +215,17 @@ pmov = { # prepend with 'A_' for flying version
 #'PLAYER_HITDEATH' # death anim
 }
 
-
-
+# primary attacks for determining spike instances (i.e. ignore jaunts off flares or snipe only or w/e)
+primaryattacks = [
+	'envenom',
+	'corrosive enzyme',
+	'dominate',
+	'blaze',
+	'bib',
+	'lancer',
+	'char',
+	'penetrating ray/charged shot',
+]
 
 # generic FX by the actor - usage determined by target's FX
 preverse = [
