@@ -44,6 +44,7 @@ with open(sys.argv[1],'r') as fp:
 		if line[2] == "Map":
 			match_map = line[3]
 			match_map = match_map.split('/')[-1]
+			match_map = match_map.split('_')[1]
 		if line[2] == "NEW":
 			if pid not in player_ids and line[3] not in name_filter:
 				player_ids.append(pid)
@@ -166,6 +167,15 @@ with open(sys.argv[1],'r') as fp:
 	# main parsing loop
 	with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		csvw = csv.writer(csvfile, delimiter=',')
+		for key, p in players.items(): # print blu team first
+			if p.team == 'BLU':
+				csv_line = [-starttime/1000,p.name,'','',p.team,'','','',match_map]
+				csvw.writerow(csv_line)
+		for key, p in players.items(): # print blu team first
+			if p.team == 'RED':
+				csv_line = [-starttime/1000,p.name,'','',p.team]
+				csvw.writerow(csv_line)
+
 		while line and t < 605: # ignore data after match end with small buffer time
 			ms = ms + int(line[0]) # running demo time
 			t2 = round(ms*tick/1000)/tick # time in s rounded to the nearest server tick to organize data - user input tick
@@ -270,21 +280,29 @@ with open(sys.argv[1],'r') as fp:
 			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 			count = count + 1
 
-
+		for key, p in players.items(): # print blu team first
+			csv_line = [t,p.name,'','',p.team,'on time',p.ontime]
+			csvw.writerow(csv_line)
+			csv_line = [t,p.name,'','',p.team,'on late',p.late]
+			csvw.writerow(csv_line)
+			csv_line = [t,p.name,'','',p.team,'on time emp',p.ontargetheals]
+			csvw.writerow(csv_line)
+			csv_line = [t,p.name,'','',p.team,'attack timing',str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4]]
+			csvw.writerow(csv_line)
 
 
 print("\ndemo time " + str(round(t/60,2)) + " minutes")
 print("map: " + match_map)
 
-print('\nlegend:')
-print(f'targeted: attacked by {targetminattacks} attacks spread across at least {targetminattackers} attackers in less than {targetwindow} seconds')
-print(f'clean: same as targeted except over {cleanspiketime} seconds')
-print(f'ontime: number of spikes joined within {cleanspiketime} seconds')
-print(f'late: number of spikes joined after {cleanspiketime} seconds')
-print(f'timing: average time joining in on a spike')
-print(f'first: number of times player is the first to attack a target')
-print(f'apspike: short for attacks per spike, the average number of attacks the player throws on target')
-print('')
+# print('\nlegend:')
+# print(f'targeted: attacked by {targetminattacks} attacks spread across at least {targetminattackers} attackers in less than {targetwindow} seconds')
+# print(f'clean: same as targeted except over {cleanspiketime} seconds')
+# print(f'ontime: number of spikes joined within {cleanspiketime} seconds')
+# print(f'late: number of spikes joined after {cleanspiketime} seconds')
+# print(f'timing: average time joining in on a spike')
+# print(f'first: number of times player is the first to attack a target')
+# print(f'apspike: short for attacks per spike, the average number of attacks the player throws on target')
+# print('')
 
 score1 = 0
 clean1 = 0

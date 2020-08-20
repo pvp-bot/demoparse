@@ -78,9 +78,9 @@ class Player:
 	def targetcount(self, t, aid, players, action = ''):
 		if (self.targetstart == -1 or 					# first target
 			(t - self.targetstart) > targetcooldown or	# cooldown timer has elapsed
-			(self.attackcounter<targetminattacks and (t - self.targetstart) > targetwindow and len(self.targetattackers) < targetminattackers and not self.targetlock) # or previous attack was rogue damage from 1 person
+			(self.attackcounter<targetminattacks+1 and (t - self.targetstart) > targetwindow and len(self.targetattackers) < targetminattackers and not self.targetlock) # or previous attack was rogue damage from 1 person
 			) and action != 'jaunt':
-			self.targetstart = t #start timer
+			self.targetstart = t # restart timer
 			self.attackcounter = 0
 			self.primaryattackcounter = 0 # to determine spikes only count "primary attacks" and not random extra damage
 			self.targetattackers = []
