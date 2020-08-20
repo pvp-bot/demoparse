@@ -38,7 +38,7 @@ atk = { # fx from actor to target (includes buffs)
 	# pain
 	# 'SOOTH_ATTACK.FX':'soothe',
 	# 'SHAREPAIN_ATTACK.FX':'share pain',
-	'SOOTH_ATTACK.FX':'heal other', # same thing
+	'SOOTH_ATTACK.FX':'heal other', # just counting the same as emp for simplicity
 	'SHAREPAIN_ATTACK.FX':'absorb pain',
 	'PAINBRINGER_ATTACK.FX':'painbringer',
 
@@ -83,6 +83,11 @@ atk = { # fx from actor to target (includes buffs)
 	'/OVERGROWTH.FX':'overgrowth',
 	'/REGROWTH2.FX':'regrowth',
 
+	# trick arrow
+	'/ARROW_NET.FX':'entangling arrow',
+	'/ARROW_STICKY.FX':'glue arrow',
+	'/ARROW_ACID.FX':'acid arrow',
+
 	# epics
 	'/COMMAND2.FX':'dominate',
 	'/SCHOOLOFSHARKS_HIT.FX':'ssj', # not sure about this one
@@ -104,11 +109,6 @@ atk = { # fx from actor to target (includes buffs)
 	'MEDICINE/MAID.FX':'aid other', # or aid other
 	'AIDOTHER_ATTACK.FX':'aid other', # or aid other
 	'/TELEPORT_ATTACK.FX':'translocation', # MOV A_\TRANSLOCATION
-
-	# trick arrow
-	'/ARROW_NET.FX':'entangling arrow',
-	'/ARROW_STICKY.FX':'glue arrow',
-	'/ARROW_ACID.FX':'acid arrow',
 
 	# misc powerset
 	'FOSSILIZEHANDS.FX':'fossilize',
@@ -256,6 +256,9 @@ buffs = [
 'INSULATINGCIRCUITATK.FX',
 'AMPUPATTACK.FX',
 'PAINBRINGER_ATTACK.FX',
+'WILD_GROWTH_HIT.FX',
+'WILDBASTION_HIT.FX',
+'KINSPEEDBOOSTHIT.FX'
 ]
 
 heals = [
