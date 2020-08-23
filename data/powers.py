@@ -90,9 +90,9 @@ atk = { # fx from actor to target (includes buffs)
 
 	# epics
 	'/COMMAND2.FX':'dominate',
-	'/SCHOOLOFSHARKS_HIT.FX':'ssj', # not sure about this one
+	'SCHOOLOFSHARKS_HIT.FX':'ssj', # not sure about this one
 	'V_MAKO_SPIRITSHARK_CIRCLE_HIT':'ssj',
-	'SPIRTSHARKJAWS_CONDITIONAL.FX': 'ssj',
+	# 'SPIRTSHARKJAWS_CONDITIONAL.FX': 'ssj',
 	'/HIBERNATE.FX':'hibernate',
 	'/HIBERNATE_CONTINUING.FX':'hibernate',
 	'/SOOT.FX':'char',
@@ -187,9 +187,9 @@ atkhit = { # fx on target from actor (includes buffs)
 	'MINDCONTROLHIT.FX':'dominate',
 	'CINDERSHIT.FX':'char',
 	'EMBERSHITSOOTANDCINDERS.FX':'char',
-	'SCHOOLOFSHARKS_HIT.FX':'ssj',
+	# 'SCHOOLOFSHARKS_HIT.FX':'ssj',
 	'V_MAKO_SPIRITSHARK_CIRCLE_HIT.FX':'ssj',
-	# 'SPIRTSHARKJAWS_CONDITIONAL.FX': 'ssj',
+	'SPIRTSHARKJAWS_CONDITIONAL.FX': 'ssj',
 
 }
 
@@ -227,6 +227,20 @@ primaryattacks = [
 	'penetrating ray/charged shot',
 ]
 
+utility = [	# for filtering out not atk offense powers
+'shock',
+'entangling arrow',
+'weaken',
+'siphon speed',
+'transference',
+'force bolt',
+'web nade',
+'glue arrow',
+'confuse',
+
+]
+
+
 # generic FX by the actor - usage determined by target's FX
 preverse = [
 # buffs
@@ -236,9 +250,9 @@ preverse = [
 
 #attacks - note this means misses for these powers don't get counted
 '/PLANTCONTROLHIT.FX',
-'/SCHOOLOFSHARKS_HIT.FX',
+'SCHOOLOFSHARKS_HIT.FX',
 '/V_MAKO_SPIRITSHARK_CIRCLE_HIT',
-'SPIRTSHARKJAWS_CONDITIONAL.FX',
+# 'SPIRTSHARKJAWS_CONDITIONAL.FX',
 'STRANGLERROOTS.FX',
 'ENERVATINGFIELDCONTINUING.FX'
 '/DEHYDRATE.FX',
@@ -274,30 +288,9 @@ absorbs = [
 'spirit ward'
 ]
 
-# common attacks - unused for anything atm
-atks = [
-'BLAZE_ATTACK.FX',
-'FIREBALL.FX',
-'BLAZINGBOLT_ATTACK.FX',
-'/INFERNOBOLT.FX',
-'BITTERFREEZERAY.FX',
-'BITTERICEBOLT.FX',
-'BITTERFREEZEBOLT.FX',
-'ICEBLAST.FX',
-'FREEZERAY.FX',
-'BEAMRIFLE_DISINTEGRATE.FX',
-'BEAMRIFLE_CHARGEDSHOT.FX',
-'BEAMRIFLE_LANCERSHOT.FX',
-'/COMMAND2.FX',
-'/SCHOOLOFSHARKS_HIT.FX',
-'V_MAKO_SPIRITSHARK_CIRCLE_HIT',
-'PLANTCONTROL/PLANTCONTROLHIT.FX'
-]
-
-
 npc = [
-'NPC',
-'EntTypeFile',
+	'NPC',
+	'EntTypeFile',
 ]
 
 # filter out non-player entities - issues if player name = one of these

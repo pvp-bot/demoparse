@@ -4,13 +4,13 @@ import sys
 import math
 import numpy as np
 
-from data.powers import atk, preverse, heals, npc, name_filter, buffs
+from data.powers import atk, preverse, heals, npc, name_filter, buffs, utility
 from data.config import *
 from data.Player import Player
 
 ms = 0          # demo time in ms
 t = 0           # demo time in seconds
-tick = 32       # tick rate to determine time stamps/time grouping, not the actual server ticks
+tick = 0       # tick rate to determine time stamps/time grouping, not the actual server ticks
 
 player_ids   = []
 player_list  = []
@@ -21,9 +21,10 @@ targets      = []
 match_map = ""
 starttime = 0 # in seconds
 
-headers = ['time','actor','hp','deaths','team','action','target','targeted']
+headers = ['time','actor','hp','deaths','team','action','target','targeted','demoline']
 emotecheck = 0
-
+lastactor = 0
+writeline = False
 
 with open(sys.argv[1],'r') as fp:
 
@@ -56,9 +57,6 @@ with open(sys.argv[1],'r') as fp:
 			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 		except:
 			print(count) # find broken lines
-		# if len(player_list) == 16: # assuming 8v8 at most # problem sometimes if spectating
-		# 	print(f'found 16 players after {count} lines')
-		# 	break
 		count = count + 1
 
 	players = dict(zip(player_ids,player_list))
@@ -73,7 +71,6 @@ with open(sys.argv[1],'r') as fp:
 
 	# loop for assigning teams
 	# assumes at least 1 buff-type power is thrown in the match per person
-	# also assumes no confused buffs thrown, hmmm
 	num_players   = len(player_ids)
 	count_players = 0
 	buff_count	  = 0
@@ -164,7 +161,12 @@ with open(sys.argv[1],'r') as fp:
 	count = 0
 	line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 
-	# main parsing loop
+	# #################
+	# #################
+	# MAIN PARSING LOOP
+	# #################
+	# #################
+
 	with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		csvw = csv.writer(csvfile, delimiter=',')
 		for key, p in players.items(): # print blu team first
@@ -178,13 +180,13 @@ with open(sys.argv[1],'r') as fp:
 
 		while line and t < 605: # ignore data after match end with small buffer time
 			ms = ms + int(line[0]) # running demo time
-			t2 = round(ms*tick/1000)/tick # time in s rounded to the nearest server tick to organize data - user input tick
-			if t2 > t:
+			t2 = (ms/1000) # to seconds
+			if t2 > t or writeline:
 				for key, p in players.items():
-					csv_line = [t,p.name,p.hp,p.death,p.team,p.action,p.target,p.targetinstance]
-					if p.hp != '' or p.death != '' or p.action  != '' or p.targetinstance == 1:
+					csv_line = [t,p.name,p.hp,p.death,p.team,p.action,p.target,p.targetinstance,count]
+					if p.hp != '' or p.death != '' or p.action  != '' or p.target != '' or p.targetinstance == 1:
 						csvw.writerow(csv_line)
-					p.reset()
+						p.reset()
 			t = t2
 
 
@@ -194,12 +196,14 @@ with open(sys.argv[1],'r') as fp:
 			except:
 				pid = 0 # ignore special
 
-
 			if pid in players:
-				if action == "POS" and players[pid].team == '':
-					pass # todo use starting pos to get end of buff cycle
 
-				elif action == "HP":
+				if writeline: # write to csv if new action but team hasn't elapsed
+					players[lastactor].reset()
+					writeline = False
+				lastactor = pid
+
+				if action == "HP":
 					hp  = float(line[3])
 					players[pid].hp = hp
 
@@ -223,12 +227,12 @@ with open(sys.argv[1],'r') as fp:
 						tid = int(line[4])
 						if tid != pid and tid in player_ids: # if target is a player
 							players[pid].target = players[tid].name
-							if players[pid].team != players[tid].team:
+
+							if players[pid].team != players[tid].team and players[pid].action not in utility and not players[pid].reverse:
+								if pid == 28 and players[pid].action == '':
+									print(count)
 								players[tid].targetcount(t, pid, players,players[pid].action)
-							else:
-								if players[pid].action in heals:
-									players[pid].healcount(t, players[tid])
-							if players[pid].reverse:
+							elif players[pid].reverse:
 								players[tid].target = players[pid].name
 								players[tid].action = players[pid].action
 								players[pid].action = ''
@@ -236,21 +240,35 @@ with open(sys.argv[1],'r') as fp:
 								players[pid].reverse = False
 								if players[pid].team != players[tid].team:
 									players[pid].targetcount(t, tid, players,players[tid].action)
-					elif line[3] == 'POS' and players[pid].action == 'jaunt': # catch cases where you jaunt off 1 attack
-						players[pid].targetcount(t, pid, players, players[pid].action)
+							else:
+								if players[pid].action in heals:
+									players[pid].healcount(t, players[tid])
 
-				elif action == 'PREVTARGET' and players[pid].reverse:
-					# strangler, ssj etc are dumb
-					aid = int(line[4])
-					if aid in player_ids and players[aid].action != 'strangler': # if already reversed from the other hit marker, # or 'ssj'?
-						players[pid].action = ''
-					elif aid in player_ids and aid != pid:
-						players[aid].target = players[pid].name
-						players[aid].action = players[pid].action
-						players[pid].action = ''
-						
-						if players[pid].team != players[aid].team:
-							players[pid].targetcount(t, aid, players,players[aid].action)
+					elif line[3] == 'POS':
+						if players[pid].action == 'jaunt': # catch cases where you jaunt off 1 attack
+							players[pid].lastjaunt = t
+							players[pid].jauntoffone(t)
+						players[pid].target = '!pos'
+						writeline = True
+
+				elif action == "PREVTARGET":
+					if line[3] == 'ENT' and players[pid].action != '':
+						tid = int(line[4])
+						if tid != pid and tid in player_ids:
+							players[pid].target = players[tid].name
+							if players[pid].reverse and players[pid] != tid:
+								players[tid].target = players[pid].name
+								players[tid].action = players[pid].action
+								players[pid].action = ''
+								players[pid].target = ''
+								players[pid].reverse = False
+								if players[pid].team != players[tid].team:
+									players[pid].targetcount(t, tid, players,players[tid].action)
+					writeline = True
+					
+
+
+
 
 				elif action == "MOV":
 					mov = line[3]
@@ -281,28 +299,23 @@ with open(sys.argv[1],'r') as fp:
 			count = count + 1
 
 		for key, p in players.items(): # print blu team first
-			csv_line = [t,p.name,'','',p.team,'on time',p.ontime]
+			csv_line = [t,p.name,'','',p.team,'on target',p.ontarget]
 			csvw.writerow(csv_line)
-			csv_line = [t,p.name,'','',p.team,'on late',p.late]
+			csv_line = [t,p.name,'','',p.team,'first',p.first]
 			csvw.writerow(csv_line)
-			csv_line = [t,p.name,'','',p.team,'on time emp',p.ontargetheals]
+			csv_line = [t,p.name,'','',p.team,'attack timing avg',str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4]]
 			csvw.writerow(csv_line)
-			csv_line = [t,p.name,'','',p.team,'attack timing',str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4]]
+			divontarget = max(p.ontarget,1)
+			csv_line = [t,p.name,'','',p.team,'atk per spike avg',p.attacks / divontarget]
 			csvw.writerow(csv_line)
 
 
-print("\ndemo time " + str(round(t/60,2)) + " minutes")
+for pid in player_ids: # clean up, if target at end of match
+	if players[pid].istarget:
+		players[pid].resettargetcount(players)
+
+print("\ndemo time " + str(round((t+starttime/1000)/60,2)) + " minutes")
 print("map: " + match_map)
-
-# print('\nlegend:')
-# print(f'targeted: attacked by {targetminattacks} attacks spread across at least {targetminattackers} attackers in less than {targetwindow} seconds')
-# print(f'clean: same as targeted except over {cleanspiketime} seconds')
-# print(f'ontime: number of spikes joined within {cleanspiketime} seconds')
-# print(f'late: number of spikes joined after {cleanspiketime} seconds')
-# print(f'timing: average time joining in on a spike')
-# print(f'first: number of times player is the first to attack a target')
-# print(f'apspike: short for attacks per spike, the average number of attacks the player throws on target')
-# print('')
 
 score1 = 0
 clean1 = 0
@@ -326,7 +339,7 @@ def print_table(headers, content):
 
 	print('')
 
-offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'targeted', 'clean', 'ontime', 'late', 'timing', 'first', 'apspike']
+offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'targeted', '', 'ontarget', '', 'timing', 'first', 'apspike']
 offence_content = []
 healer_headers = ['team', '{:<20}'.format('name'), 'ontarget', 'timing', 'topups', "AP's", 'predicts']
 healer_content = []
@@ -348,11 +361,11 @@ for p in sorted(players.values(), key=lambda i: i.team):
 		p.deathtotal,
 		p.targeted,
 		p.cleanspiked,
-		p.ontime,
+		p.ontarget,
 		p.late,
 		str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4],
 		p.first,
-		str(p.attacks / max(p.ontime + p.late, 1))[:4]
+		str(p.attacks / max(p.ontarget, 1))[:4]
 	])
 
 	if p.ontargetheals or p.topups:
@@ -372,6 +385,6 @@ print_table(healer_headers, healer_content)
 print("")
 print("SCORE: " + str(score1) + "-" + str(score2))
 print("TARGETS CALLED: " + str(targets1) + "-" + str(targets2))
-print('CLEAN SPIKES: ' + str(clean1) + '-' + str(clean2))
+# print('CLEAN SPIKES: ' + str(clean1) + '-' + str(clean2))
 if emotecheck > 0:
 	print('CHECK EMOTES: ' + str(emotecheck) + ' were used')

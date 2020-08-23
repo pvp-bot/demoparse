@@ -37,6 +37,14 @@ class Player:
 		self.cleanspiked = 0
 		self.absorbed = [] # List[[time, pid]] where time is when the absorb was placed, pid was the player who placed it
 
+		# new spike count system
+		self.recentattacks = []
+		self.recentprimaryattacks = []
+		self.lastjaunt = False
+		self.istarget = False
+		self.ontarget = 0
+
+
 		# spiking someone else
 		self.ontime = 0
 		self.late = 0
@@ -65,17 +73,93 @@ class Player:
 
 	def _update_ontarget(self, t, aid, players):
 		timing = (t - self.targetstart)
-		if self.targetlock: # its actually a spike
-			players[aid].spiketiming.append(timing)
-			if self.targetattackers[0][0] == aid:
-				players[aid].first += 1
+		players[aid].spiketiming.append(timing)
+		players[aid].ontarget += 1
 
-			if timing <= cleanspiketime:
-				players[aid].ontime += 1
+	def isrecent(self,time,attacktime):
+		t = time-attacktime
+		if self.istarget:
+			window = targetcooldown
+		else:
+			window = targetwindow
+
+		if t < window:
+			return True
+		else:
+			return False
+
+	def resettargetcount(self, players):
+		players[self.targetattackers[0]].first += 1
+		for atk in self.recentattacks:
+			players[atk[1]].attacks += 1
+		for aid in self.targetattackers:
+			timing = 605 # large number to catch error in output
+			for atk in self.recentattacks:
+				if atk[1] == aid:
+					timing = min(timing,atk[0])
+			self._update_ontarget(timing, aid, players)
+
+		self.targetstart = False # restart timer
+		self.recentattacks = []
+		self.recentprimaryattacks = []
+		self.targetattackers = []
+		self.istarget = False
+
+	def inittarget(self):
+		self.istarget = True
+		self.targeted += 1
+		self.targetinstance = 1 # for spreadsheet
+		if len(self.recentprimaryattacks) > 0:
+			self.targetstart = self.recentprimaryattacks[0][0]
+		else:
+			self.targetstart = self.recentattacks[0][0]
+		for atk in self.recentattacks:
+			if atk[1] not in self.targetattackers:
+				self.targetattackers.append(atk[1])
+
+	def jauntoffone(self,t): # count as target if jaunt off single primary attack
+		if not self.istarget and len(self.recentprimaryattacks) == 1 and (t-self.recentprimaryattacks[0][0]) <= targetwindow: # with 1 sec of atk
+			self.inittarget()
+
+	def targetcount(self,t,aid,players,action):
+
+		if self.istarget: # if already target
+			if t-self.targetstart >= targetcooldown: # if we're over the target window
+				self.resettargetcount(players)
 			else:
-				players[aid].late += 1
+				self.recentattacks.append([t,aid,action]) # add the atk
+				for atk in self.recentattacks:
+					if atk[1] not in self.targetattackers: # add the atkr if needed
+						self.targetattackers.append(atk[1])
+			
 
-	def targetcount(self, t, aid, players, action = ''):
+		if not self.istarget:
+			self.recentattacks.append([t,aid,action]) # add the atk
+			if action in primaryattacks:
+				self.recentprimaryattacks.append([t,aid,action])
+
+			self.recentattacks = [x for x in self.recentattacks if self.isrecent(t,x[0])] # remove recent attacks outside window
+			self.recentprimaryattacks = [x for x in self.recentprimaryattacks if self.isrecent(t,x[0])]
+
+			self.targetattackers = []
+			for atk in self.recentattacks:
+				if atk[1] not in self.targetattackers: # add the atkr if needed
+					self.targetattackers.append(atk[1])
+
+			if  (
+				len(self.targetattackers) >= targetminattackers and not self.istarget and # at least 2 people on target and not already target
+				(((2*len(self.recentprimaryattacks) + len(self.recentattacks))/2.9>= targetminattacks) # if min 2 primary attacks (weighted)
+				# or (len(self.recentattacks) >= targetminattacks*2) # or if people throw at least 4x trash damage on someone i.e. 4 BBs on emp at same time
+				or (len(self.recentprimaryattacks) == targetminattacks/2 and t-self.lastjaunt < targetwindow/2) # if jaunt slightly before primary atk activated				# or (len(self.recentprimaryattacks) >= targetminattacks-1 and len(self.recentattacks) >= targetminattacks+2) # if 1
+				)):
+				
+				self.inittarget()
+
+
+
+	def old_targetcount(self, t, aid, players, action = ''):
+
+
 		if (self.targetstart == -1 or 					# first target
 			(t - self.targetstart) > targetcooldown or	# cooldown timer has elapsed
 			(self.attackcounter<targetminattacks+1 and (t - self.targetstart) > targetwindow and len(self.targetattackers) < targetminattackers and not self.targetlock) # or previous attack was rogue damage from 1 person
@@ -94,13 +178,19 @@ class Player:
 			self.targeted = self.targeted + 1
 			self.targetinstance = 1
 			self.targetlock = True
+			for attacker, time in self.targetattackers:
+				self._update_ontarget(time, attacker, players)
+				players[attacker].attacks += 1
+
 		elif action != 'jaunt':
 			if timing < targetwindow: #if within targeting window
 				self.attackcounter += 1 #increase the #attacks on
+
 				if action in primaryattacks:
-					self.primaryattackcounter += 1
+					self.primaryattackcounter += 1 # increase 'primary' attack count
+
 				if self.targetlock:
-					players[aid].attacks += 1
+					players[aid].attacks += 1 # increase atk count of attacker
 
 				if aid not in [i[0] for i in self.targetattackers]:
 					self.targetattackers.append([aid, t]) #add the actor to the attacker list
@@ -111,16 +201,17 @@ class Player:
 						players[hid].predicts += 1
 				self.absorbed = []
 
-				if self.primaryattackcounter >= targetminattacks and len(self.targetattackers) >= targetminattackers and not self.targetlock:
+				if (self.primaryattackcounter >= targetminattacks or self.attackcounter >= 4) and len(self.targetattackers) >= targetminattackers and not self.targetlock:
 					self.targeted = self.targeted + 1
 					self.targetinstance = 1
 					self.targetlock = True
-
 					for attacker, time in self.targetattackers:
 						self._update_ontarget(time, attacker, players)
 						players[attacker].attacks += 1
+
 				if timing <= cleanspiketime and self.attackcounter == cleanspikecount:
 					self.cleanspiked += 1
+
 			elif timing < targetcooldown and self.targetlock:
 				# count trash damage vs non-evaders as attacks on target
 				players[aid].attacks += 1
