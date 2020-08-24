@@ -1,5 +1,5 @@
 # in seconds
-targetwindow = 3   # time window for min attacks to count a spike
+targetwindow = 2   # time window for min attacks to count a spike
 cleanspiketime = 0.8 # time window for a spike to be considered clean
 cleanspikecount = 3 # number on target to be clean
 targetcooldown = 9 # max spike time

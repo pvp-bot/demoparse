@@ -43,6 +43,7 @@ class Player:
 		self.lastjaunt = False
 		self.istarget = False
 		self.ontarget = 0
+		self.resets = 0
 
 
 		# spiking someone else

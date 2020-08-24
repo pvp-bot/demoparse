@@ -10,7 +10,6 @@ from data.Player import Player
 
 ms = 0          # demo time in ms
 t = 0           # demo time in seconds
-tick = 0       # tick rate to determine time stamps/time grouping, not the actual server ticks
 
 player_ids   = []
 player_list  = []
@@ -21,10 +20,11 @@ targets      = []
 match_map = ""
 starttime = 0 # in seconds
 
-headers = ['time','actor','hp','deaths','team','action','target','targeted','demoline']
+headers = ['time','actor','hp','deaths','team','action','target','targeted','demoline','line uid']
 emotecheck = 0
 lastactor = 0
 writeline = False
+lasttarget = {'BLU':'','RED':''}
 
 with open(sys.argv[1],'r') as fp:
 
@@ -160,6 +160,7 @@ with open(sys.argv[1],'r') as fp:
 	ms = -starttime
 	count = 0
 	line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
+	lineuid = 0
 
 	# #################
 	# #################
@@ -183,9 +184,10 @@ with open(sys.argv[1],'r') as fp:
 			t2 = (ms/1000) # to seconds
 			if t2 > t or writeline:
 				for key, p in players.items():
-					csv_line = [t,p.name,p.hp,p.death,p.team,p.action,p.target,p.targetinstance,count]
+					csv_line = [t,p.name,p.hp,p.death,p.team,p.action,p.target,p.targetinstance,count,lineuid]
 					if p.hp != '' or p.death != '' or p.action  != '' or p.target != '' or p.targetinstance == 1:
 						csvw.writerow(csv_line)
+						lineuid += 1
 						p.reset()
 			t = t2
 
@@ -266,9 +268,6 @@ with open(sys.argv[1],'r') as fp:
 									players[pid].targetcount(t, tid, players,players[tid].action)
 					writeline = True
 					
-
-
-
 
 				elif action == "MOV":
 					mov = line[3]
