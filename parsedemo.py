@@ -179,7 +179,7 @@ with open(sys.argv[1],'r') as fp:
 				csv_line = [-starttime/1000,p.name,'','',p.team]
 				csvw.writerow(csv_line)
 
-		while line and t < 605: # ignore data after match end with small buffer time
+		while line and t <= matchtime: # ignore data after match end with small buffer time
 			ms = ms + int(line[0]) # running demo time
 			t2 = (ms/1000) # to seconds
 			if t2 > t or writeline:
@@ -254,18 +254,18 @@ with open(sys.argv[1],'r') as fp:
 						writeline = True
 
 				elif action == "PREVTARGET":
-					if line[3] == 'ENT' and players[pid].action != '':
-						tid = int(line[4])
-						if tid != pid and tid in player_ids:
-							players[pid].target = players[tid].name
-							if players[pid].reverse and players[pid] != tid:
-								players[tid].target = players[pid].name
-								players[tid].action = players[pid].action
-								players[pid].action = ''
-								players[pid].target = ''
-								players[pid].reverse = False
-								if players[pid].team != players[tid].team:
-									players[pid].targetcount(t, tid, players,players[tid].action)
+					# if line[3] == 'ENT' and players[pid].action != '':
+					# 	tid = int(line[4])
+					# 	if tid != pid and tid in player_ids:
+					# 		players[pid].target = players[tid].name
+					# 		if players[pid].reverse and players[pid] != tid:
+					# 			players[tid].target = players[pid].name
+					# 			players[tid].action = players[pid].action
+					# 			players[pid].action = ''
+					# 			players[pid].target = ''
+					# 			players[pid].reverse = False
+					# 			if players[pid].team != players[tid].team:
+					# 				players[pid].targetcount(t, tid, players,players[tid].action)
 					writeline = True
 					
 
@@ -297,21 +297,31 @@ with open(sys.argv[1],'r') as fp:
 			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 			count = count + 1
 
-		for key, p in players.items(): # print blu team first
-			csv_line = [t,p.name,'','',p.team,'on target',p.ontarget]
-			csvw.writerow(csv_line)
-			csv_line = [t,p.name,'','',p.team,'first',p.first]
-			csvw.writerow(csv_line)
-			csv_line = [t,p.name,'','',p.team,'attack timing avg',str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4]]
-			csvw.writerow(csv_line)
-			divontarget = max(p.ontarget,1)
-			csv_line = [t,p.name,'','',p.team,'atk per spike avg',p.attacks / divontarget]
-			csvw.writerow(csv_line)
+
 
 
 for pid in player_ids: # clean up, if target at end of match
 	if players[pid].istarget:
 		players[pid].resettargetcount(players)
+
+with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
+	csvw = csv.writer(csvfile, delimiter=',')
+	for key, p in players.items(): # append stats
+		# start and end points for time graphing
+		csv_line = [0,p.name,'',0]
+		csvw.writerow(csv_line)
+		csv_line = [matchtime,p.name,'',0]
+		csvw.writerow(csv_line)
+
+		csv_line = [t,p.name,'','',p.team,'on target',p.ontarget]
+		csvw.writerow(csv_line)
+		csv_line = [t,p.name,'','',p.team,'first',p.first]
+		csvw.writerow(csv_line)
+		csv_line = [t,p.name,'','',p.team,'attack timing avg',str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4]]
+		csvw.writerow(csv_line)
+		divontarget = max(p.ontarget,1)
+		csv_line = [t,p.name,'','',p.team,'atk per spike avg',p.attacks / divontarget]
+		csvw.writerow(csv_line)
 
 print("\ndemo time " + str(round((t+starttime/1000)/60,2)) + " minutes")
 print("map: " + match_map)
