@@ -125,6 +125,9 @@ atk = { # fx from actor to target (includes buffs)
 	'/WATERJET.FX':'water jet',
 	'WATERJET_FAST.FX':'water jet',
 	'/DEHYDRATE.FX':'dehydrate',
+	'POWERPUSH.FX':'power push',
+	'ENERGYBLAST/MEGA.FX':'power burst', #?!
+	'ENERGYBLAST/SNIPERBLAST_QUICK.FX':'sniper blast', 
 
 	'AIM.FX':'aim',
 	'FOLLOWUPHIT4.FX':'build up', #'fiery embrace',
