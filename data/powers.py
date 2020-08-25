@@ -64,8 +64,8 @@ atk = { # fx from actor to target (includes buffs)
 	# plant
 	# 'THORNS/BUILDUP_ATTACK.FX':'toxins',
 	'THORNS/BUILDUP_ATTACK.FX':'build up',
-	'PLANTCONTROL/PLANTCONTROLHIT.FX':'strangler',
-	'STRANGLERROOTS.FX': 'strangler',
+	'PLANTCONTROLHIT.FX':'strangler', # shared with plant control
+	# 'STRANGLERROOTS.FX': 'strangler', # doesn't spawn on every strangler
 
 	# elec
 	'REJUVENATINGCIRCUITATK.FX':'rejuvenating circuit',
@@ -174,7 +174,7 @@ atkhit = { # fx on target from actor (includes buffs)
 
 	# plant
 	'PLANTCONTROLHIT.FX':'strangler', # from TARGET
-	'STRANGLERROOTS.FX': 'strangler', # from PREVTARGET
+	# 'STRANGLERROOTS.FX': 'strangler', # from PREVTARGET
 
 	# poison
 	'POISONHITQUICK.FX':'envenom', # or weaken
@@ -255,8 +255,7 @@ preverse = [
 '/PLANTCONTROLHIT.FX',
 'SCHOOLOFSHARKS_HIT.FX',
 '/V_MAKO_SPIRITSHARK_CIRCLE_HIT',
-# 'SPIRTSHARKJAWS_CONDITIONAL.FX',
-'STRANGLERROOTS.FX',
+
 'ENERVATINGFIELDCONTINUING.FX'
 '/DEHYDRATE.FX',
 ]

@@ -94,7 +94,7 @@ class Player:
 		for atk in self.recentattacks:
 			players[atk[1]].attacks += 1
 		for aid in self.targetattackers:
-			timing = 605 # large number to catch error in output
+			timing = matchtime # large number to catch error in output
 			for atk in self.recentattacks:
 				if atk[1] == aid:
 					timing = min(timing,atk[0])
