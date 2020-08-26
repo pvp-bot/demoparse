@@ -40,17 +40,18 @@ with open(sys.argv[1],'r') as fp:
 	while line and count < 30000: # 30k should be enough to find all players
 		try:
 			pid = int(line[1]) # player ID
+			action = line[2]
 		except:
 			pid = 0 # ignore special actors like CAM
 		if line[2] == "Map":
 			match_map = line[3]
 			match_map = match_map.split('/')[-1]
 			match_map = match_map.split('_')[1]
-		if line[2] == "NEW":
+		if action == "NEW":
 			if pid not in player_ids and line[3] not in name_filter:
 				player_ids.append(pid)
 				player_list.append(Player(line[3],pid))
-		if line[2] in npc and pid in player_ids: #
+		if action in npc and pid in player_ids: #
 			del player_ids[-1]
 			del player_list[-1]
 		try:
@@ -80,7 +81,7 @@ with open(sys.argv[1],'r') as fp:
 			action = line[2] # catches weird lines without anything on it
 		except:
 			pid = 0 # ignore special
-
+			action = ''
 		if action == 'FX' and pid in player_ids:
 			if any(substring for substring in buffs if substring in line[5]):
 				buff_count = count
@@ -121,10 +122,10 @@ with open(sys.argv[1],'r') as fp:
 		ms = ms + int(line[0]) # running demo time
 		try:
 			pid = int(line[1])
+			action = line[2]
 		except:
 			pid = 0 # ignore special
-		action = line[2]
-
+			action = ''
 		# first jump action of the game also works pretty well, usually before the POS check
 		if action == 'MOV' and pid in player_ids:
 			if 'JUMP' in line[3]:
