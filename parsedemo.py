@@ -43,7 +43,8 @@ with open(sys.argv[1],'r') as fp:
 			action = line[2]
 		except:
 			pid = 0 # ignore special actors like CAM
-		if line[2] == "Map":
+			action = ''
+		if action == "Map":
 			match_map = line[3]
 			match_map = match_map.split('/')[-1]
 			match_map = match_map.split('_')[1]
