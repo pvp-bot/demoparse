@@ -4,9 +4,10 @@ import sys
 import math
 import numpy as np
 
-from data.powers import atk, preverse, heals, npc, name_filter, buffs, utility
+from data.powers import *
 from data.config import *
 from data.Player import Player
+from data.Target import Target
 
 ms = 0          # demo time in ms
 t = 0           # demo time in seconds
@@ -23,8 +24,13 @@ starttime = 0 # in seconds
 headers = ['time','actor','hp','deaths','team','action','target','targeted','demoline','line uid']
 emotecheck = 0
 lastactor = 0
-writeline = False
+writeline = False # flag to write line to csv
+timeinc = False  # flag if inc has progressed in demo
+
 lasttarget = {'BLU':'','RED':''}
+lastgather = {'BLU':0,'RED':0}
+gatherplayercount = {'BLU':0,'RED':0}
+gathertimes = {'BLU':[],'RED':[]}
 
 with open(sys.argv[1],'r') as fp:
 
@@ -164,11 +170,11 @@ with open(sys.argv[1],'r') as fp:
 	line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 	lineuid = 0
 
-	# #################
-	# #################
-	# MAIN PARSING LOOP
-	# #################
-	# #################
+	# ################################################ #
+	# ################################################ #
+	# MAIN PARSING LOOP ############################## # 
+	# ################################################ #
+	# ################################################ #
 
 	with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		csvw = csv.writer(csvfile, delimiter=',')
@@ -185,6 +191,12 @@ with open(sys.argv[1],'r') as fp:
 			ms = ms + int(line[0]) # running demo time
 			t2 = (ms/1000) # to seconds
 			if t2 > t or writeline:
+				if t2 > t:
+					timeinc = True
+					gatherplayercount = {'BLU':0,'RED':0}
+				else:
+					timeinc = False
+
 				for key, p in players.items():
 					csv_line = [t,p.name,p.hp,p.death,p.team,p.action,p.target,p.targetinstance,count,lineuid]
 					if p.hp != '' or p.death != '' or p.action  != '' or p.target != '' or p.targetinstance == 1:
@@ -226,6 +238,16 @@ with open(sys.argv[1],'r') as fp:
 							players[pid].reverse = True
 						players[pid].action = atk[action]
 
+					# gather check
+					if (any(substring for substring in gatherbuffs if substring in line[5]) and
+						t - lastgather[players[pid].team] > 30 and t > 10):
+						gatherplayercount[players[pid].team] += 1 # inc number of teammates hit
+						if gatherplayercount[players[pid].team] == 4: # if you hit at least 4 teammates
+							gathertimes[players[pid].team].append(t)
+							lastgather[players[pid].team] = t
+
+
+
 				elif action == "TARGET" and players[pid].action != '':
 					if line[3] == 'ENT':
 						tid = int(line[4])
@@ -256,18 +278,6 @@ with open(sys.argv[1],'r') as fp:
 						writeline = True
 
 				elif action == "PREVTARGET":
-					# if line[3] == 'ENT' and players[pid].action != '':
-					# 	tid = int(line[4])
-					# 	if tid != pid and tid in player_ids:
-					# 		players[pid].target = players[tid].name
-					# 		if players[pid].reverse and players[pid] != tid:
-					# 			players[tid].target = players[pid].name
-					# 			players[tid].action = players[pid].action
-					# 			players[pid].action = ''
-					# 			players[pid].target = ''
-					# 			players[pid].reverse = False
-					# 			if players[pid].team != players[tid].team:
-					# 				players[pid].targetcount(t, tid, players,players[tid].action)
 					writeline = True
 					
 
@@ -324,6 +334,13 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		divontarget = max(p.ontarget,1)
 		csv_line = [t,p.name,'','',p.team,'atk per spike avg',p.attacks / divontarget]
 		csvw.writerow(csv_line)
+
+	for gathertime in gathertimes['BLU']:
+		csv_line = [gathertime,'','','','BLU','gather']
+		csvw.writerow(csv_line)		
+	for gathertime in gathertimes['RED']:
+		csv_line = [gathertime,'','','','RED','gather']
+		csvw.writerow(csv_line)		
 
 print("\ndemo time " + str(round((t+starttime/1000)/60,2)) + " minutes")
 print("map: " + match_map)

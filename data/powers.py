@@ -277,6 +277,12 @@ buffs = [
 'KINSPEEDBOOSTHIT.FX'
 ]
 
+gatherbuffs = [
+'WILDBASTION_HIT.FX',
+'KINSPEEDBOOSTHIT.FX',
+'KININERTIALREDUCTIONSCONTINUING.FX',
+]
+
 heals = [
 'heal other',
 'absorb pain',
