@@ -11,9 +11,8 @@ class Target:
 		self.team = team # team being targeted
 		self.death = 0 # 1 if dead
 		
-		self.attacks = 0 # how many attacks thrown
-		self.attackers = [] # list of attackers
-		self.heals = 0 # number of heals/absorbs received
+		self.attacks = 0 # how many attacks thrown  [t,actor,action]
+		self.heals = [] # list of heals/absorbs received [t,actor,action]
 		self.healers = [] # list of support casting on target
 		self.greens = 0 # list of support casting on target
 		

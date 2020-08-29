@@ -129,6 +129,8 @@ class Player:
 				self.resettargetcount(players)
 			else:
 				self.recentattacks.append([t,aid,action]) # add the atk
+				if action in primaryattacks:
+					self.recentprimaryattacks.append([t,aid,action])
 				for atk in self.recentattacks:
 					if atk[1] not in self.targetattackers: # add the atkr if needed
 						self.targetattackers.append(atk[1])

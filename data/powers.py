@@ -73,9 +73,9 @@ atk = { # fx from actor to target (includes buffs)
 	'INSULATINGCIRCUITATK.FX':'insulating circuit',
 	'AMPUPATTACK.FX':'amp up',
 	'/ENERGIZINGCIRCUITATK.FX':'energizing circuit',
-	'WITCHESLIGHTNINGBOLTMEGA.FX':'shock',#?
-	'ENERGYSINKCASTATTACK.FX':'shock', #?
+	'WITCHESLIGHTNINGBOLTMEGA.FX':'shock',
 	'/GALVANICSENTINELSUMMON.FX':'galvanic sentinel',
+	# 'ENERGYSINKCASTATTACK.FX':'shock', # galvanic shock
 
 	#nature
 	'CORROSIVESAP.FX':'corrosive enzyme',
@@ -116,6 +116,9 @@ atk = { # fx from actor to target (includes buffs)
 	'/SHIVER.FX':'shiver',
 	'/CHILLBLAINSHANDS.FX':'chilblain',
 	'/THUNDEROUSBLAST.FX':'thunderous blast',
+	'ZAPP_QUICK.FX':'zapp',
+	'LIGHTNINGBOLT.FX':'lightning bolt',
+	'CHARGEDBOLTS.FX':'charged bolt',
 	'/KININERTIALREDUCTIONS.FX':'ir',
 	'/KINSIPHONSPEED.FX':'siphon speed',
 	'/KINTRANSFERENCE.FX':'transference',
@@ -128,6 +131,8 @@ atk = { # fx from actor to target (includes buffs)
 	'POWERPUSH.FX':'power push',
 	'ENERGYBLAST/MEGA.FX':'power burst', #?!
 	'ENERGYBLAST/SNIPERBLAST_QUICK.FX':'sniper blast', 
+	'ENERGYBLAST.FX':'energy blast', 
+	'BOOSTRANGE_ATTACK.FX':'boost range', 
 
 	'AIM.FX':'aim',
 	'FOLLOWUPHIT4.FX':'build up', #'fiery embrace',

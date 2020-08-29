@@ -16,7 +16,7 @@ player_ids   = []
 player_list  = []
 players      = ''
 
-targets      = []
+spikes      = []
 
 match_map = ""
 starttime = 0 # in seconds
