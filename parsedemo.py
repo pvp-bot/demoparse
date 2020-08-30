@@ -188,6 +188,7 @@ with open(sys.argv[1],'r') as fp:
 				csvw.writerow(csv_line)
 
 		while line and t <= matchtime: # ignore data after match end with small buffer time
+			# print(count)
 			ms = ms + int(line[0]) # running demo time
 			t2 = (ms/1000) # to seconds
 			if t2 > t or writeline:
@@ -305,8 +306,7 @@ with open(sys.argv[1],'r') as fp:
 						players[pid].action = 'emote'
 						emotecheck += 1
 
-
-			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
+			line = shlex.split(fp.readline().replace('\\','').replace('\'','').replace('\"',''))
 			count = count + 1
 
 
