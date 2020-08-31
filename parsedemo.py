@@ -376,7 +376,7 @@ def print_table(headers, content):
 
 offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'targeted', 'survival', 'ontarget', 'otp', 'timing', 'variance','first', 'apspike']
 offence_content = []
-healer_headers = ['team', '{:<20}'.format('name'), 'on time', 'followup','topups', 'first', 'timing','variance', 'ontime%','predicts','hpspike']
+healer_headers = ['team', '{:<20}'.format('name'), 'on time', 'followup','topups', 'alpha', 'timing','variance', 'ontime%','predicts','hpspike']
 healer_content = []
 
 

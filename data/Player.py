@@ -171,6 +171,10 @@ class Player:
 
 
 	def healcount(self, t, targetplayer):
+		# todo
+		# ignore if player dead
+		# account for phases
+		# account for jaunts?
 		if targetplayer.istarget:
 			if self.id not in targetplayer.healedby:
 				late = False
@@ -178,7 +182,7 @@ class Player:
 					self.healontime += 1
 					if targetplayer.healedby == []:
 						self.healalpha += 1
-				elif t- targetplayer.targetstart > targethealwindow+3:
+				elif t- targetplayer.targetstart > targethealwindow*2:
 					self.healfollowup += 1 # counting extra late as topups
 					late = True
 				else:
@@ -189,10 +193,9 @@ class Player:
 					self.healtiming.append(t-targetplayer.targetstart)
 
 			self.ontargetheals += 1
+
 		else:
 			self.topups += 1
 
-		if self.action == 'absorb pain':
-			self.aps += 1
-		elif self.action in absorbs:
+		if self.action in absorbs:
 			targetplayer.absorbed.append([t, self.id])
