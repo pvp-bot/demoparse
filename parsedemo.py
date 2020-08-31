@@ -170,6 +170,10 @@ with open(sys.argv[1],'r') as fp:
 	line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 	lineuid = 0
 
+
+
+
+
 	# ################################################ #
 	# ################################################ #
 	# MAIN PARSING LOOP ############################## # 
@@ -198,12 +202,14 @@ with open(sys.argv[1],'r') as fp:
 				else:
 					timeinc = False
 
-				for key, p in players.items():
+				for p in players.values():
 					csv_line = [t,p.name,p.hp,p.death,p.team,p.action,p.target,p.targetinstance,count,lineuid]
 					if p.hp != '' or p.death != '' or p.action  != '' or p.target != '' or p.targetinstance == 1:
 						csvw.writerow(csv_line)
 						lineuid += 1
 						p.reset()
+					if p.istarget and t2-p.targetstart >= targetcooldown: # if we're over the target window
+						p.resettargetcount(players)
 			t = t2
 
 
@@ -271,10 +277,11 @@ with open(sys.argv[1],'r') as fp:
 								if players[pid].action in heals:
 									players[pid].healcount(t, players[tid])
 
+
 					elif line[3] == 'POS':
 						if players[pid].action == 'jaunt': # catch cases where you jaunt off 1 attack
 							players[pid].lastjaunt = t
-							players[pid].jauntoffone(t)
+							players[pid].jauntoffone(t,players)
 						players[pid].target = '!pos'
 						writeline = True
 
@@ -367,52 +374,90 @@ def print_table(headers, content):
 
 	print('')
 
-offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'targeted', '', 'ontarget', '', 'timing', 'first', 'apspike']
+offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'targeted', 'survival', 'ontarget', 'otp', 'timing', 'variance','first', 'apspike']
 offence_content = []
-healer_headers = ['team', '{:<20}'.format('name'), 'ontarget', 'timing', 'topups', "AP's", 'predicts']
+healer_headers = ['team', '{:<20}'.format('name'), 'on time', 'followup','topups', 'first', 'timing','variance', 'ontime%','predicts','hpspike']
 healer_content = []
 
 
-for p in sorted(players.values(), key=lambda i: i.team):
-	if p.team == 'BLU':
-		score2 = score2 + p.deathtotal
-		clean2 = clean2 + p.cleanspiked
-		targets2 = targets2 + p.targeted
-	else:
-		score1 = score1 + p.deathtotal
-		clean1 = clean1 + p.cleanspiked
-		targets1 = targets1 + p.targeted
+deaths = {'BLU':0,'RED':0}
+targeted = {'BLU':0,'RED':0}
+for p in players.values():
+	deaths[p.team] += p.deathtotal 
+	targeted[p.team] += p.targeted
+	if p.ontargetheals+p.topups > p.attacks:
+		p.support = True
+targets = {'BLU':targeted['RED'],'RED':targeted['BLU']}
 
-	offence_content.append([
-		"[" + p.team + "]",
-		'{:<20}'.format(p.name),
-		p.deathtotal,
-		p.targeted,
-		p.cleanspiked,
-		p.ontarget,
-		p.late,
-		str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4],
-		p.first,
-		str(p.attacks / max(p.ontarget, 1))[:4]
-	])
+with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
+	csvw = csv.writer(csvfile, delimiter=',')
 
-	if p.ontargetheals or p.topups:
-		healer_content.append([
+	for p in sorted(players.values(), key=lambda i: i.team):
+
+		spiketiming = sum(p.spiketiming) / max(len(p.spiketiming), 1)
+		spiketimingvar = sum((x-spiketiming)**2 for x in p.spiketiming) / max(len(p.spiketiming),1)
+		healtiming = sum(p.healtiming) / max(len(p.healtiming), 1)
+		healtimingvar = sum((x-healtiming)**2 for x in p.healtiming) / max(len(p.healtiming),1)
+
+		offence_content.append([
 			"[" + p.team + "]",
 			'{:<20}'.format(p.name),
-			p.ontargetheals,
-			str(sum(p.healtiming) / max(len(p.healtiming), 1))[:4],
-			p.topups,
-			p.aps,
-			p.predicts
+			p.deathtotal,
+			p.targeted,
+			"{:.0%}".format(1-p.deathtotal/max(p.targeted,1)),
+			p.ontarget,
+			"{:.0%}".format(p.ontarget/targets[p.team]),
+			str(spiketiming)[:4],
+			str(spiketimingvar)[:4],
+			p.first,
+			str(p.attacks / max(p.ontarget, 1))[:4]
 		])
+
+		if p.support:
+			hpspike =p.ontargetheals/(p.healontime+p.healfollowup)
+			healer_content.append([
+				"[" + p.team + "]",
+				'{:<20}'.format(p.name),
+				p.healontime,
+				p.healfollowup,
+				# p.heallate,
+				p.topups,
+				p.healalpha,
+				str(healtiming)[:4],
+				str(healtimingvar)[:4],
+				"{:.0%}".format(p.healontime/targeted[p.team],1),
+				p.predicts,
+				str(hpspike)[:4]
+
+			])
+
+			csv_line = [t,p.name,'','',p.team,'on time heal',p.healontime]
+			csvw.writerow(csv_line)
+			csv_line = [t,p.name,'','',p.team,'follow up heal',p.healfollowup]
+			csvw.writerow(csv_line)
+			# csv_line = [t,p.name,'','',p.team,'late heal',p.heallate]
+			# csvw.writerow(csv_line)
+			csv_line = [t,p.name,'','',p.team,'top up heal',p.topups]
+			csvw.writerow(csv_line)
+			csv_line = [t,p.name,'','',p.team,'heal timing avg',healtiming]
+			csvw.writerow(csv_line)
+			csv_line = [t,p.name,'','',p.team,'heal timing variance',healtimingvar]
+			csvw.writerow(csv_line)
+			csv_line = [t,p.name,'','',p.team,'alpha heal',p.healalpha]
+			csvw.writerow(csv_line)
+			csv_line = [t,p.name,'','',p.team,'spirit ward predicts',p.predicts]
+			csvw.writerow(csv_line)
+			csv_line = [t,p.name,'','',p.team,'heals per spike',hpspike]
+			csvw.writerow(csv_line)
+		csv_line = [t,p.name,'','',p.team,'attack timing variance',spiketimingvar]
+		csvw.writerow(csv_line)
 
 print_table(offence_headers, offence_content)
 print_table(healer_headers, healer_content)
 
 print("")
-print("SCORE: " + str(score1) + "-" + str(score2))
-print("TARGETS CALLED: " + str(targets1) + "-" + str(targets2))
+print("SCORE: " + str(deaths['RED']) + "-" + str(deaths['BLU']))
+print("TARGETS CALLED: " + str(targets['BLU']) + "-" + str(targets['RED']))
 # print('CLEAN SPIKES: ' + str(clean1) + '-' + str(clean2))
 if emotecheck > 0:
 	print('CHECK EMOTES: ' + str(emotecheck) + ' were used')

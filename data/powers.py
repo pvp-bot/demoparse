@@ -23,6 +23,7 @@ atk = { # fx from actor to target (includes buffs)
 	'BEAMRIFLE_DISINTEGRATE.FX':'disintegrate',
 	'BEAMRIFLE_CHARGEDSHOT.FX':'penetrating ray/charged shot',
 	'BEAMRIFLE_LANCERSHOT.FX':'lancer',
+	'BEAMRIFLE_PIERCINGBEAM.FX':'piercing beam',
 
 	# emp
 	'HEALINGHANDS.FX':'heal other',
@@ -45,6 +46,10 @@ atk = { # fx from actor to target (includes buffs)
 	# psn
 	'/POISONLIQUIDPROJECTILE.FX':'envenom',
 	'/PALMPOISONLIQUIDPROJECTILE.FX':'weaken',
+
+	# cold
+	'HEATLOSSBLAST.FX':'heat loss',
+	'HEATLOSSBLAST.FX':'heat loss',
 
 	# rad
 	# this is actually the onhit animation as the activation animation EVERVATINGFIELDHANDS doesnt have target info for some reason
@@ -109,6 +114,7 @@ atk = { # fx from actor to target (includes buffs)
 	'MEDICINE/MAID.FX':'aid other', # or aid other
 	'AIDOTHER_ATTACK.FX':'aid other', # or aid other
 	'/TELEPORT_ATTACK.FX':'translocation', # MOV A_\TRANSLOCATION
+	'AIRSUPERIORITY_ATTACK.FX':'air superiority', # 
 
 	# misc powerset
 	'FOSSILIZEHANDS.FX':'fossilize',
@@ -133,6 +139,8 @@ atk = { # fx from actor to target (includes buffs)
 	'ENERGYBLAST/SNIPERBLAST_QUICK.FX':'sniper blast', 
 	'ENERGYBLAST.FX':'energy blast', 
 	'BOOSTRANGE_ATTACK.FX':'boost range', 
+	'ASSASINSPSIBLADE.FX':'assassin\'s strike', 
+	'PSIBLADEGREAT.FX':'greater psi blade', 
 
 	'AIM.FX':'aim',
 	'FOLLOWUPHIT4.FX':'build up', #'fiery embrace',
@@ -297,13 +305,13 @@ heals = [
 ]
 
 absorbs = [
-'insulating circuit',
+# 'insulating circuit',
 'spirit ward'
 ]
 
 npc = [
-	'NPC',
-	'EntTypeFile',
+'NPC',
+'EntTypeFile',
 ]
 
 # filter out non-player entities - issues if player name = one of these
