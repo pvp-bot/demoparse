@@ -119,29 +119,39 @@ atk = { # fx from actor to target (includes buffs)
 	# misc powerset
 	'FOSSILIZEHANDS.FX':'fossilize',
 	'/STALAGMITESTOMP.FX':'stalagmites',
+
 	'/SHIVER.FX':'shiver',
 	'/CHILLBLAINSHANDS.FX':'chilblain',
+
 	'/THUNDEROUSBLAST.FX':'thunderous blast',
 	'ZAPP_QUICK.FX':'zapp',
 	'LIGHTNINGBOLT.FX':'lightning bolt',
 	'CHARGEDBOLTS.FX':'charged bolt',
+
 	'/KININERTIALREDUCTIONS.FX':'ir',
 	'/KINSIPHONSPEED.FX':'siphon speed',
 	'/KINTRANSFERENCE.FX':'transference',
+
 	'/EXECUTIONERSSHOT_ATTACK.FX':'executioner shot',
 	'/PIERCINGROUNDS_ATTACK.FX':'piercing rounds',
-	'/FORCEBOLT.FX':'force bolt',
+	'SUPPRESSIVEFIRE_ATTACK.FX':'suppressive fire',
+
+	
 	'/WATERJET.FX':'water jet',
 	'WATERJET_FAST.FX':'water jet',
 	'/DEHYDRATE.FX':'dehydrate',
+	
 	'POWERPUSH.FX':'power push',
 	'ENERGYBLAST/MEGA.FX':'power burst', #?!
 	'ENERGYBLAST/SNIPERBLAST_QUICK.FX':'sniper blast', 
 	'ENERGYBLAST.FX':'energy blast', 
-	'BOOSTRANGE_ATTACK.FX':'boost range', 
+	
+	
 	'ASSASINSPSIBLADE.FX':'assassin\'s strike', 
 	'PSIBLADEGREAT.FX':'greater psi blade', 
 
+	'/FORCEBOLT.FX':'force bolt',
+	'BOOSTRANGE_ATTACK.FX':'boost range', 
 	'AIM.FX':'aim',
 	'FOLLOWUPHIT4.FX':'build up', #'fiery embrace',
 	'/TIDALFORCES.FX':'aim', #water
