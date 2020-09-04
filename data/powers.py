@@ -57,7 +57,7 @@ atk = { # fx from actor to target (includes buffs)
 
 	# ill
 	'ILLUSDECOY.FX':'phantom army',
-	'/SPECTRALTERROR/ILLUSTERRORCONTINUING.FX':'spectral terror',
+	'ILLUSTERROR.FX':'spectral terror',
 	'/ILLUSDECIEVE.FX':'confuse',
 	'ILLUSIONCONTROL/ILLUSBLIND.FX':'blind', # attack and target? need to match up w/ MOV MOUTH
 

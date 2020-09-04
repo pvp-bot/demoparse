@@ -62,7 +62,8 @@ class Player:
 
 		self.healalpha = 0
 		self.healontime = 0
-		self.healfollowup = 0
+		self.heallate = 0
+		self.healontarget = 0
 
 		self.support = False
 
@@ -178,19 +179,20 @@ class Player:
 		if targetplayer.istarget:
 			if self.id not in targetplayer.healedby:
 				late = False
-				if t- targetplayer.targetstart < targethealwindow:
+				if t- targetplayer.targetstart < targethealwindow or len(targetplayer.recentattacks)<4:
 					self.healontime += 1
 					if targetplayer.healedby == []:
 						self.healalpha += 1
 				elif t- targetplayer.targetstart > targethealwindow*2:
-					self.healfollowup += 1 # counting extra late as topups
+					self.heallate += 1 # counting extra late as topups
 					late = True
 				else:
-					self.healfollowup += 1
+					self.heallate += 1
 
 				targetplayer.healedby.append(self.id)
 				if not late: 
 					self.healtiming.append(t-targetplayer.targetstart)
+				self.healontarget += 1
 
 			self.ontargetheals += 1
 

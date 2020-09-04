@@ -376,7 +376,7 @@ def print_table(headers, content):
 
 offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'targeted', 'survival', 'ontarget', 'otp', 'timing', 'variance','first', 'apspike']
 offence_content = []
-healer_headers = ['team', '{:<20}'.format('name'), 'on time', 'followup','topups', 'alpha', 'timing','variance', 'ontime%','predicts','hpspike']
+healer_headers = ['team', '{:<20}'.format('name'), 'on time', 'late','topups', 'alpha', 'timing','ontrgt%', 'ontime%','predicts','hpspike']
 healer_content = []
 
 
@@ -414,17 +414,17 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		])
 
 		if p.support:
-			hpspike =p.ontargetheals/(p.healontime+p.healfollowup)
+			hpspike =p.ontargetheals/(p.healontime+p.heallate)
 			healer_content.append([
 				"[" + p.team + "]",
 				'{:<20}'.format(p.name),
 				p.healontime,
-				p.healfollowup,
+				p.heallate,
 				# p.heallate,
 				p.topups,
 				p.healalpha,
 				str(healtiming)[:4],
-				str(healtimingvar)[:4],
+				"{:.0%}".format(p.healontarget/targeted[p.team],1),
 				"{:.0%}".format(p.healontime/targeted[p.team],1),
 				p.predicts,
 				str(hpspike)[:4]
@@ -433,7 +433,7 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 
 			csv_line = [t,p.name,'','',p.team,'on time heal',p.healontime]
 			csvw.writerow(csv_line)
-			csv_line = [t,p.name,'','',p.team,'follow up heal',p.healfollowup]
+			csv_line = [t,p.name,'','',p.team,'follow up heal',p.heallate]
 			csvw.writerow(csv_line)
 			# csv_line = [t,p.name,'','',p.team,'late heal',p.heallate]
 			# csvw.writerow(csv_line)

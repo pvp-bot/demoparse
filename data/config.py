@@ -6,5 +6,5 @@ targethealwindow = 2.8 # depends on the type of offense (blaze lead requires low
 targetcooldown = 8 # max spike time
 targetminattacks = 2   # minimum atks on target to count as attack
 targetminattackers = 2 # minimum ppl on target to count as attack
-predictspiketime = 8 # time before someone gets spiked where they can receive an absorb and have it count as a heal, e.g. spirit warding someone you expect to be the next target
+predictspiketime = 10 # time before someone gets spiked where they can receive an absorb and have it count as a heal, e.g. spirit warding someone you expect to be the next target
 matchtime = 600 # 2 sec buff
