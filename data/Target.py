@@ -1,17 +1,16 @@
 # not in use yet
 class Target:
-	def __init__(self, start, target, team):
-		self.firstatk = start # match time of first attack
-		self.firsthit = 0
-		self.firstheal = 0
-		self.endspike = 0
+	def __init__(self, target, team, start):
+		self.start = start # match time of first attack
+		self.spiketime = 0
 		self.targettime = 0 #total time being targeted
 
 		self.target = target # player being targeted
 		self.team = team # team being targeted
 		self.death = 0 # 1 if dead
 		
-		self.attacks = 0 # how many attacks thrown  [t,actor,action]
+		self.attacks = [] # how many attacks thrown  [t,actor,action]
+		self.attackers = [] # how many attacks thrown  [t,actor,action]
 		self.heals = [] # list of heals/absorbs received [t,actor,action]
 		self.healers = [] # list of support casting on target
 		self.greens = 0 # list of support casting on target

@@ -1,6 +1,8 @@
 from data.powers import absorbs
 from data.powers import primaryattacks
 from data.config import *
+from data.Target import Target
+
 
 class Player:
 	def __init__(self, name, pid):
@@ -20,13 +22,13 @@ class Player:
 
 		self.action = ''
 		self.target = ''
+		self.targetteam = ''
 		self.reverse = False
 
 		self.at = ''
 
 		# being spiked
 		self.targetstart = -1
-		self.targetcooldown = 0
 		self.attackcounter = 0
 		self.primaryattackcounter = 0
 		self.targetattackers = []
@@ -43,6 +45,8 @@ class Player:
 		self.istarget = False
 		self.ontarget = 0
 		self.resets = 0
+		self.lastresdebuff = False
+		self.lastresdebuff = False
 
 
 		# spiking someone else
@@ -65,12 +69,19 @@ class Player:
 		self.heallate = 0
 		self.healontarget = 0
 
+		self.targetheals = []
+
+		self.greens = 20
+
 		self.support = False
+
+		self.stats = {}
 
 	def reset(self):
 		self.hp = ''
 		self.action = ''
 		self.target = ''
+		self.targetteam = ''
 		self.death = ''
 		self.reverse = False
 		self.targetinstance = 0
@@ -83,7 +94,7 @@ class Player:
 	def isrecent(self,time,attacktime):
 		t = time-attacktime
 		if self.istarget:
-			window = targetcooldown
+			window = targetmaxtime
 		else:
 			window = targetwindow
 
@@ -92,7 +103,7 @@ class Player:
 		else:
 			return False
 
-	def resettargetcount(self, players):
+	def endtarget(self, players,spikes):
 		players[self.targetattackers[0]].first += 1
 		for atk in self.recentattacks:
 			players[atk[1]].attacks += 1
@@ -103,23 +114,32 @@ class Player:
 					timing = min(timing,atk[0])
 			self._update_ontarget(timing, aid, players)
 
+		# spike data
+		spikes.append(Target(self.name,self.team,self.targetstart))
+		spikes[-1].attacks = self.recentattacks[:]
+		spikes[-1].attackers = self.recentattacks[:]
+		spikes[-1].spiketime = targetstart - self.recentattacks[-1][0]
+		if self.hp == 0:
+			spikes[-1].death = 1
+
 		self.targetstart = False # restart timer
 		self.recentattacks = []
 		self.recentprimaryattacks = []
 		self.targetattackers = []
 		self.healedby = []
+		self.targetheals = []
 		self.istarget = False
 
 	def inittarget(self,players):
 		self.istarget = True
 		self.targeted += 1
 		self.targetinstance = 1 # for spreadsheet
-		if len(self.recentprimaryattacks) == 1:
+
+		if len(self.recentprimaryattacks) > 0:
 			self.targetstart = self.recentprimaryattacks[0][0]
-		elif len(self.recentprimaryattacks) > 1:
-			self.targetstart = (self.recentprimaryattacks[0][0]+self.recentprimaryattacks[1][0])/2 # average of first 2 atk if available
 		else:
-			self.targetstart = (self.recentattacks[0][0]+self.recentattacks[1][0])/2
+			self.targetstart = self.recentattacks[0][0]
+
 		for atk in self.recentattacks:
 			if atk[1] not in self.targetattackers:
 				self.targetattackers.append(atk[1])
@@ -133,11 +153,11 @@ class Player:
 		if not self.istarget and len(self.recentprimaryattacks) == 1 and (t-self.recentprimaryattacks[0][0]) <= targetwindow: # with 1 sec of atk
 			self.inittarget(players)
 
-	def targetcount(self,t,aid,players,action):
+	def targetcount(self,t,aid,players,action,spikes):
 
 		if self.istarget: # if already target
-			if t-self.targetstart >= targetcooldown: # if we're over the target window
-				self.resettargetcount(players)
+			if t-self.targetstart >= targetmaxtime or t-self.recentattacks[-1][0] > targetcooldown: # if we're over the max target window or it's been long enough since the last attack
+				self.endtarget(players,spikes)
 			else:
 				self.recentattacks.append([t,aid,action]) # add the atk
 				if action in primaryattacks:
@@ -171,12 +191,13 @@ class Player:
 
 
 
-	def healcount(self, t, targetplayer):
+	def healcount(self, t, targetplayer,action):
 		# todo
 		# ignore if player dead
 		# account for phases
 		# account for jaunts?
 		if targetplayer.istarget:
+			targetplayer.targetheals.append([t,self.name,action])
 			if self.id not in targetplayer.healedby:
 				late = False
 				if t- targetplayer.targetstart < targethealwindow or len(targetplayer.recentattacks)<4:

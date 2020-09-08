@@ -1,4 +1,4 @@
-atk = { # fx from actor to target (includes buffs)
+fx = { # fx from actor to target (includes buffs)
 
 	# fire
 	'BLAZE_ATTACK.FX':'blaze',
@@ -6,6 +6,7 @@ atk = { # fx from actor to target (includes buffs)
 	'BLAZINGBOLT_ATTACK.FX':'blazing bolt',
 	'/INFERNOBOLT.FX':'blazing bolt',
 	'FLARES_ATTACK.FX':'flares',
+	'INFERNO_ATTACK.FX':'inferno',
 
 	# ice
 	'BITTERFREEZERAY.FX':'bib', # misleading name
@@ -48,7 +49,6 @@ atk = { # fx from actor to target (includes buffs)
 	'/PALMPOISONLIQUIDPROJECTILE.FX':'weaken',
 
 	# cold
-	'HEATLOSSBLAST.FX':'heat loss',
 	'HEATLOSSBLAST.FX':'heat loss',
 
 	# rad
@@ -170,7 +170,7 @@ atk = { # fx from actor to target (includes buffs)
 	'/WILLPOWER.FX':'red',
 	'/INTELLIGENCE.FX':'blue',
 	'/STRENGTH.FX':'purple/orange',
-	'/AGILITY.FX':'yellow',
+	'/AGILITY.FX':'yellow', # maybe not?
 
 	# temp
 	'WEBGRENADETHROW.FX':'web nade',
@@ -178,46 +178,14 @@ atk = { # fx from actor to target (includes buffs)
 }
 
 
-atkhit = { # fx on target from actor (includes buffs)
-	# not used yet
+resdebuff = 'DEBUFFDAMRESCONTINUING.FX'
 
-	# nature
-	'CORROSIVESAP_HIT.FX':'corrosive enzyme',
-
-	# fire
-	'BLAZE_HIT.FX':'blaze',
-	'FIREBALLHITNO_RING.FX':'blaze',
-	'BLAZINGBOLT_HIT.FX':'blazing bolt',
-	'/INFERNO_ATTACK.FX':'inferno',
-	'/FIREBLAST_ATTACK.FX':'fire blast',
-	'/FLARES_ATTACK.FX':'flares',
-
-	# ice
-	'ICEBOLTHIT.FX':'bfr',
-
-	# plant
-	'PLANTCONTROLHIT.FX':'strangler', # from TARGET
-	# 'STRANGLERROOTS.FX': 'strangler', # from PREVTARGET
-
-	# poison
-	'POISONHITQUICK.FX':'envenom', # or weaken
-
-	# rad
-	'ENERVATINGFIELDCONTINUING.FX': 'enervating field',
-
-	# elec
-	'INSULATINGCIRCUITHIT.FX':'insulating circuit',
-	'DNASIPHON_HIT.FX':'shock', #?
-
-	# epics
-	'MINDCONTROLHIT.FX':'dominate',
-	'CINDERSHIT.FX':'char',
-	'EMBERSHITSOOTANDCINDERS.FX':'char',
-	# 'SCHOOLOFSHARKS_HIT.FX':'ssj',
-	'V_MAKO_SPIRITSHARK_CIRCLE_HIT.FX':'ssj',
-	'SPIRTSHARKJAWS_CONDITIONAL.FX': 'ssj',
-
-}
+evade = [
+	'phase shift',
+	'hibernate',
+	'jaunt',
+	'translocation',
+]
 
 healhit = {
 	# emp
@@ -234,12 +202,13 @@ healhit = {
 
 
 pmov = { # prepend with 'A_' for flying version
-'DRAW_PISTOL':'crey pistol',
-'DRAW_WEAPONBACK':'crey pistol', # vill
-'WALL':'ssj',
-'MOUTH':'blind',
-#'PLAYER_HITDEATH' # death anim
+	'DRAW_PISTOL':'crey pistol',
+	'DRAW_WEAPONBACK':'crey pistol', # vill
+	'WALL':'ssj',
+	'MOUTH':'blind',
+	#'PLAYER_HITDEATH' # death anim
 }
+
 
 # primary attacks for determining spike instances (i.e. ignore jaunts off flares or snipe only or w/e)
 primaryattacks = [
@@ -249,109 +218,113 @@ primaryattacks = [
 	'blaze',
 	'bib',
 	'lancer',
-	'char',
+	'char', # maybe? depends on lineup
 	'penetrating ray/charged shot',
 ]
 
 utility = [	# for filtering out not atk offense powers
-'shock',
-'entangling arrow',
-'weaken',
-'siphon speed',
-'transference',
-'force bolt',
-'web nade',
-'glue arrow',
-'confuse',
-
+	'shock',
+	'entangling arrow',
+	'weaken',
+	'siphon speed',
+	'transference',
+	'force bolt',
+	'web nade',
+	'glue arrow',
+	'confuse',
+	'brawl',
+	'thunderous blast',
+	'heat loss',
+	'suppressive fire',
 ]
 
 
 # generic FX by the actor - usage determined by target's FX
 preverse = [
-# buffs
-'ENDURANCE.FX',
-'MINDWALL.FX',
-'FORTITUDE.FX',
+	# buffs
+	'ENDURANCE.FX',
+	'MINDWALL.FX',
+	'FORTITUDE.FX',
 
-#attacks - note this means misses for these powers don't get counted
-'/PLANTCONTROLHIT.FX',
-'SCHOOLOFSHARKS_HIT.FX',
-'/V_MAKO_SPIRITSHARK_CIRCLE_HIT',
+	#attacks - note this means misses for these powers don't get counted
+	'/PLANTCONTROLHIT.FX',
+	'SCHOOLOFSHARKS_HIT.FX',
+	'/V_MAKO_SPIRITSHARK_CIRCLE_HIT',
 
-'ENERVATINGFIELDCONTINUING.FX'
-'/DEHYDRATE.FX',
+	'ENERVATINGFIELDCONTINUING.FX'
+	'/DEHYDRATE.FX',
 ]
 
+
 buffs = [
-'HEALINGHANDS.FX',
-'ABSORBPAIN.FX',
-'STRENGTHHANDS2.FX',
-'ENDURANCE.FX',
-'MINDWALL.FX',
-'FORTITUDE.FX',
-'REJUVENATINGCIRCUITATK.FX',
-'EMPOWERINGCIRCUITATK.FX',
-'INSULATINGCIRCUITATK.FX',
-'AMPUPATTACK.FX',
-'PAINBRINGER_ATTACK.FX',
-'WILD_GROWTH_HIT.FX',
-'WILDBASTION_HIT.FX',
-'KINSPEEDBOOSTHIT.FX'
+	'HEALINGHANDS.FX',
+	'ABSORBPAIN.FX',
+	'STRENGTHHANDS2.FX',
+	'ENDURANCE.FX',
+	'MINDWALL.FX',
+	'FORTITUDE.FX',
+	'REJUVENATINGCIRCUITATK.FX',
+	'EMPOWERINGCIRCUITATK.FX',
+	'INSULATINGCIRCUITATK.FX',
+	'AMPUPATTACK.FX',
+	'PAINBRINGER_ATTACK.FX',
+	'WILD_GROWTH_HIT.FX',
+	'WILDBASTION_HIT.FX',
+	'KINSPEEDBOOSTHIT.FX'
 ]
 
 gatherbuffs = [
-'WILDBASTION_HIT.FX',
-'KINSPEEDBOOSTHIT.FX',
-'KININERTIALREDUCTIONSCONTINUING.FX',
+	'WILDBASTION_HIT.FX',
+	'KINSPEEDBOOSTHIT.FX',
+	'KININERTIALREDUCTIONSCONTINUING.FX',
 ]
 
 heals = [
-'heal other',
-'absorb pain',
-'rejuvenating circuit',
-'insulating circuit',
-'spirit ward'
+	'heal other',
+	'absorb pain',
+	'rejuvenating circuit',
+	'insulating circuit',
+	'spirit ward'
 ]
 
 absorbs = [
-# 'insulating circuit',
-'spirit ward'
+	# 'insulating circuit',
+	'spirit ward'
 ]
 
 npc = [
-'NPC',
-'EntTypeFile',
+	'NPC',
+	'EntTypeFile',
 ]
 
 # filter out non-player entities - issues if player name = one of these
 # probably a better way to do this
 name_filter  = [
-'Mu Guardian',
-'Phantasm',
-'Decoy Phantasm',
-'Decoy',
-'Coralax Blue Hybrid',
-'Dr',
-'Poison Trap',
-'Animated Stone',
-'Superior Vigilant Assault',
-'Blind',
-'Galvanic Sentinel',
-'Voltaic Geyser',
-'Voltaic Sentinel',
-'Water Spout',
-'Fortunata Mistress',
-'Superior Scourging Blast',
-'German Shepherd',
-'Ice Storm',
-'Energy Font',
-'Spectral Terror',
-'Coralax Red Hybrid',
-'Faraday Cage',
-'Architect Entertainment Instructor',
-'Architect Contact',
-'Spirit Panther',
-'Ticket Vendor',
-'Architect Entertainment Greeter',
+	'Mu Guardian',
+	'Phantasm',
+	'Decoy Phantasm',
+	'Decoy',
+	'Coralax Blue Hybrid',
+	'Dr',
+	'Poison Trap',
+	'Animated Stone',
+	'Superior Vigilant Assault',
+	'Blind',
+	'Galvanic Sentinel',
+	'Voltaic Geyser',
+	'Voltaic Sentinel',
+	'Water Spout',
+	'Fortunata Mistress',
+	'Superior Scourging Blast',
+	'German Shepherd',
+	'Ice Storm',
+	'Energy Font',
+	'Spectral Terror',
+	'Coralax Red Hybrid',
+	'Faraday Cage',
+	'Architect Entertainment Instructor',
+	'Architect Contact',
+	'Spirit Panther',
+	'Ticket Vendor',
+	'Architect Entertainment Greeter',
 ]
