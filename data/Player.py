@@ -71,7 +71,8 @@ class Player:
 
 		self.targetheals = []
 
-		self.greens = 20
+		self.greens = 20 # assumes all slots greens
+		self.greensavailable = 20 # assumes all slots greens
 
 		self.support = False
 
@@ -118,6 +119,7 @@ class Player:
 		spikes.append(Target(self.name,self.team,self.targetstart))
 		spikes[-1].attacks = self.recentattacks[:]
 		spikes[-1].attackers = self.recentattacks[:]
+		spikes[-1].heals = self.targetheals[:]
 		spikes[-1].spiketime = targetstart - self.recentattacks[-1][0]
 		if self.hp == 0:
 			spikes[-1].death = 1
@@ -134,6 +136,8 @@ class Player:
 		self.istarget = True
 		self.targeted += 1
 		self.targetinstance = 1 # for spreadsheet
+
+		self.greensavailable = self.greens
 
 		if len(self.recentprimaryattacks) > 0:
 			self.targetstart = self.recentprimaryattacks[0][0]

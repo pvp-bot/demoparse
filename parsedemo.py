@@ -258,7 +258,9 @@ with open(sys.argv[1],'r') as fp:
 					if line[5] == resdebuff:
 						player[pid].lastresdebuff = t
 					if action == 'green':
-						self.greens -= 1
+						if player[pid].istarget:
+							player[pid].targetheals.append([t,player[pid].name,'green'])
+						player[pid].greens -= 1
 
 
 
@@ -283,7 +285,7 @@ with open(sys.argv[1],'r') as fp:
 									players[pid].targetcount(t, tid, players,players[tid].action,spikes)
 							else:
 								if players[pid].action in heals:
-									players[pid].healcount(t, players[tid])
+									players[pid].healcount(t, players[tid],players[pid].action)
 
 
 					elif line[3] == 'POS':
@@ -360,7 +362,12 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 	for gathertime in gathertimes['BLU']:
 		csvw.writerow([demoname,match_map,'gathers','','BLU',gathertime])		
 	for gathertime in gathertimes['RED']:
-		csvw.writerow([demoname,match_map,'gathers','','RED',gathertime])		
+		csvw.writerow([demoname,match_map,'gathers','','RED',gathertime])
+
+	suid = 1
+	for s in spikes:
+		csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,s.start])
+		suid += 1
 
 
 
