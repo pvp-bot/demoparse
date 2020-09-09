@@ -120,7 +120,9 @@ class Player:
 		spikes[-1].attacks = self.recentattacks[:]
 		spikes[-1].attackers = self.recentattacks[:]
 		spikes[-1].heals = self.targetheals[:]
-		spikes[-1].spiketime = targetstart - self.recentattacks[-1][0]
+		spikes[-1].greensavailable = self.greensavailable
+		spikes[-1].greensused = self.greensavailable - self.greens
+		spikes[-1].spiketime = self.targetstart - self.recentattacks[-1][0]
 		if self.hp == 0:
 			spikes[-1].death = 1
 
