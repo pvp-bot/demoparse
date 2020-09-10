@@ -23,7 +23,7 @@ match_map = ""
 starttime = 0 # in seconds
 
 header = ['match','map','linetype']
-header_log = ['log','actor','team','match_time','hp','death','action','target','target_team','targeted','demoline','line_uid']
+header_log = ['actor','team','match_time','hp','death','action','target','target_team','targeted','demoline','uid']
 header.extend(header_log)
 
 emotecheck = 0
@@ -60,7 +60,6 @@ with open(sys.argv[1],'r') as fp:
 			match_map = line[3]
 			match_map = match_map.split('/')[-1]
 			match_map = match_map.split('_')[1]
-			csv_prepend = [demoname,match_map]
 		if action == "NEW":
 			if pid not in player_ids and line[3] not in name_filter:
 				player_ids.append(pid)
@@ -203,8 +202,6 @@ with open(sys.argv[1],'r') as fp:
 
 				for p in players.values():
 					csv_log = [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
-					# csv_line = csv_prepend
-					# csv_line.extend(csv_log)
 					if p.hp != '' or p.death != '' or p.action  != '' or p.target != '' or p.targetinstance == 1:
 						csvw.writerow(csv_log)
 						lineuid += 1
@@ -255,12 +252,18 @@ with open(sys.argv[1],'r') as fp:
 							lastgather[players[pid].team] = t
 
 					# damresdebuff
-					if line[5] == resdebuff:
-						player[pid].lastresdebuff = t
-					if action == 'green':
-						if player[pid].istarget:
-							player[pid].targetheals.append([t,player[pid].name,'green'])
-						player[pid].greens -= 1
+					if resdebuff in line[5] and players[pid].istarget and not players[pid].lastresdebuff:
+						players[pid].lastresdebuff = t
+					if players[pid].action == 'green':
+						if players[pid].istarget:
+							players[pid].targetheals.append([t,pid,players[pid].action])
+						players[pid].greens -= 1
+					# TODO add pre jaunt/phase with lastjaunt timer
+					if players[pid].istarget and players[pid].action in evade:
+						players[pid].targetevades.append([t,pid,players[pid].action])
+
+
+
 
 
 
@@ -328,9 +331,10 @@ with open(sys.argv[1],'r') as fp:
 
 
 
-for pid in player_ids: # clean up, if target at end of match
-	if players[pid].istarget:
-		players[pid].endtarget(players,spikes)
+for p in players.values(): # clean up, if target at end of match
+	if p.istarget:
+		p.endtarget(players,spikes)
+			# start and end points for time graphing
 
 
 # PRINT STATS TO CSV
@@ -338,26 +342,21 @@ for pid in player_ids: # clean up, if target at end of match
 with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 	csvw = csv.writer(csvfile, delimiter=',')
 	for key, p in players.items(): # append stats
-
+		csvw.writerow([demoname,match_map,'log',p.name,p.team,0,'',0,'','','',0])
+		csvw.writerow([demoname,match_map,'log',p.name,p.team,600,'',0,'','','',0])
 		for stat, value in p.stats:
 			csvw.writerow([demoname,match_map,'stats',p.name,p.team,'','','',stat,value])
 
-		# start and end points for time graphing
-		csv_line = [0,p.name,'',0]
-		csvw.writerow(csv_line)
-		csv_line = [matchtime,p.name,'',0]
-		csvw.writerow(csv_line)
 
-		##
-		csv_line = [demoname,match_map,'stats',p.name,p.team,t,'','','on target',p.ontarget]
-		csvw.writerow(csv_line)
-		csv_line = [t,p.name,'','',p.team,'first',p.first]
-		csvw.writerow(csv_line)
-		csv_line = [t,p.name,'','',p.team,'attack timing avg',str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4]]
-		csvw.writerow(csv_line)
-		divontarget = max(p.ontarget,1)
-		csv_line = [t,p.name,'','',p.team,'atk per spike avg',p.attacks / divontarget]
-		csvw.writerow(csv_line)
+		# csv_line = [demoname,match_map,'stats',p.name,p.team,t,'','','on target',p.ontarget]
+		# csvw.writerow(csv_line)
+		# csv_line = [t,p.name,'','',p.team,'first',p.first]
+		# csvw.writerow(csv_line)
+		# csv_line = [t,p.name,'','',p.team,'attack timing avg',str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4]]
+		# csvw.writerow(csv_line)
+		# divontarget = max(p.ontarget,1)
+		# csv_line = [t,p.name,'','',p.team,'atk per spike avg',p.attacks / divontarget]
+		# csvw.writerow(csv_line)
 
 	for gathertime in gathertimes['BLU']:
 		csvw.writerow([demoname,match_map,'gathers','','BLU',gathertime])		
@@ -365,8 +364,24 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		csvw.writerow([demoname,match_map,'gathers','','RED',gathertime])
 
 	suid = 1
+	# spikes to csv
 	for s in spikes:
-		csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,s.start])
+		csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,s.start,'',s.death,'','','','','',suid])
+		for act in s.attacks:
+			act_time = act[0] - s.start
+			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'','',act[2],players[act[1]].name,players[act[1]].team,'','',suid])
+		for act in s.heals:
+			act_time = act[0] - s.start
+			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'','',act[2],players[act[1]].name,players[act[1]].team,'','',suid])
+		for act in s.evades:
+			act_time = act[0] - s.start
+			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'','',act[2],players[act[1]].name,players[act[1]].team,'','',suid])
+		if s.debufftime:
+			debufftime = s.debufftime - s.start
+			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,debufftime,'','','res debuff hit','','','','',suid])
+
+		
+		# [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
 		suid += 1
 
 

@@ -11,6 +11,7 @@ class Target:
 		self.attacks = [] # how many attacks thrown  [t,actor,action]
 		self.attackers = [] # how many attacks thrown  [t,actor,action]
 		self.heals = [] # list of heals/absorbs received [t,actor,action]
+		self.evades = [] # list of heals/absorbs received [t,actor,action]
 		# self.healers = [] # list of support casting on target
 		self.greens = 0 # list of support casting on target
 		
@@ -22,4 +23,6 @@ class Target:
 
 		self.greensavailable = 0
 		self.greensused = 0
+
+		self.debufftime = 0
 

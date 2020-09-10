@@ -46,7 +46,6 @@ class Player:
 		self.ontarget = 0
 		self.resets = 0
 		self.lastresdebuff = False
-		self.lastresdebuff = False
 
 
 		# spiking someone else
@@ -70,6 +69,7 @@ class Player:
 		self.healontarget = 0
 
 		self.targetheals = []
+		self.targetevades = []
 
 		self.greens = 20 # assumes all slots greens
 		self.greensavailable = 20 # assumes all slots greens
@@ -120,10 +120,12 @@ class Player:
 		spikes[-1].attacks = self.recentattacks[:]
 		spikes[-1].attackers = self.recentattacks[:]
 		spikes[-1].heals = self.targetheals[:]
+		spikes[-1].evades = self.targetevades[:]
 		spikes[-1].greensavailable = self.greensavailable
 		spikes[-1].greensused = self.greensavailable - self.greens
 		spikes[-1].spiketime = self.targetstart - self.recentattacks[-1][0]
-		if self.hp == 0:
+		spikes[-1].debufftime = self.lastresdebuff
+		if self.lasthp == 0:
 			spikes[-1].death = 1
 
 		self.targetstart = False # restart timer
@@ -132,6 +134,8 @@ class Player:
 		self.targetattackers = []
 		self.healedby = []
 		self.targetheals = []
+		self.targetevades = []
+		self.lastresdebuff = False
 		self.istarget = False
 
 	def inittarget(self,players):
@@ -203,7 +207,7 @@ class Player:
 		# account for phases
 		# account for jaunts?
 		if targetplayer.istarget:
-			targetplayer.targetheals.append([t,self.name,action])
+			targetplayer.targetheals.append([t,self.id,action])
 			if self.id not in targetplayer.healedby:
 				late = False
 				if t- targetplayer.targetstart < targethealwindow or len(targetplayer.recentattacks)<4:
