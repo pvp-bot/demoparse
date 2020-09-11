@@ -46,6 +46,8 @@ class Player:
 		self.ontarget = 0
 		self.resets = 0
 		self.lastresdebuff = False
+		self.dmgtaken = 0
+		self.healreceived = 0
 
 
 		# spiking someone else
@@ -67,6 +69,7 @@ class Player:
 		self.healontime = 0
 		self.heallate = 0
 		self.healontarget = 0
+
 
 		self.targetheals = []
 		self.targetevades = []
@@ -103,7 +106,7 @@ class Player:
 		else:
 			return False
 
-	def endtarget(self, players,spikes):
+	def endtarget(self,players,spikes):
 		players[self.targetattackers[0]].first += 1
 		for atk in self.recentattacks:
 			players[atk[1]].attacks += 1
@@ -114,18 +117,41 @@ class Player:
 					timing = min(timing,atk[0])
 			self._update_ontarget(timing, aid, players)
 
-		# spike data
+		# new spike
 		spikes.append(Target(self.name,self.team,self.targetstart))
+
+		# spike data
 		spikes[-1].attacks = self.recentattacks[:]
-		spikes[-1].attackers = self.recentattacks[:]
+		spikes[-1].attackers = self.targetattackers[:]
 		spikes[-1].heals = self.targetheals[:]
 		spikes[-1].evades = self.targetevades[:]
-		spikes[-1].greensavailable = self.greensavailable
-		spikes[-1].greensused = self.greensavailable - self.greens
 		spikes[-1].spiketime = self.targetstart - self.recentattacks[-1][0]
 		spikes[-1].debufftime = self.lastresdebuff
+		if self.death == 1:
+			spikes[-1].spikedeath = self.lastdeath/1000 - self.targetstart
 		if self.lasthp == 0:
 			spikes[-1].death = 1
+
+		# spike summary
+		spikes[-1].stats['evade attempt'] = 0
+		if len(self.targetevades) > 0 and (self.targetevades[0][0] - self.targetstart) < evadewindow:
+			spikes[-1].stats['evade attempt'] = 1
+		spikes[-1].stats['attackers'] = len(self.targetattackers)
+		spikes[-1].stats['attacks'] = len(self.recentattacks)
+		healsreceived = 0
+		# to not count greens
+		for h in self.targetheals:
+			if h[1] != 'green':
+				healsreceived += 1
+		spikes[-1].stats['heals received'] = healsreceived
+		spikes[-1].stats['greens available'] = self.greensavailable # at the start of the spike
+		spikes[-1].stats['greens used'] = self.greensavailable - self.greens
+		spikes[-1].stats['spike duration'] = self.recentattacks[-1][0] - self.targetstart
+		spikes[-1].stats['total dmg taken'] = self.dmgtaken
+		spikes[-1].stats['total hp recovered'] = self.healreceived
+		spikes[-1].stats['hp after spike'] = self.lasthp
+
+
 
 		self.targetstart = False # restart timer
 		self.recentattacks = []
@@ -133,11 +159,13 @@ class Player:
 		self.targetattackers = []
 		self.healedby = []
 		self.targetheals = []
-		self.targetevades = []
+		self.dmgtaken = 0
+		self.healreceived = 0
+		# self.targetevades = [] # reset handled in the preevade lines
 		self.lastresdebuff = False
 		self.istarget = False
 
-	def inittarget(self,players):
+	def inittarget(self,t,players):
 		self.istarget = True
 		self.targeted += 1
 		self.targetinstance = 1 # for spreadsheet
@@ -149,29 +177,35 @@ class Player:
 		else:
 			self.targetstart = self.recentattacks[0][0]
 
+		# add all current attackers to list
 		for atk in self.recentattacks:
 			if atk[1] not in self.targetattackers:
 				self.targetattackers.append(atk[1])
 
+		# for spirit ward predicts
 		for time, hid in self.absorbed:
 			if (self.targetstart - time) < predictspiketime: # absorb was fired before the spike
 				players[hid].predicts += 1
 			self.absorbed = []
 
+		# determine preevades
+		if len(self.targetevades) > 0:
+			lastevade = self.targetevades[-1]
+			self.targetevades = []
+			if (t-lastevade[0] < targetwindow):
+				self.targetevades.append(lastevade)
+
 	def jauntoffone(self,t,players): # count as target if jaunt off single primary attack
 		if not self.istarget and len(self.recentprimaryattacks) == 1 and (t-self.recentprimaryattacks[0][0]) <= targetwindow: # with 1 sec of atk
-			self.inittarget(players)
+			self.inittarget(t,players)
 
 	def targetcount(self,t,aid,players,action,spikes):
 		if self.istarget: # if already target
-			if t-self.targetstart >= targetmaxtime or t-self.recentattacks[-1][0] > targetcooldown: # if we're over the max target window or it's been long enough since the last attack
-				self.endtarget(players,spikes)
-			else:
-				self.recentattacks.append([t,aid,action]) # add the atk
-				if action in primaryattacks:
-					self.recentprimaryattacks.append([t,aid,action])
-				for atk in self.recentattacks:
-					if atk[1] not in self.targetattackers: # add the atkr if needed
+			self.recentattacks.append([t,aid,action]) # add the atk
+			if action in primaryattacks:
+				self.recentprimaryattacks.append([t,aid,action])
+			for atk in self.recentattacks:
+				if atk[1] not in self.targetattackers: # add the atkr if needed
 						self.targetattackers.append(atk[1])
 			
 
@@ -195,7 +229,7 @@ class Player:
 				or (len(self.recentprimaryattacks) == targetminattacks/2 and t-self.lastjaunt < targetwindow/2) # if jaunt slightly before primary atk activated				# or (len(self.recentprimaryattacks) >= targetminattacks-1 and len(self.recentattacks) >= targetminattacks+2) # if 1
 				)):
 				
-				self.inittarget(players)
+				self.inittarget(t,players)
 
 
 

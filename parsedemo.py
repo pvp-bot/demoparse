@@ -23,7 +23,7 @@ match_map = ""
 starttime = 0 # in seconds
 
 header = ['match','map','linetype']
-header_log = ['actor','team','match_time','hp','death','action','target','target_team','targeted','demoline','uid']
+header_log = ['player','team','time (s)','hp','death','action','target','target_team','targeted','value','uid']
 header.extend(header_log)
 
 emotecheck = 0
@@ -202,12 +202,12 @@ with open(sys.argv[1],'r') as fp:
 
 				for p in players.values():
 					csv_log = [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
+					if p.istarget and (p.death == 1 or (t2-p.targetstart >= targetmaxtime and t-p.recentattacks[-1][0] > targetcooldown)): # if we're over the target window
+						p.endtarget(players,spikes)
 					if p.hp != '' or p.death != '' or p.action  != '' or p.target != '' or p.targetinstance == 1:
 						csvw.writerow(csv_log)
 						lineuid += 1
 						p.reset()
-					if p.istarget and (p.death == 1 or (t2-p.targetstart >= targetmaxtime and t-p.recentattacks[-1][0] > targetcooldown)): # if we're over the target window
-						p.endtarget(players,spikes)
 			t = t2
 
 
@@ -234,6 +234,10 @@ with open(sys.argv[1],'r') as fp:
 						players[pid].death = 1
 						players[pid].lastdeath = ms
 						players[pid].deathtotal = players[pid].deathtotal + 1
+
+					if players[pid].istarget:
+						players[pid].dmgtaken += min(0,hp-players[pid].lasthp)
+						players[pid].healreceived += max(0,hp-players[pid].lasthp)
 					players[pid].lasthp = hp
 
 				elif action == "FX":
@@ -258,8 +262,8 @@ with open(sys.argv[1],'r') as fp:
 						if players[pid].istarget:
 							players[pid].targetheals.append([t,pid,players[pid].action])
 						players[pid].greens -= 1
-					# TODO add pre jaunt/phase with lastjaunt timer
-					if players[pid].istarget and players[pid].action in evade:
+
+					if players[pid].action in evade:
 						players[pid].targetevades.append([t,pid,players[pid].action])
 
 
@@ -344,7 +348,7 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 	for key, p in players.items(): # append stats
 		csvw.writerow([demoname,match_map,'log',p.name,p.team,0,'',0,'','','',0])
 		csvw.writerow([demoname,match_map,'log',p.name,p.team,600,'',0,'','','',0])
-		for stat, value in p.stats:
+		for stat, value in p.stats.items():
 			csvw.writerow([demoname,match_map,'stats',p.name,p.team,'','','',stat,value])
 
 
@@ -366,20 +370,32 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 	suid = 1
 	# spikes to csv
 	for s in spikes:
-		csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,s.start,'',s.death,'','','','','',suid])
+		#												  spk tgt ,t team,spike-t,hp,death? ,# atks        ,#attackers      ,tm,															
+		csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid])
+
+		# spike log data
 		for act in s.attacks:
-			act_time = act[0] - s.start
+			act_time = round(act[0] - s.start,1)
 			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid])
 		for act in s.heals:
-			act_time = act[0] - s.start
-			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid])
+			healer = players[act[1]].name
+			if act[2] == 'green':
+				healer = '-'
+			act_time = round(act[0] - s.start,1)
+			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],healer,players[act[1]].team,'','',suid])
 		for act in s.evades:
-			act_time = act[0] - s.start
+			act_time = round(act[0] - s.start,1)
 			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],'-',players[act[1]].team,'','',suid])
 		if s.debufftime:
-			debufftime = s.debufftime - s.start
-			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,debufftime,'',s.death,'res debuff hit',' ','','','',suid])
+			debufftime = round(s.debufftime - s.start,1)
+			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,debufftime,'',s.death,'res debuff hit','--','','','',suid])
+		if s.spikedeath:
+			deathtime = round(s.spikedeath,1)
+			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,round(s.spikedeath,1),'',s.death,'death','---','','','',suid])
 
+		# spike stats
+		for stat,value in s.stats.items():
+			csvw.writerow([demoname,match_map,'spike_stats',s.target,s.team,'','',s.death,stat,'','','',value,suid])			
 		
 		# [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
 		suid += 1
@@ -470,26 +486,26 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 
 			])
 
-			csv_line = [t,p.name,'','',p.team,'on time heal',p.healontime]
-			csvw.writerow(csv_line)
-			csv_line = [t,p.name,'','',p.team,'follow up heal',p.heallate]
-			csvw.writerow(csv_line)
-			# csv_line = [t,p.name,'','',p.team,'late heal',p.heallate]
-			# csvw.writerow(csv_line)
-			csv_line = [t,p.name,'','',p.team,'top up heal',p.topups]
-			csvw.writerow(csv_line)
-			csv_line = [t,p.name,'','',p.team,'heal timing avg',healtiming]
-			csvw.writerow(csv_line)
-			csv_line = [t,p.name,'','',p.team,'heal timing variance',healtimingvar]
-			csvw.writerow(csv_line)
-			csv_line = [t,p.name,'','',p.team,'alpha heal',p.healalpha]
-			csvw.writerow(csv_line)
-			csv_line = [t,p.name,'','',p.team,'spirit ward predicts',p.predicts]
-			csvw.writerow(csv_line)
-			csv_line = [t,p.name,'','',p.team,'heals per spike',hpspike]
-			csvw.writerow(csv_line)
-		csv_line = [t,p.name,'','',p.team,'attack timing variance',spiketimingvar]
-		csvw.writerow(csv_line)
+		# 	csv_line = [t,p.name,'','',p.team,'on time heal',p.healontime]
+		# 	csvw.writerow(csv_line)
+		# 	csv_line = [t,p.name,'','',p.team,'follow up heal',p.heallate]
+		# 	csvw.writerow(csv_line)
+		# 	# csv_line = [t,p.name,'','',p.team,'late heal',p.heallate]
+		# 	# csvw.writerow(csv_line)
+		# 	csv_line = [t,p.name,'','',p.team,'top up heal',p.topups]
+		# 	csvw.writerow(csv_line)
+		# 	csv_line = [t,p.name,'','',p.team,'heal timing avg',healtiming]
+		# 	csvw.writerow(csv_line)
+		# 	csv_line = [t,p.name,'','',p.team,'heal timing variance',healtimingvar]
+		# 	csvw.writerow(csv_line)
+		# 	csv_line = [t,p.name,'','',p.team,'alpha heal',p.healalpha]
+		# 	csvw.writerow(csv_line)
+		# 	csv_line = [t,p.name,'','',p.team,'spirit ward predicts',p.predicts]
+		# 	csvw.writerow(csv_line)
+		# 	csv_line = [t,p.name,'','',p.team,'heals per spike',hpspike]
+		# 	csvw.writerow(csv_line)
+		# csv_line = [t,p.name,'','',p.team,'attack timing variance',spiketimingvar]
+		# csvw.writerow(csv_line)
 
 print_table(offence_headers, offence_content)
 print_table(healer_headers, healer_content)

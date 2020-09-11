@@ -25,4 +25,7 @@ class Target:
 		self.greensused = 0
 
 		self.debufftime = 0
+		self.spikedeath = False
+
+		self.stats = {}
 
