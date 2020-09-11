@@ -98,7 +98,6 @@ class Player:
 			window = targetmaxtime
 		else:
 			window = targetwindow
-
 		if t < window:
 			return True
 		else:
@@ -164,7 +163,6 @@ class Player:
 			self.inittarget(players)
 
 	def targetcount(self,t,aid,players,action,spikes):
-
 		if self.istarget: # if already target
 			if t-self.targetstart >= targetmaxtime or t-self.recentattacks[-1][0] > targetcooldown: # if we're over the max target window or it's been long enough since the last attack
 				self.endtarget(players,spikes)
@@ -181,6 +179,7 @@ class Player:
 			self.recentattacks.append([t,aid,action]) # add the atk
 			if action in primaryattacks:
 				self.recentprimaryattacks.append([t,aid,action])
+			
 
 			self.recentattacks = [x for x in self.recentattacks if self.isrecent(t,x[0])] # remove recent attacks outside window
 			self.recentprimaryattacks = [x for x in self.recentprimaryattacks if self.isrecent(t,x[0])]
@@ -189,7 +188,6 @@ class Player:
 			for atk in self.recentattacks:
 				if atk[1] not in self.targetattackers: # add the atkr if needed
 					self.targetattackers.append(atk[1])
-
 			if  (
 				len(self.targetattackers) >= targetminattackers and not self.istarget and # at least 2 people on target and not already target
 				(((2*len(self.recentprimaryattacks) + len(self.recentattacks))/2.9>= targetminattacks) # if min 2 primary attacks (weighted)

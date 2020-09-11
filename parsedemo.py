@@ -369,29 +369,20 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,s.start,'',s.death,'','','','','',suid])
 		for act in s.attacks:
 			act_time = act[0] - s.start
-			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'','',act[2],players[act[1]].name,players[act[1]].team,'','',suid])
+			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid])
 		for act in s.heals:
 			act_time = act[0] - s.start
-			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'','',act[2],players[act[1]].name,players[act[1]].team,'','',suid])
+			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid])
 		for act in s.evades:
 			act_time = act[0] - s.start
-			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'','',act[2],players[act[1]].name,players[act[1]].team,'','',suid])
+			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],'-',players[act[1]].team,'','',suid])
 		if s.debufftime:
 			debufftime = s.debufftime - s.start
-			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,debufftime,'','','res debuff hit','','','','',suid])
+			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,debufftime,'',s.death,'res debuff hit',' ','','','',suid])
 
 		
 		# [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
 		suid += 1
-
-
-
-
-
-
-
-
-
 
 
 
