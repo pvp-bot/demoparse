@@ -22,7 +22,7 @@ demoname = sys.argv[1].split('/')[-1].split('.')[0]
 match_map = ""
 starttime = 0 # in seconds
 
-header = ['match','map','linetype']
+header = ['demo','map','linetype']
 header_log = ['player','team','time (s)','hp','death','action','target','target_team','targeted','value','uid']
 header.extend(header_log)
 
@@ -349,8 +349,10 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		csvw.writerow([demoname,match_map,'log',p.name,p.team,0,'',0,'','','',0])
 		csvw.writerow([demoname,match_map,'log',p.name,p.team,600,'',0,'','','',0])
 		for stat, value in p.stats.items():
-			csvw.writerow([demoname,match_map,'stats',p.name,p.team,'','','',stat,value])
-
+			csvw.writerow([demoname,match_map,'stats'     ,p.name,p.team,'','','',stat,'','','',value])
+		for ac, count in p.atkchains.items():
+			csvw.writerow([demoname,match_map,'atk_chains',p.name,p.team,'','','',ac,  '','','',count])
+		# [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,value,lineuid]
 
 		# csv_line = [demoname,match_map,'stats',p.name,p.team,t,'','','on target',p.ontarget]
 		# csvw.writerow(csv_line)

@@ -39,7 +39,7 @@ class Player:
 		self.absorbed = [] # List[[time, pid]] where time is when the absorb was placed, pid was the player who placed it
 
 		# new spike count system
-		self.recentattacks = []
+		self.recentattacks = [] # [t,aid,action]
 		self.recentprimaryattacks = []
 		self.lastjaunt = False
 		self.istarget = False
@@ -80,6 +80,7 @@ class Player:
 		self.support = False
 
 		self.stats = {}
+		self.atkchains = {}
 
 	def reset(self):
 		self.hp = ''
@@ -112,9 +113,17 @@ class Player:
 			players[atk[1]].attacks += 1
 		for aid in self.targetattackers:
 			timing = matchtime # large number to catch error in output
+			atkchain = ''
 			for atk in self.recentattacks:
 				if atk[1] == aid:
-					timing = min(timing,atk[0])
+					timing = min(timing,atk[0]) # update attacker timing for avg
+					atkchain += atk[2]+' - ' # change atk chain to string
+			atkchain = atkchain[:-3]
+			if atkchain in players[aid].atkchains.keys():
+				players[aid].atkchains[atkchain] += 1
+			else:
+				players[aid].atkchains[atkchain] = 1
+
 			self._update_ontarget(timing, aid, players)
 
 		# new spike
@@ -133,9 +142,13 @@ class Player:
 			spikes[-1].death = 1
 
 		# spike summary
-		spikes[-1].stats['evade attempt'] = 0
-		if len(self.targetevades) > 0 and (self.targetevades[0][0] - self.targetstart) < evadewindow:
-			spikes[-1].stats['evade attempt'] = 1
+		spikes[-1].stats['atks before evade'] = ''
+		if len(self.targetevades) > 0:
+			atkb4evade = 0
+			for atk in self.recentattacks:
+				if self.targetevades[0][0] > atk[0]:
+					atkb4evade += 1
+			spikes[-1].stats['atks before evade'] = atkb4evade
 		spikes[-1].stats['attackers'] = len(self.targetattackers)
 		spikes[-1].stats['attacks'] = len(self.recentattacks)
 		healsreceived = 0
