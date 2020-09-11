@@ -208,7 +208,7 @@ class Player:
 			targetplayer.targetheals.append([t,self.id,action])
 			if self.id not in targetplayer.healedby:
 				late = False
-				if t- targetplayer.targetstart < targethealwindow or len(targetplayer.recentattacks)<4:
+				if t- targetplayer.targetstart < targethealwindow or len(targetplayer.recentattacks)<3:
 					self.healontime += 1
 					if targetplayer.healedby == []:
 						self.healalpha += 1
