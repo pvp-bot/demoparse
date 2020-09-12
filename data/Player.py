@@ -48,6 +48,7 @@ class Player:
 		self.lastresdebuff = False
 		self.dmgtaken = 0
 		self.healreceived = 0
+		self.misseddead = 0 # targets missed while dead
 
 
 		# spiking someone else
@@ -55,6 +56,7 @@ class Player:
 		self.late = 0
 		self.spiketiming = []
 		self.attacks = 0
+		self.attackstotal = 0
 		self.first = 0
 		self.healedby = []
 
@@ -160,10 +162,16 @@ class Player:
 		spikes[-1].stats['greens available'] = self.greensavailable # at the start of the spike
 		spikes[-1].stats['greens used'] = self.greensavailable - self.greens
 		spikes[-1].stats['spike duration'] = self.recentattacks[-1][0] - self.targetstart
-		spikes[-1].stats['total dmg taken'] = self.dmgtaken
+		spikes[-1].stats['total dmg lost'] = self.dmgtaken
 		spikes[-1].stats['total hp recovered'] = self.healreceived
 		spikes[-1].stats['hp after spike'] = self.lasthp
 
+		for p in players.values(): # count num spikes missed if dead
+			if p.team != self.team:
+				lastdeath = p.lastdeath/1000
+				respawn = round(lastdeath/15)*15+15
+				if lastdeath < self.targetstart and self.recentattacks[-1][0] < respawn:
+					p.misseddead += 1
 
 
 		self.targetstart = False # restart timer
@@ -209,10 +217,12 @@ class Player:
 				self.targetevades.append(lastevade)
 
 	def jauntoffone(self,t,players): # count as target if jaunt off single primary attack
-		if not self.istarget and len(self.recentprimaryattacks) == 1 and (t-self.recentprimaryattacks[0][0]) <= targetwindow: # with 1 sec of atk
+		if not self.istarget and len(self.recentprimaryattacks) == 1 and (t-self.recentprimaryattacks[0][0]) <= targetwindow/2: # with 1 sec of atk
 			self.inittarget(t,players)
 
 	def targetcount(self,t,aid,players,action,spikes):
+		players[aid].attackstotal += 1
+
 		if self.istarget: # if already target
 			self.recentattacks.append([t,aid,action]) # add the atk
 			if action in primaryattacks:
