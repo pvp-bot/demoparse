@@ -2,6 +2,7 @@ from data.powers import absorbs
 from data.powers import primaryattacks
 from data.config import *
 from data.Target import Target
+import math
 
 
 class Player:
@@ -25,6 +26,8 @@ class Player:
 		self.targetteam = ''
 		self.reverse = False
 
+		self.set1 = False
+		self.set2 = False
 		self.at = ''
 
 		# being spiked
@@ -169,7 +172,7 @@ class Player:
 		for p in players.values(): # count num spikes missed if dead
 			if p.team != self.team:
 				lastdeath = p.lastdeath/1000
-				respawn = round(lastdeath/15)*15+15
+				respawn = math.ceil((lastdeath-1)/15)*15+15 # 1 sec safety, includes 15 sec uneffecting
 				if lastdeath < self.targetstart and self.recentattacks[-1][0] < respawn:
 					p.misseddead += 1
 

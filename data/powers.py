@@ -40,8 +40,8 @@ fx = { # fx from actor to target (includes buffs)
 	# pain
 	# 'SOOTH_ATTACK.FX':'soothe',
 	# 'SHAREPAIN_ATTACK.FX':'share pain',
-	'SOOTH_ATTACK.FX':'heal other', # just counting the same as emp for simplicity
-	'SHAREPAIN_ATTACK.FX':'absorb pain',
+	'SOOTH_ATTACK.FX':'sooth', # just counting the same as emp for simplicity
+	'SHAREPAIN_ATTACK.FX':'share pain',
 	'PAINBRINGER_ATTACK.FX':'painbringer',
 
 	# psn
@@ -67,8 +67,8 @@ fx = { # fx from actor to target (includes buffs)
 	'/GCDIMENSIONSHIFT.FX':'dimension shift', # toggle on
 
 	# plant
-	# 'THORNS/BUILDUP_ATTACK.FX':'toxins',
-	'THORNS/BUILDUP_ATTACK.FX':'build up',
+	'THORNS/BUILDUP_ATTACK.FX':'toxins',
+	# 'THORNS/BUILDUP_ATTACK.FX':'build up',
 	'PLANTCONTROLHIT.FX':'strangler', # shared with plant control
 	# 'STRANGLERROOTS.FX': 'strangler', # doesn't spawn on every strangler
 
@@ -84,8 +84,9 @@ fx = { # fx from actor to target (includes buffs)
 
 	#nature
 	'CORROSIVESAP.FX':'corrosive enzyme',
-	'/WILDBASTION.FX':'wild bastion',
-	'/OVERGROWTH.FX':'overgrowth',
+	'WILDBASTION.FX':'wild bastion', # share with plant
+	'OVERGROWTH.FX':'overgrowth',
+	'WILD_GROWTH.FX':'wild growth',
 	'/REGROWTH2.FX':'regrowth',
 
 	# trick arrow
@@ -170,7 +171,7 @@ fx = { # fx from actor to target (includes buffs)
 	'/WILLPOWER.FX':'red',
 	'/INTELLIGENCE.FX':'blue',
 	'/STRENGTH.FX':'purple/orange',
-	'/AGILITY.FX':'yellow', # maybe not?
+	# '/AGILITY.FX':'yellow', # shares with tac arrow agility
 
 	# temp
 	'WEBGRENADETHROW.FX':'web nade',
@@ -282,9 +283,13 @@ gatherbuffs = [
 heals = [
 	'heal other',
 	'absorb pain',
+	'soothe',
+	'share pain',
+	'aid other',
 	'rejuvenating circuit',
 	'insulating circuit',
 	'spirit ward'
+	# alkaloid
 ]
 
 absorbs = [
@@ -327,4 +332,69 @@ name_filter  = [
 	'Spirit Panther',
 	'Ticket Vendor',
 	'Architect Entertainment Greeter',
+]
+
+otherfx = { # like toggles and stuff for determining powersets
+	'THORNS_ACTIVATION.FX':'thorns',
+	'AGILITY.FX':'agility',
+}
+
+powersets = {
+	'bib':'ice',
+	'blaze':'fire',
+	'lancer':'beam',
+	
+	'heal other':'emp',
+	'absorb pain':'emp',
+	'sooth':'pain',
+	'share pain':'emp',
+	'insulating circuit':'elec aff',
+	'amp up':'elec aff',
+	'shock':'elec aff',
+	
+	'envenom':'poison',
+	'weaken':'poison',
+	'corrosive enzyme':'nature',
+	'overgrowth':'nature',
+	'wild growth':'nature',
+	
+	'thorns':'plant',
+	'toxins':'plant',
+	'agility':'tac',
+
+	'ir':'kin',
+	'siphon speed':'kin',
+	'entangling arrow':'trick',
+	'heat loss':'cold',
+	'phantom army':'ill',
+	'dimension shift':'grav',
+	'crush':'grav',
+	'fossilize':'earth',
+	'chilblain':'ice control',
+	'shiver':'ice control',
+	'thunderous blast':'elec blast',
+	'lightning bolt':'elec blast',
+	'executioner shot':'dual pistol',
+	'suppressive fire':'dual pistol',
+	'water jet':'water',
+	'tidal forces':'water',
+	'power push':'energy blast',
+	'power burst':'energy blast',
+	'greater psi blade':'psi melee',
+	'force bolt':'bubble',
+	'boost range':'energy manip',
+}
+
+primarysupport = [ #order of importance?
+	'emp',
+	'pain',
+	'elec aff',
+]
+primaryoffence = [ #order of importance?
+	'poison',
+	'fire',
+	'ice',
+	'beam',
+	'psi',
+	'energy',
 ]

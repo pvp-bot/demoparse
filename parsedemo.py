@@ -266,6 +266,24 @@ with open(sys.argv[1],'r') as fp:
 					if players[pid].action in evade:
 						players[pid].targetevades.append([t,pid,players[pid].action])
 
+					# powerset determination
+					if not players[pid].set1:
+						othercheck = next((substring for substring in otherfx.keys() if substring in line[5]), None)
+						if othercheck:
+							othercheck = otherfx[othercheck] 
+						if players[pid].action in powersets:
+							players[pid].set1 = powersets[players[pid].action]						
+						elif othercheck in powersets:
+							players[pid].set1 = powersets[othercheck]
+					if not players[pid].set2:
+						othercheck = next((substring for substring in otherfx.keys() if substring in line[5]), None)
+						if othercheck:
+							othercheck = otherfx[othercheck] 
+						if players[pid].action in powersets and powersets[players[pid].action] != players[pid].set1:
+							players[pid].set2 = powersets[players[pid].action]						
+						elif othercheck in powersets and  powersets[othercheck] != players[pid].set1:
+							players[pid].set2 = powersets[othercheck]
+
 
 
 
@@ -326,7 +344,7 @@ with open(sys.argv[1],'r') as fp:
 					# 	players[pid].action = 'ssj'
 
 					elif 'EMOTE' in mov: # WEAPONBACK might be shared with some other sets
-						emotes.append([players[pid].name],mov)
+						emotes.append([players[pid].name,mov])
 
 			line = shlex.split(fp.readline().replace('\\','').replace('\'','').replace('\"',''))
 			count = count + 1
@@ -336,7 +354,7 @@ with open(sys.argv[1],'r') as fp:
 for p in players.values(): # clean up, if target at end of match
 	if p.istarget:
 		p.endtarget(players,spikes)
-			# start and end points for time graphing
+
 
 
 # PRINT STATS TO CSV
@@ -352,15 +370,6 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 			csvw.writerow([demoname,match_map,'atk_chains',p.name,p.team,'','','',ac,  '','','',count])
 		# [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,value,lineuid]
 
-		# csv_line = [demoname,match_map,'stats',p.name,p.team,t,'','','on target',p.ontarget]
-		# csvw.writerow(csv_line)
-		# csv_line = [t,p.name,'','',p.team,'first',p.first]
-		# csvw.writerow(csv_line)
-		# csv_line = [t,p.name,'','',p.team,'attack timing avg',str(sum(p.spiketiming) / max(len(p.spiketiming), 1))[:4]]
-		# csvw.writerow(csv_line)
-		# divontarget = max(p.ontarget,1)
-		# csv_line = [t,p.name,'','',p.team,'atk per spike avg',p.attacks / divontarget]
-		# csvw.writerow(csv_line)
 
 	for gathertime in gathertimes['BLU']:
 		csvw.writerow([demoname,match_map,'gathers','','BLU',gathertime])		
@@ -442,6 +451,25 @@ for p in players.values():
 	targeted[p.team] += p.targeted
 	if p.ontargetheals+p.topups > p.attacks:
 		p.support = True
+
+	# setup player powersets in order
+	if p.support:
+		if p.set2 in primarysupport:
+			set3 = p.set2
+			p.set2 = p.set1
+			p.set1 = set3
+	else:
+		if p.set2 in primaryoffence and p.set1 != 'poison':
+			set3 = p.set2
+			p.set2 = p.set1
+			p.set1 = set3
+	if not p.set1:
+		p.set1 = '-'
+	if not p.set2:
+		p.set2 = '-'
+	p.at = p.set1+'/'+p.set2
+
+
 targets = {'BLU':targeted['RED'],'RED':targeted['BLU']}
 total_ontarget = {'BLU':0,'RED':0}
 total_attacks  = {'BLU':0,'RED':0}
@@ -488,33 +516,16 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 				str(hpspike)[:4]
 
 			])
+
 		#header_log = ['demo','map',   'linetype',    'playr','team',t, hp d  a  tgt tt tgtd,'value','uid','stat1','stat2','stat3','stat4','stat5',stat6,stat7,stat8,...]
-		
-		csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','','','', '','',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/targeted[p.team] if p.healontarget > 0 else ''])
+		csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'', '','',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/targeted[p.team] if p.healontarget > 0 else ''])
 		csvw.writerow([demoname,match_map,'offense_stats',p.name,p.team,'','','','','', '','',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/targets[p.team],spiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget,p.misseddead,p.attacks,p.attackstotal-p.attacks])
 		
 		total_attacks[p.team]  += p.attacks
 		total_ontarget[p.team] += p.ontarget
 		total_timing[p.team].extend(p.spiketiming)
 
-		# 	csv_line = [t,p.name,'','',p.team,'follow up heal',p.heallate]
-		# 	csvw.writerow(csv_line)
-		# 	# csv_line = [t,p.name,'','',p.team,'late heal',p.heallate]
-		# 	# csvw.writerow(csv_line)
-		# 	csv_line = [t,p.name,'','',p.team,'top up heal',p.topups]
-		# 	csvw.writerow(csv_line)
-		# 	csv_line = [t,p.name,'','',p.team,'heal timing avg',healtiming]
-		# 	csvw.writerow(csv_line)
-		# 	csv_line = [t,p.name,'','',p.team,'heal timing variance',healtimingvar]
-		# 	csvw.writerow(csv_line)
-		# 	csv_line = [t,p.name,'','',p.team,'alpha heal',p.healalpha]
-		# 	csvw.writerow(csv_line)
-		# 	csv_line = [t,p.name,'','',p.team,'spirit ward predicts',p.predicts]
-		# 	csvw.writerow(csv_line)
-		# 	csv_line = [t,p.name,'','',p.team,'heals per spike',hpspike]
-		# 	csvw.writerow(csv_line)
-		# csv_line = [t,p.name,'','',p.team,'attack timing variance',spiketimingvar]
-		# csvw.writerow(csv_line)
+
 	csvw.writerow([demoname,match_map,'summary','','','','','','score','', '','',  '',''      ,deaths['RED'],deaths['BLU']])
 	csvw.writerow([demoname,match_map,'summary','','','','','','targets called','', '','',  '',''      ,targets['BLU'],targets['RED']])
 	csvw.writerow([demoname,match_map,'summary','','','','','','avg on target','', '','',  '',''      ,total_ontarget['BLU']/targets['BLU'],total_ontarget['RED']/targets['RED']])
