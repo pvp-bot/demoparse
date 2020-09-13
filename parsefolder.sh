@@ -11,8 +11,14 @@ do
 done
 
 first="0"
+
+
 for csv in $1/*.csv
 do
+	if [ "$csv" == "$1"/"$dir_name".csv ]
+	then
+		continue
+	fi
 	if [ "$first" -eq "0" ]
 	then
 		head -1 $csv > "$1"/"$dir_name".csv

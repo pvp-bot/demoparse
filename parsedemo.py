@@ -235,9 +235,12 @@ with open(sys.argv[1],'r') as fp:
 						players[pid].lastdeath = ms
 						players[pid].deathtotal = players[pid].deathtotal + 1
 
+					players[pid].totaldmgtaken += min(0,hp-players[pid].lasthp)
+					players[pid].totalhprecovered += max(0,hp-players[pid].lasthp)
 					if players[pid].istarget:
 						players[pid].dmgtaken += min(0,hp-players[pid].lasthp)
 						players[pid].healreceived += max(0,hp-players[pid].lasthp)
+						players[pid].targethp.append([t,hp])
 					players[pid].lasthp = hp
 
 				elif action == "FX":
@@ -384,23 +387,28 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 
 		# spike log data
 		for act in s.attacks:
-			act_time = round(act[0] - s.start,1)
+			act_time = round(act[0] - s.start,2)
 			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid])
 		for act in s.heals:
 			healer = players[act[1]].name
 			if act[2] == 'green':
 				healer = '+'
-			act_time = round(act[0] - s.start,1)
+			act_time = round(act[0] - s.start,2)
 			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],healer,players[act[1]].team,'','',suid])
 		for act in s.evades:
-			act_time = round(act[0] - s.start,1)
+			act_time = round(act[0] - s.start,2)
 			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],'-',players[act[1]].team,'','',suid])
 		if s.debufftime:
-			debufftime = round(s.debufftime - s.start,1)
+			debufftime = round(s.debufftime - s.start,2)
 			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,debufftime,'',s.death,'res debuff hit','--','','','',suid])
 		if s.spikedeath:
-			deathtime = round(s.spikedeath,1)
 			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,round(s.spikedeath,1),'',s.death,'death','x','','','',suid])
+		
+		# graphing spike hp
+		if len(s.hp)>1:
+			for hp in s.hp:
+				hptime = round(hp[0]-s.start,2)
+				csvw.writerow([demoname,match_map,'spike_hp',s.target,s.team,hptime,hp[1],s.death,'','','','','',suid])
 
 		# spike stats
 		for stat,value in s.stats.items():
@@ -516,10 +524,13 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 				str(hpspike)[:4]
 
 			])
-
+		targetteam = 'BLU'
+		if p.team == 'BLU':
+			targetteam = 'RED'
 		#header_log = ['demo','map',   'linetype',    'playr','team',t, hp d  a  tgt tt tgtd,'value','uid','stat1','stat2','stat3','stat4','stat5',stat6,stat7,stat8,...]
-		csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'', '','',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/targeted[p.team] if p.healontarget > 0 else ''])
-		csvw.writerow([demoname,match_map,'offense_stats',p.name,p.team,'','','','','', '','',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/targets[p.team],spiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget,p.misseddead,p.attacks,p.attackstotal-p.attacks])
+		csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/targeted[p.team] if p.healontarget > 0 else ''])
+		csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/targets[p.team],spiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget,p.misseddead,p.attacks,p.attackstotal-p.attacks])
+		csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.totaldmgtaken,p.totalhprecovered,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts])
 		
 		total_attacks[p.team]  += p.attacks
 		total_ontarget[p.team] += p.ontarget

@@ -49,8 +49,18 @@ class Player:
 		self.ontarget = 0
 		self.resets = 0
 		self.lastresdebuff = False
+
 		self.dmgtaken = 0
 		self.healreceived = 0
+		self.totaldmgtaken = 0
+		self.totalhprecovered = 0
+		self.totalhealsreceived = 0
+		self.totalhealsreceivedontarget = 0
+
+		self.totalearlyjaunts = 0
+		self.totalearlyphases = 0
+
+		self.targethp = []
 		self.misseddead = 0 # targets missed while dead
 
 
@@ -139,6 +149,7 @@ class Player:
 		spikes[-1].attackers = self.targetattackers[:]
 		spikes[-1].heals = self.targetheals[:]
 		spikes[-1].evades = self.targetevades[:]
+		spikes[-1].hp = self.targethp[:]
 		spikes[-1].spiketime = self.targetstart - self.recentattacks[-1][0]
 		spikes[-1].debufftime = self.lastresdebuff
 		if self.death == 1:
@@ -153,6 +164,13 @@ class Player:
 			for atk in self.recentattacks:
 				if self.targetevades[0][0] > atk[0]:
 					atkb4evade += 1
+			if (atkb4evade <= earlyevadecount or self.targetevades[0][0] < earlyevadetime):
+				if (self.targetevades[0][2] == 'phase' or self.targetevades[0][2] == 'hibernate'):
+					self.totalearlyphases  += 1
+				elif (self.targetevades[0][2] == 'jaunt' ): #or self.targetevades[0][2] == 'translocation'
+					self.totalearlyjaunts  += 1
+				
+			
 			spikes[-1].stats['atks before evade'] = atkb4evade
 		spikes[-1].stats['attackers'] = len(self.targetattackers)
 		spikes[-1].stats['attacks'] = len(self.recentattacks)
@@ -183,6 +201,7 @@ class Player:
 		self.targetattackers = []
 		self.healedby = []
 		self.targetheals = []
+		self.targethp = []
 		self.dmgtaken = 0
 		self.healreceived = 0
 		# self.targetevades = [] # reset handled in the preevade lines
@@ -212,6 +231,7 @@ class Player:
 				players[hid].predicts += 1
 			self.absorbed = []
 
+		self.targethp.append([t,self.lasthp])
 		# determine preevades
 		if len(self.targetevades) > 0:
 			lastevade = self.targetevades[-1]
@@ -264,7 +284,9 @@ class Player:
 		# ignore if player dead
 		# account for phases
 		# account for jaunts?
+		targetplayer.totalhealsreceived += 1
 		if targetplayer.istarget:
+			targetplayer.totalhealsreceivedontarget += 1
 			targetplayer.targetheals.append([t,self.id,action])
 			if self.id not in targetplayer.healedby:
 				late = False
