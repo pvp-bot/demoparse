@@ -37,7 +37,6 @@ lastgather = {'BLU':0,'RED':0}
 gatherplayercount = {'BLU':0,'RED':0}
 gathertimes = {'BLU':[],'RED':[]}
 
-
 with open(sys.argv[1],'r') as fp:
 
 	# blank out csv if existing
@@ -204,7 +203,7 @@ with open(sys.argv[1],'r') as fp:
 					csv_log = [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
 					if p.istarget and (p.death == 1 or (t2-p.targetstart >= targetmaxtime and t-p.recentattacks[-1][0] > targetcooldown)): # if we're over the target window
 						p.endtarget(players,spikes)
-					if p.hp != '' or p.death != '' or p.action  != '' or p.target != '' or p.targetinstance == 1:
+					if p.death != '' or p.action  != '' or p.target != '' or p.targetinstance == 1:
 						csvw.writerow(csv_log)
 						lineuid += 1
 						p.reset()
@@ -238,6 +237,7 @@ with open(sys.argv[1],'r') as fp:
 					players[pid].totaldmgtaken += min(0,hp-players[pid].lasthp)
 					players[pid].totalhprecovered += max(0,hp-players[pid].lasthp)
 					if players[pid].istarget:
+						players[pid].totaldmgtakenonspike += min(0,hp-players[pid].lasthp)
 						players[pid].dmgtaken += min(0,hp-players[pid].lasthp)
 						players[pid].healreceived += max(0,hp-players[pid].lasthp)
 						players[pid].targethp.append([t,hp])
@@ -530,7 +530,7 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		#header_log = ['demo','map',   'linetype',    'playr','team',t, hp d  a  tgt tt tgtd,'value','uid','stat1','stat2','stat3','stat4','stat5',stat6,stat7,stat8,...]
 		csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/targeted[p.team] if p.healontarget > 0 else ''])
 		csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/targets[p.team],spiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget,p.misseddead,p.attacks,p.attackstotal-p.attacks])
-		csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.totaldmgtaken,p.totalhprecovered,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts])
+		csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken])
 		
 		total_attacks[p.team]  += p.attacks
 		total_ontarget[p.team] += p.ontarget
@@ -539,9 +539,9 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 
 	csvw.writerow([demoname,match_map,'summary','','','','','','score','', '','',  '',''      ,deaths['RED'],deaths['BLU']])
 	csvw.writerow([demoname,match_map,'summary','','','','','','targets called','', '','',  '',''      ,targets['BLU'],targets['RED']])
-	csvw.writerow([demoname,match_map,'summary','','','','','','avg on target','', '','',  '',''      ,total_ontarget['BLU']/targets['BLU'],total_ontarget['RED']/targets['RED']])
-	csvw.writerow([demoname,match_map,'summary','','','','','','atk per target','', '','',  '',''      ,total_attacks['BLU']/targets['BLU'],total_attacks['RED']/targets['RED']])
-	csvw.writerow([demoname,match_map,'summary','','','','','','avg atk timing','', '','',  '',''      ,sum(total_timing['BLU'])/max(len(total_timing['BLU']),1),sum(total_timing['RED'])/max(len(total_timing['RED']),1)])
+	csvw.writerow([demoname,match_map,'summary','','','','','','avg on target','', '','',  '',''      ,round(total_ontarget['BLU']/targets['BLU'],1),round(total_ontarget['RED']/targets['RED'],1)])
+	csvw.writerow([demoname,match_map,'summary','','','','','','atk per target','', '','',  '',''      ,round(total_attacks['BLU']/targets['BLU'],1),round(total_attacks['RED']/targets['RED'],1)])
+	csvw.writerow([demoname,match_map,'summary','','','','','','avg atk timing','', '','',  '',''      ,round(sum(total_timing['BLU'])/max(len(total_timing['BLU']),1),2),round(sum(total_timing['RED'])/max(len(total_timing['RED']),1),2)])
 
 print_table(offence_headers, offence_content)
 print_table(healer_headers, healer_content)

@@ -53,6 +53,7 @@ class Player:
 		self.dmgtaken = 0
 		self.healreceived = 0
 		self.totaldmgtaken = 0
+		self.totaldmgtakenonspike = 0
 		self.totalhprecovered = 0
 		self.totalhealsreceived = 0
 		self.totalhealsreceivedontarget = 0
@@ -164,7 +165,7 @@ class Player:
 			for atk in self.recentattacks:
 				if self.targetevades[0][0] > atk[0]:
 					atkb4evade += 1
-			if (atkb4evade <= earlyevadecount or self.targetevades[0][0] < earlyevadetime):
+			if (atkb4evade <= earlyevadecount or self.targetevades[0][0] < self.targetstart + earlyevadetime):
 				if (self.targetevades[0][2] == 'phase' or self.targetevades[0][2] == 'hibernate'):
 					self.totalearlyphases  += 1
 				elif (self.targetevades[0][2] == 'jaunt' ): #or self.targetevades[0][2] == 'translocation'
