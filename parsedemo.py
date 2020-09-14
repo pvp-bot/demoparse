@@ -316,8 +316,6 @@ with open(sys.argv[1],'r') as fp:
 							players[pid].targetteam = players[tid].team
 
 							if players[pid].team != players[tid].team and players[pid].action not in utility and not players[pid].reverse:
-								if pid == 28 and players[pid].action == '':
-									print(count)
 								players[tid].targetcount(t, pid, players,players[pid].action,spikes)
 							elif players[pid].reverse:
 								players[tid].target = players[pid].name
@@ -398,7 +396,7 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 	suid = 1
 	# spikes to csv
 	for s in spikes:
-		
+
 		csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost']])
 
 		# spike log data

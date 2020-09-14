@@ -194,14 +194,14 @@ class Player:
 		healsreceived = 0
 		# to not count greens
 		for h in self.targetheals:
-			if h[1] != 'green':
+			if h[2] != 'green':
 				healsreceived += 1
 		spikes[-1].stats['heals received'] = healsreceived
 		spikes[-1].stats['greens available'] = self.greensavailable # at the start of the spike
 		spikes[-1].stats['greens used'] = self.greensavailable - self.greens
 		spikes[-1].stats['spike duration'] = self.recentattacks[-1][0] - self.targetstart
-		spikes[-1].stats['total hp lost'] = self.dmgtaken
-		spikes[-1].stats['total hp recovered'] = self.healreceived
+		spikes[-1].stats['total hp lost'] = -self.dmgtaken
+		# spikes[-1].stats['total hp recovered'] = self.healreceived
 		spikes[-1].stats['hp after spike'] = self.lasthp
 
 		for p in players.values(): 
