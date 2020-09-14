@@ -60,6 +60,7 @@ class Player:
 
 		self.totalearlyjaunts = 0
 		self.totalearlyphases = 0
+		self.lastphase = -60
 
 		self.targethp = []
 		self.misseddead = 0 # targets missed while dead
@@ -80,23 +81,28 @@ class Player:
 		self.topups = 0
 		self.aps = 0 # absorb pain
 		self.predicts = 0 # predicted the spike target and gave an absorb
+		self.guesses = 0
 
 		self.healalpha = 0
 		self.healontime = 0
+		self.healfollowup = 0
 		self.heallate = 0
 		self.healontarget = 0
-
-
 		self.targetheals = []
 		self.targetevades = []
-
 		self.greens = 20 # assumes all slots greens
 		self.greensavailable = 20 # assumes all slots greens
-
 		self.support = False
+		self.phaseheals = 0
+		self.supportextras = {}
+		self.healmisseddead = 0
+		self.healpowers = {'absorb pain':0,'heal other':0,'insulating circuit':0,'rejuvenating circuit':0,'share pain':0,'soothe':0,'aid other':0}
 
 		self.stats = {}
 		self.atkchains = {}
+		self.firstatktiming = False
+		self.followuptiming = []
+		self.lateatks = 0
 
 	def reset(self):
 		self.hp = ''
@@ -134,7 +140,17 @@ class Player:
 				if atk[1] == aid:
 					timing = min(timing,atk[0]) # update attacker timing for avg
 					atkchain += atk[2]+' - ' # change atk chain to string
-			atkchain = atkchain[:-3]
+					
+					# followup attack timing stats
+					if atkchain.count('-') == 1:
+						players[aid].firstatktiming = atk[0]
+						if atk[0] > targetwindow:
+							players[aid].lateatks += 1
+					elif atkchain.count('-') == 2:
+						players[aid].followuptiming.append(atk[0]-players[aid].firstatktiming)
+			players[aid].firstatktiming = False		
+
+			atkchain = atkchain[:-3] # trailing " - "
 			if atkchain in players[aid].atkchains.keys():
 				players[aid].atkchains[atkchain] += 1
 			else:
@@ -188,12 +204,19 @@ class Player:
 		spikes[-1].stats['total hp recovered'] = self.healreceived
 		spikes[-1].stats['hp after spike'] = self.lasthp
 
-		for p in players.values(): # count num spikes missed if dead
+		for p in players.values(): 
+			# count num spikes missed if dead
 			if p.team != self.team:
 				lastdeath = p.lastdeath/1000
 				respawn = math.ceil((lastdeath-1)/15)*15+15 # 1 sec safety, includes 15 sec uneffecting
 				if lastdeath < self.targetstart and self.recentattacks[-1][0] < respawn:
 					p.misseddead += 1
+			# count num heals missed if dead
+			if p.team == self.team and p.id != self.id:
+				lastdeath = p.lastdeath/1000
+				respawn = math.ceil((lastdeath-1)/15)*15+15 # 1 sec safety, includes 15 sec uneffecting
+				if lastdeath < self.targetstart and self.recentattacks[-1][0] < respawn:
+					p.healmisseddead += 1
 
 
 		self.targetstart = False # restart timer
@@ -289,27 +312,31 @@ class Player:
 		if targetplayer.istarget:
 			targetplayer.totalhealsreceivedontarget += 1
 			targetplayer.targetheals.append([t,self.id,action])
+
 			if self.id not in targetplayer.healedby:
-				late = False
 				if t- targetplayer.targetstart < targethealwindow or len(targetplayer.recentattacks)<3:
 					self.healontime += 1
 					if targetplayer.healedby == []:
 						self.healalpha += 1
-				elif t- targetplayer.targetstart > targethealwindow*2:
-					self.heallate += 1 # counting extra late as topups
-					late = True
 				else:
 					self.heallate += 1
 
 				targetplayer.healedby.append(self.id)
-				if not late: 
-					self.healtiming.append(t-targetplayer.targetstart)
+				self.healtiming.append(t-targetplayer.targetstart)
+
 				self.healontarget += 1
+			else:
+				self.healfollowup += 1
 
 			self.ontargetheals += 1
 
 		else:
 			self.topups += 1
 
+		if t > targetplayer.lastphase+2 and t < targetplayer.lastphase+6:
+			self.phaseheals += 1
+
 		if self.action in absorbs:
+			if not targetplayer.istarget:
+				self.guesses += 1
 			targetplayer.absorbed.append([t, self.id])

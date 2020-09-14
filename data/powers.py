@@ -38,9 +38,7 @@ fx = { # fx from actor to target (includes buffs)
 	'ADRENALINEFLOW.FX':'recovery aura',
 
 	# pain
-	# 'SOOTH_ATTACK.FX':'soothe',
-	# 'SHAREPAIN_ATTACK.FX':'share pain',
-	'SOOTH_ATTACK.FX':'sooth', # just counting the same as emp for simplicity
+	'SOOTH_ATTACK.FX':'sooth',
 	'SHAREPAIN_ATTACK.FX':'share pain',
 	'PAINBRINGER_ATTACK.FX':'painbringer',
 
@@ -181,11 +179,30 @@ fx = { # fx from actor to target (includes buffs)
 
 resdebuff = 'DEBUFFDAMRESCONTINUING.FX'
 
-evade = [
+phases = [
 	'phase shift',
 	'hibernate',
+]
+teleports = [
 	'jaunt',
 	'translocation',
+]
+
+evade = []
+evade.extend(teleports)
+evade.extend(phases)
+
+filterextras = [
+	'crey pistol',
+	'raptor pack',
+	'mystic/flight',
+	'green',
+	'red',
+	'blue',
+	'purple/orange',
+	'yellow',
+	'clear mind',
+	'healing aura',
 ]
 
 healhit = {
