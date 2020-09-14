@@ -38,9 +38,10 @@ fx = { # fx from actor to target (includes buffs)
 	'ADRENALINEFLOW.FX':'recovery aura',
 
 	# pain
-	'SOOTH_ATTACK.FX':'sooth',
+	'SOOTH_ATTACK.FX':'soothe',
 	'SHAREPAIN_ATTACK.FX':'share pain',
 	'PAINBRINGER_ATTACK.FX':'painbringer',
+	# world of pain
 
 	# psn
 	'/POISONLIQUIDPROJECTILE.FX':'envenom',
@@ -82,7 +83,7 @@ fx = { # fx from actor to target (includes buffs)
 
 	#nature
 	'CORROSIVESAP.FX':'corrosive enzyme',
-	'WILDBASTION.FX':'wild bastion', # share with plant
+	'WILDBASTION.FX':'wild bastion/fortress', # share with plant
 	'OVERGROWTH.FX':'overgrowth',
 	'WILD_GROWTH.FX':'wild growth',
 	'/REGROWTH2.FX':'regrowth',
@@ -142,8 +143,12 @@ fx = { # fx from actor to target (includes buffs)
 	
 	'POWERPUSH.FX':'power push',
 	'ENERGYBLAST/MEGA.FX':'power burst', #?!
+	'CUSTOMANIM_MEGA.FX':'power burst', 
 	'ENERGYBLAST/SNIPERBLAST_QUICK.FX':'sniper blast', 
 	'ENERGYBLAST.FX':'energy blast', 
+	'CHRONOLOGICALSELECTION_ATTACK.FX':'chronos', 
+
+	# 'MARTIALARTS/FOCUSCHI.FX':'focus chi', # or tac arrow?
 	
 	
 	'ASSASINSPSIBLADE.FX':'assassin\'s strike', 
@@ -381,6 +386,7 @@ powersets = {
 
 	'ir':'kin',
 	'siphon speed':'kin',
+
 	'entangling arrow':'trick',
 	'heat loss':'cold',
 	'phantom army':'ill',
@@ -389,6 +395,7 @@ powersets = {
 	'fossilize':'earth',
 	'chilblain':'ice control',
 	'shiver':'ice control',
+
 	'thunderous blast':'elec blast',
 	'lightning bolt':'elec blast',
 	'executioner shot':'dual pistol',
@@ -397,9 +404,12 @@ powersets = {
 	'tidal forces':'water',
 	'power push':'energy blast',
 	'power burst':'energy blast',
+
 	'greater psi blade':'psi melee',
 	'force bolt':'bubble',
 	'boost range':'energy manip',
+	'chronos':'temporal',
+	# 'focus chi':'martial',
 }
 
 primarysupport = [ #order of importance?
@@ -413,5 +423,5 @@ primaryoffence = [ #order of importance?
 	'ice',
 	'beam',
 	'psi',
-	'energy',
+	'energy blast',
 ]

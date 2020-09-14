@@ -398,8 +398,8 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 	suid = 1
 	# spikes to csv
 	for s in spikes:
-		#												  spk tgt ,t team,spike-t,hp,death? ,# atks        ,#attackers      ,tm,															
-		csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid])
+		
+		csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost']])
 
 		# spike log data
 		for act in s.attacks:
@@ -430,8 +430,7 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		for stat,value in s.stats.items():
 			csvw.writerow([demoname,match_map,'spike_stats',s.target,s.team,'','',s.death,stat,'','','',value,suid])			
 		
-		# [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
-		suid += 1
+		suid += 1 # spike uid
 
 
 

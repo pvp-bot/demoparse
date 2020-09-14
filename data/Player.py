@@ -200,7 +200,7 @@ class Player:
 		spikes[-1].stats['greens available'] = self.greensavailable # at the start of the spike
 		spikes[-1].stats['greens used'] = self.greensavailable - self.greens
 		spikes[-1].stats['spike duration'] = self.recentattacks[-1][0] - self.targetstart
-		spikes[-1].stats['total dmg lost'] = self.dmgtaken
+		spikes[-1].stats['total hp lost'] = self.dmgtaken
 		spikes[-1].stats['total hp recovered'] = self.healreceived
 		spikes[-1].stats['hp after spike'] = self.lasthp
 
@@ -233,35 +233,36 @@ class Player:
 		self.istarget = False
 
 	def inittarget(self,t,players):
-		self.istarget = True
-		self.targeted += 1
-		self.targetinstance = 1 # for spreadsheet
+		if self.lasthp != 0:
+			self.istarget = True
+			self.targeted += 1
+			self.targetinstance = 1 # for spreadsheet
 
-		self.greensavailable = self.greens
+			self.greensavailable = self.greens
 
-		if len(self.recentprimaryattacks) > 0:
-			self.targetstart = self.recentprimaryattacks[0][0]
-		else:
-			self.targetstart = self.recentattacks[0][0]
+			if len(self.recentprimaryattacks) > 0:
+				self.targetstart = self.recentprimaryattacks[0][0]
+			else:
+				self.targetstart = self.recentattacks[0][0]
 
-		# add all current attackers to list
-		for atk in self.recentattacks:
-			if atk[1] not in self.targetattackers:
-				self.targetattackers.append(atk[1])
+			# add all current attackers to list
+			for atk in self.recentattacks:
+				if atk[1] not in self.targetattackers:
+					self.targetattackers.append(atk[1])
 
-		# for spirit ward predicts
-		for time, hid in self.absorbed:
-			if (self.targetstart - time) < predictspiketime: # absorb was fired before the spike
-				players[hid].predicts += 1
-			self.absorbed = []
+			# for spirit ward predicts
+			for time, hid in self.absorbed:
+				if (self.targetstart - time) < predictspiketime: # absorb was fired before the spike
+					players[hid].predicts += 1
+				self.absorbed = []
 
-		self.targethp.append([t,self.lasthp])
-		# determine preevades
-		if len(self.targetevades) > 0:
-			lastevade = self.targetevades[-1]
-			self.targetevades = []
-			if (t-lastevade[0] < targetwindow):
-				self.targetevades.append(lastevade)
+			self.targethp.append([t,self.lasthp])
+			# determine preevades
+			if len(self.targetevades) > 0:
+				lastevade = self.targetevades[-1]
+				self.targetevades = []
+				if (t-lastevade[0] < targetwindow):
+					self.targetevades.append(lastevade)
 
 	def jauntoffone(self,t,players): # count as target if jaunt off single primary attack
 		if not self.istarget and len(self.recentprimaryattacks) == 1 and (t-self.recentprimaryattacks[0][0]) <= targetwindow/2: # with 1 sec of atk
