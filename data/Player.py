@@ -144,7 +144,7 @@ class Player:
 					# followup attack timing stats
 					if atkchain.count('-') == 1:
 						players[aid].firstatktiming = atk[0]
-						if atk[0] > targetwindow:
+						if atk[0] > self.targetstart + targetwindow:
 							players[aid].lateatks += 1
 					elif atkchain.count('-') == 2:
 						players[aid].followuptiming.append(atk[0]-players[aid].firstatktiming)
@@ -208,13 +208,13 @@ class Player:
 			# count num spikes missed if dead
 			if p.team != self.team:
 				lastdeath = p.lastdeath/1000
-				respawn = math.ceil((lastdeath-1)/15)*15+15 # 1 sec safety, includes 15 sec uneffecting
+				respawn = math.ceil((lastdeath)/15)*15+15 # 1 sec safety, includes 15 sec uneffecting
 				if lastdeath < self.targetstart and self.recentattacks[-1][0] < respawn:
 					p.misseddead += 1
 			# count num heals missed if dead
 			if p.team == self.team and p.id != self.id:
 				lastdeath = p.lastdeath/1000
-				respawn = math.ceil((lastdeath-1)/15)*15+15 # 1 sec safety, includes 15 sec uneffecting
+				respawn = math.ceil((lastdeath)/15)*15+15 # 1 sec safety, includes 15 sec uneffecting
 				if lastdeath < self.targetstart and self.recentattacks[-1][0] < respawn:
 					p.healmisseddead += 1
 

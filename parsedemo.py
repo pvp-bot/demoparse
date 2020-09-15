@@ -174,6 +174,7 @@ with open(sys.argv[1],'r') as fp:
 	count = 0
 	line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 	lineuid = 0
+	t_bundle = 0.0
 
 
 
@@ -220,10 +221,21 @@ with open(sys.argv[1],'r') as fp:
 							p.healpowers[p.action] += 1
 						if p.action in phases:
 							p.lastphase = t
-
 						lineuid += 1
 						p.reset()
+
+			# aggregate data by time type
+			if t > 0:
+				t_bundle += t2-t
+			if t_bundle > t_bundle_step and t2<matchtime:
+				# aggregate greens availability
+				for p in players.values():
+					csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,math.floor(t2/t_bundle_step)*t_bundle_step,'','','','','','','',lineuid,p.greens])
+				t_bundle = 0
 			t = t2
+				
+
+
 
 
 			try:
@@ -281,6 +293,7 @@ with open(sys.argv[1],'r') as fp:
 						if players[pid].istarget:
 							players[pid].targetheals.append([t,pid,players[pid].action])
 						players[pid].greens -= 1
+
 
 					if players[pid].action in evade:
 						players[pid].targetevades.append([t,pid,players[pid].action])
@@ -379,8 +392,11 @@ for p in players.values(): # clean up, if target at end of match
 with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 	csvw = csv.writer(csvfile, delimiter=',')
 	for key, p in players.items(): # append stats
-		csvw.writerow([demoname,match_map,'log',p.name,p.team,0,'',0,'','','',0])
+		csvw.writerow([demoname,match_map,'log',p.name,p.team,0,'',0,'','','',0,])
 		csvw.writerow([demoname,match_map,'log',p.name,p.team,600,'',0,'','','',0])
+		csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,0,'','','','','','','','',20])
+		csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,matchtime,'','','','','','','',lineuid,p.greens])
+		csvw.writerow([demoname,match_map,'greens_log','','',0,'','','','','','','','',0])
 		for stat, value in p.stats.items():
 			csvw.writerow([demoname,match_map,'stats'     ,p.name,p.team,'','','',stat,'','','',value])
 		for ac, count in p.atkchains.items():
@@ -426,7 +442,7 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 
 		# spike stats
 		for stat,value in s.stats.items():
-			csvw.writerow([demoname,match_map,'spike_stats',s.target,s.team,'','',s.death,stat,'','','',value,suid])			
+			csvw.writerow([demoname,match_map,'spike_stats',s.target,s.team,'','',s.death,stat,'','','',value,suid])
 		
 		suid += 1 # spike uid
 
@@ -470,7 +486,7 @@ targeted = {'BLU':0,'RED':0}
 for p in players.values():
 	deaths[p.team] += p.deathtotal 
 	targeted[p.team] += p.targeted
-	if p.ontargetheals+p.topups > p.attacks:
+	if p.ontargetheals+p.topups > p.attacks/4 and p.ontargetheals > 6:
 		p.support = True
 
 	# setup player powersets in order
@@ -504,7 +520,7 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		if p.team == 'BLU':
 			targetteam = 'RED'
 
-		spiketiming = sum(p.spiketiming) / max(len(p.spiketiming), 1)
+		spiketiming = sum(map(abs,p.spiketiming)) / max(len(p.spiketiming), 1)
 		spiketimingvar = sum((x-spiketiming)**2 for x in p.spiketiming) / max(len(p.spiketiming),1)
 		healtiming = sum(p.healtiming) / max(len(p.healtiming), 1)
 		healtimingvar = sum((x-healtiming)**2 for x in p.healtiming) / max(len(p.healtiming),1)
@@ -565,11 +581,11 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		total_timing[p.team].extend(p.spiketiming)
 
 
-	csvw.writerow([demoname,match_map,'summary','','','','','','score','', '','',  '',''      ,deaths['RED'],deaths['BLU']])
-	csvw.writerow([demoname,match_map,'summary','','','','','','targets called','', '','',  '',''      ,targets['BLU'],targets['RED']])
-	csvw.writerow([demoname,match_map,'summary','','','','','','avg on target','', '','',  '',''      ,round(total_ontarget['BLU']/targets['BLU'],1),round(total_ontarget['RED']/targets['RED'],1)])
-	csvw.writerow([demoname,match_map,'summary','','','','','','atk per target','', '','',  '',''      ,round(total_attacks['BLU']/targets['BLU'],1),round(total_attacks['RED']/targets['RED'],1)])
-	csvw.writerow([demoname,match_map,'summary','','','','','','avg atk timing','', '','',  '',''      ,round(sum(total_timing['BLU'])/max(len(total_timing['BLU']),1),2),round(sum(total_timing['RED'])/max(len(total_timing['RED']),1),2)])
+	csvw.writerow([demoname,match_map,'summary','','','','','','score','', '','',  '',''      			,deaths['RED'],deaths['BLU']])
+	csvw.writerow([demoname,match_map,'summary','','','','','','targets called','', '','',  '',''      	,targets['BLU'],targets['RED']])
+	csvw.writerow([demoname,match_map,'summary','','','','','','avg on target','', '','',  '',''      	,round(total_ontarget['BLU']/targets['BLU'],1),round(total_ontarget['RED']/targets['RED'],1)])
+	csvw.writerow([demoname,match_map,'summary','','','','','','atk per target','', '','',  '',''      	,round(total_attacks['BLU']/targets['BLU'],1),round(total_attacks['RED']/targets['RED'],1)])
+	csvw.writerow([demoname,match_map,'summary','','','','','','avg atk timing','', '','',  '',''      	,round(sum(total_timing['BLU'])/max(len(total_timing['BLU']),1),2),round(sum(total_timing['RED'])/max(len(total_timing['RED']),1),2)])
 
 print_table(offence_headers, offence_content)
 print_table(healer_headers, healer_content)

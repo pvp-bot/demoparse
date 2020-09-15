@@ -41,7 +41,7 @@ fx = { # fx from actor to target (includes buffs)
 	'SOOTH_ATTACK.FX':'soothe',
 	'SHAREPAIN_ATTACK.FX':'share pain',
 	'PAINBRINGER_ATTACK.FX':'painbringer',
-	# world of pain
+	'WORLDOFPAIN_ATTACK.FX':'world of pain',
 
 	# psn
 	'/POISONLIQUIDPROJECTILE.FX':'envenom',
@@ -197,18 +197,7 @@ evade = []
 evade.extend(teleports)
 evade.extend(phases)
 
-filterextras = [
-	'crey pistol',
-	'raptor pack',
-	'mystic/flight',
-	'green',
-	'red',
-	'blue',
-	'purple/orange',
-	'yellow',
-	'clear mind',
-	'healing aura',
-]
+
 
 healhit = {
 	# emp
@@ -319,6 +308,20 @@ absorbs = [
 	'spirit ward'
 ]
 
+filterextras = [
+	'crey pistol',
+	'raptor pack',
+	'mystic/flight',
+	'green',
+	'red',
+	'blue',
+	'purple/orange',
+	'yellow',
+	'clear mind',
+	'healing aura',
+	'power boost',
+]
+
 npc = [
 	'NPC',
 	'EntTypeFile',
@@ -368,8 +371,8 @@ powersets = {
 	
 	'heal other':'emp',
 	'absorb pain':'emp',
-	'sooth':'pain',
-	'share pain':'emp',
+	'soothe':'pain',
+	'share pain':'pain',
 	'insulating circuit':'elec aff',
 	'amp up':'elec aff',
 	'shock':'elec aff',
