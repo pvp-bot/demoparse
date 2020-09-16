@@ -244,10 +244,9 @@ utility = [	# for filtering out not atk offense powers
 	'web nade',
 	'glue arrow',
 	'confuse',
-	'brawl',
 	'thunderous blast',
 	'heat loss',
-	'suppressive fire',
+	'crey pistol',
 ]
 
 

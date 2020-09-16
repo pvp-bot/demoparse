@@ -49,6 +49,7 @@ class Player:
 		self.ontarget = 0
 		self.resets = 0
 		self.lastresdebuff = False
+		self.painted = False
 
 		self.dmgtaken = 0
 		self.healreceived = 0
@@ -61,6 +62,7 @@ class Player:
 		self.totalearlyjaunts = 0
 		self.totalearlyphases = 0
 		self.lastphase = -60
+		self.atkstakenonspike = 0
 
 		self.targethp = []
 		self.misseddead = 0 # targets missed while dead
@@ -168,7 +170,11 @@ class Player:
 		spikes[-1].evades = self.targetevades[:]
 		spikes[-1].hp = self.targethp[:]
 		spikes[-1].spiketime = self.targetstart - self.recentattacks[-1][0]
-		spikes[-1].debufftime = self.lastresdebuff
+		if self.lastresdebuff:
+			spikes[-1].debufftime = self.lastresdebuff
+		elif self.painted > self.targetstart - paintedtimer:
+			spikes[-1].debufftime = self.recentattacks[0][0]
+
 		if self.death == 1:
 			spikes[-1].spikedeath = self.lastdeath/1000 - self.targetstart
 		if self.lasthp == 0:
@@ -186,9 +192,8 @@ class Player:
 					self.totalearlyphases  += 1
 				elif (self.targetevades[0][2] == 'jaunt' ): #or self.targetevades[0][2] == 'translocation'
 					self.totalearlyjaunts  += 1
-				
-			
 			spikes[-1].stats['atks before evade'] = atkb4evade
+		
 		spikes[-1].stats['attackers'] = len(self.targetattackers)
 		spikes[-1].stats['attacks'] = len(self.recentattacks)
 		healsreceived = 0
@@ -268,7 +273,7 @@ class Player:
 		if not self.istarget and len(self.recentprimaryattacks) == 1 and (t-self.recentprimaryattacks[0][0]) <= targetwindow/2: # with 1 sec of atk
 			self.inittarget(t,players)
 
-	def targetcount(self,t,aid,players,action,spikes):
+	def targetcount(self,t,aid,players,action,spikes,rogues):
 		players[aid].attackstotal += 1
 
 		if self.istarget: # if already target

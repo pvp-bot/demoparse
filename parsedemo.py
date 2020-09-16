@@ -17,6 +17,7 @@ player_list  = []
 players      = ''
 
 spikes      = []
+rogues      = []
 
 demoname = sys.argv[1].split('/')[-1].split('.')[0]
 match_map = ""
@@ -287,11 +288,15 @@ with open(sys.argv[1],'r') as fp:
 							lastgather[players[pid].team] = t
 
 					# damresdebuff
-					if resdebuff in line[5] and players[pid].istarget and not players[pid].lastresdebuff:
-						players[pid].lastresdebuff = t
+					if resdebuff in line[5]:
+						players[pid].painted = t
+						if players[pid].istarget and not players[pid].lastresdebuff:
+							players[pid].lastresdebuff = t
 					if players[pid].action == 'green':
 						if players[pid].istarget:
 							players[pid].targetheals.append([t,pid,players[pid].action])
+						else:
+							rogues.append([t,pid,players[pid].action])
 						players[pid].greens -= 1
 
 
@@ -329,7 +334,7 @@ with open(sys.argv[1],'r') as fp:
 							players[pid].targetteam = players[tid].team
 
 							if players[pid].team != players[tid].team and players[pid].action not in utility and not players[pid].reverse:
-								players[tid].targetcount(t, pid, players,players[pid].action,spikes)
+								players[tid].targetcount(t, pid, players,players[pid].action,spikes,rogues)
 							elif players[pid].reverse:
 								players[tid].target = players[pid].name
 								players[tid].action = players[pid].action
@@ -337,7 +342,7 @@ with open(sys.argv[1],'r') as fp:
 								players[pid].target = ''
 								players[pid].reverse = False
 								if players[pid].team != players[tid].team:
-									players[pid].targetcount(t, tid, players,players[tid].action,spikes)
+									players[pid].targetcount(t, tid, players,players[tid].action,spikes,rogues)
 							else:
 								if players[pid].action in heals:
 									players[pid].healcount(t, players[tid],players[pid].action)
@@ -409,8 +414,11 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 	for gathertime in gathertimes['RED']:
 		csvw.writerow([demoname,match_map,'gathers','','RED',gathertime])
 
-	suid = 1
 	# spikes to csv
+	# for r in rogues:
+		# csvw.writerow([demoname,match_map,'rogue_log',r.target,r.team,act_time,'','',act[2],players[act[1]].name,players[act[1]].team,'','',''])
+
+	suid = 1
 	for s in spikes:
 
 		csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost']])
@@ -430,7 +438,10 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],'-',players[act[1]].team,'','',suid])
 		if s.debufftime:
 			debufftime = round(s.debufftime - s.start,2)
-			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,debufftime,'',s.death,'res debuff hit','--','','','',suid])
+			if debufftime <= 0:
+				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,debufftime,'',s.death,'-res painted','--','','','',suid])
+			else:
+				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,debufftime,'',s.death,'-res hit','--','','','',suid])
 		if s.spikedeath:
 			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,round(s.spikedeath,1),'',s.death,'death','x','','','',suid])
 		
