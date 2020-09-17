@@ -15,3 +15,4 @@ matchtime = 600
 t_bundle_step = 60
 phasedelay = 0.5
 paintedtimer = 16 # ~how long after a debuff indicator it's still valid, not sure when the second pops up?
+extras_start = 5

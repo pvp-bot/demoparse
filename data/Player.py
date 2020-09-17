@@ -52,6 +52,7 @@ class Player:
 		self.painted = False
 
 		self.dmgtaken = 0
+		self.dmgtakensurv = 0
 		self.healreceived = 0
 		self.totaldmgtaken = 0
 		self.totaldmgtakenonspike = 0
@@ -206,6 +207,8 @@ class Player:
 		spikes[-1].stats['greens used'] = self.greensavailable - self.greens
 		spikes[-1].stats['spike duration'] = self.recentattacks[-1][0] - self.targetstart
 		spikes[-1].stats['total hp lost'] = -self.dmgtaken
+		if self.death != 1:
+			self.dmgtakensurv += -self.dmgtaken
 		# spikes[-1].stats['total hp recovered'] = self.healreceived
 		spikes[-1].stats['hp after spike'] = self.lasthp
 

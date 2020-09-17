@@ -31,7 +31,6 @@ emotes = []
 
 lastactor = 0
 writeline = False # flag to write line to csv
-timeinc = False  # flag if inc has progressed in demo
 
 lasttarget = {'BLU':'','RED':''}
 lastgather = {'BLU':0,'RED':0}
@@ -195,12 +194,6 @@ with open(sys.argv[1],'r') as fp:
 			ms = ms + int(line[0]) # running demo time
 			t2 = (ms/1000) # to seconds
 			if t2 > t or writeline:
-				if t2 > t:
-					timeinc = True
-					gatherplayercount = {'BLU':0,'RED':0}
-				else:
-					timeinc = False
-
 				for p in players.values():
 					csv_log = [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
 					
@@ -213,7 +206,7 @@ with open(sys.argv[1],'r') as fp:
 						csvw.writerow(csv_log)
 
 						# keep track of extra
-						if p.action != '' and (p.action not in heals or p.action == 'spirit ward') and p.action not in evade and p.action not in filterextras:
+						if p.action != '' and (p.action not in heals or p.action == 'spirit ward') and p.action not in evade and p.action not in filterextras and t > extras_start:
 							if p.action in p.supportextras.keys():
 								p.supportextras[p.action] += 1
 							else:
@@ -271,6 +264,7 @@ with open(sys.argv[1],'r') as fp:
 						players[pid].healreceived += max(0,hp-players[pid].lasthp)
 						players[pid].targethp.append([t,hp])
 					players[pid].lasthp = hp
+
 
 				elif action == "FX":
 					action = next((substring for substring in fx.keys() if substring in line[5]), None)
@@ -330,6 +324,7 @@ with open(sys.argv[1],'r') as fp:
 					if line[3] == 'ENT':
 						tid = int(line[4])
 						if tid != pid and tid in player_ids: # if target is a player
+
 							players[pid].target = players[tid].name
 							players[pid].targetteam = players[tid].team
 
@@ -543,7 +538,7 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 			p.targeted,
 			"{:.0%}".format(1-p.deathtotal/max(p.targeted,1)),
 			p.ontarget,
-			"{:.0%}".format(p.ontarget/targets[p.team]),
+			"{:.0%}".format(p.ontarget/max(targets[p.team],1)),
 			str(spiketiming)[:4],
 			str(spiketimingvar)[:4],
 			p.first,
@@ -585,7 +580,7 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		# header_log = ['demo','map',   'linetype',    'playr','team',t, hp d  a  tgt tt tgtd,'value','uid','stat1','stat2','stat3','stat4','stat5',stat6,stat7,stat8,...]
 		csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/targeted[p.team] if p.healontarget > 0 else ''])
 		csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/targets[p.team],spiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.lateatks])
-		csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken,20-p.greens])
+		csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken,20-p.greens,p.dmgtakensurv])
 		
 		total_attacks[p.team]  += p.attacks
 		total_ontarget[p.team] += p.ontarget

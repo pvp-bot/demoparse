@@ -132,6 +132,9 @@ fx = { # fx from actor to target (includes buffs)
 	'/KINSIPHONSPEED.FX':'siphon speed',
 	'/KINTRANSFERENCE.FX':'transference',
 
+	'ENERVATINGFIELDCONTINUING.FX':'enervating field',
+	'ACCELERATEMETABOLISM.FX':'accelerate metabolism',
+
 	'/EXECUTIONERSSHOT_ATTACK.FX':'executioner shot',
 	'/PIERCINGROUNDS_ATTACK.FX':'piercing rounds',
 	'SUPPRESSIVEFIRE_ATTACK.FX':'suppressive fire',
@@ -148,7 +151,7 @@ fx = { # fx from actor to target (includes buffs)
 	'ENERGYBLAST.FX':'energy blast', 
 	'CHRONOLOGICALSELECTION_ATTACK.FX':'chronos', 
 
-	# 'MARTIALARTS/FOCUSCHI.FX':'focus chi', # or tac arrow?
+	'MARTIALARTS/FOCUSCHI.FX':'upshot/focus', # or tac arrow?
 	
 	
 	'ASSASINSPSIBLADE.FX':'assassin\'s strike', 
@@ -174,7 +177,7 @@ fx = { # fx from actor to target (includes buffs)
 	'/WILLPOWER.FX':'red',
 	'/INTELLIGENCE.FX':'blue',
 	'/STRENGTH.FX':'purple/orange',
-	# '/AGILITY.FX':'yellow', # shares with tac arrow agility
+	'/AGILITY.FX':'yellow/agility', # shares with tac arrow agility
 
 	# temp
 	'WEBGRENADETHROW.FX':'web nade',
@@ -226,12 +229,14 @@ pmov = { # prepend with 'A_' for flying version
 primaryattacks = [
 	'envenom',
 	'corrosive enzyme',
+	'enervating field',
 	'dominate',
 	'blaze',
 	'bib',
 	'lancer',
 	'char', # maybe? depends on lineup
 	'penetrating ray/charged shot',
+
 ]
 
 utility = [	# for filtering out not atk offense powers
@@ -261,9 +266,8 @@ preverse = [
 	'/PLANTCONTROLHIT.FX',
 	'SCHOOLOFSHARKS_HIT.FX',
 	'/V_MAKO_SPIRITSHARK_CIRCLE_HIT',
-
-	'ENERVATINGFIELDCONTINUING.FX'
 	'/DEHYDRATE.FX',
+	'ENERVATINGFIELDCONTINUING.FX',
 ]
 
 
@@ -296,7 +300,7 @@ heals = [
 	'soothe',
 	'share pain',
 	'aid other',
-	'rejuvenating circuit',
+	# 'rejuvenating circuit',
 	'insulating circuit',
 	'spirit ward'
 	# alkaloid
@@ -366,6 +370,7 @@ otherfx = { # like toggles and stuff for determining powersets
 powersets = {
 	'bib':'ice',
 	'blaze':'fire',
+	'blazing bolt':'fire',
 	'lancer':'beam',
 	
 	'heal other':'emp',
@@ -384,10 +389,14 @@ powersets = {
 	
 	'thorns':'plant',
 	'toxins':'plant',
-	'agility':'tac',
+	# 'agility':'tac',
+	'focus chi':'tac',
 
 	'ir':'kin',
 	'siphon speed':'kin',
+
+	'accelerate metabolism':'rad',
+	'enervating field':'rad',
 
 	'entangling arrow':'trick',
 	'heat loss':'cold',
@@ -406,12 +415,12 @@ powersets = {
 	'tidal forces':'water',
 	'power push':'energy blast',
 	'power burst':'energy blast',
+	'power burst':'energy blast',
 
 	'greater psi blade':'psi melee',
 	'force bolt':'bubble',
 	'boost range':'energy manip',
 	'chronos':'temporal',
-	# 'focus chi':'martial',
 }
 
 primarysupport = [ #order of importance?
