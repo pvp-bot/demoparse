@@ -8,6 +8,7 @@ from data.powers import *
 from data.config import *
 from data.Player import Player
 from data.Target import Target
+import data.override as override
 
 ms = 0          # demo time in ms
 t = 0           # demo time in seconds
@@ -63,6 +64,15 @@ with open(sys.argv[1],'r') as fp:
 			if pid not in player_ids and line[3] not in name_filter:
 				player_ids.append(pid)
 				player_list.append(Player(line[3],pid))
+
+		# read manual demo overrides
+		if action == override.key:
+			if line[3] == 'SCORE':
+				override.score = [line[4],line[5]]
+			elif line[3] == "PLAYERTEAM":
+				override.playerteam[[line[4]]] = line[5] 
+			elif line[3] == "TEAMSWAP":
+				override.teamswap == True
 		if action in npc and pid in player_ids: #
 			del player_ids[-1]
 			del player_list[-1]
@@ -97,7 +107,7 @@ with open(sys.argv[1],'r') as fp:
 		if action == 'FX' and pid in player_ids:
 			if any(substring for substring in buffs if substring in line[5]):
 				buff_count = count
-		elif action == 'TARGET' and count < (buff_count+5) and pid in player_ids:
+		elif action == 'TARGET' and count < (buff_count+8) and pid in player_ids:
 			tid = int(line[4]) # target player id
 			if tid in player_ids:
 				if pid in player_ids and players[pid].team == '': # if  the buffer doesn't have a team
@@ -109,6 +119,9 @@ with open(sys.argv[1],'r') as fp:
 				else:
 					players[pid].team = min(players[pid].team,players[tid].team)
 					players[tid].team = min(players[pid].team,players[tid].team)
+		elif action == 'PREVTARGET':
+			buff_count = False
+
 		count = count + 1
 		line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 
@@ -117,6 +130,7 @@ with open(sys.argv[1],'r') as fp:
 			p.team = 'BLU'
 		else:
 			p.team = 'RED'
+		
 
 
 	# back to start of file
@@ -579,7 +593,7 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		
 		# header_log = ['demo','map',   'linetype',    'playr','team',t, hp d  a  tgt tt tgtd,'value','uid','stat1','stat2','stat3','stat4','stat5',stat6,stat7,stat8,...]
 		csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/targeted[p.team] if p.healontarget > 0 else ''])
-		csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/targets[p.team],spiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.lateatks])
+		csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/max(targets[p.team],1),spiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.lateatks])
 		csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken,20-p.greens,p.dmgtakensurv])
 		
 		total_attacks[p.team]  += p.attacks
@@ -589,8 +603,8 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 
 	csvw.writerow([demoname,match_map,'summary','','','','','','score','', '','',  '',''      			,deaths['RED'],deaths['BLU']])
 	csvw.writerow([demoname,match_map,'summary','','','','','','targets called','', '','',  '',''      	,targets['BLU'],targets['RED']])
-	csvw.writerow([demoname,match_map,'summary','','','','','','avg on target','', '','',  '',''      	,round(total_ontarget['BLU']/targets['BLU'],1),round(total_ontarget['RED']/targets['RED'],1)])
-	csvw.writerow([demoname,match_map,'summary','','','','','','atk per target','', '','',  '',''      	,round(total_attacks['BLU']/targets['BLU'],1),round(total_attacks['RED']/targets['RED'],1)])
+	csvw.writerow([demoname,match_map,'summary','','','','','','avg on target','', '','',  '',''      	,round(total_ontarget['BLU']/max(targets['BLU'],1),1),round(total_ontarget['RED']/max(targets['RED'],1),1)])
+	csvw.writerow([demoname,match_map,'summary','','','','','','atk per target','', '','',  '',''      	,round(total_attacks['BLU']/max(targets['BLU'],1),1),round(total_attacks['RED']/max(targets['RED'],1),1)])
 	csvw.writerow([demoname,match_map,'summary','','','','','','avg atk timing','', '','',  '',''      	,round(sum(total_timing['BLU'])/max(len(total_timing['BLU']),1),2),round(sum(total_timing['RED'])/max(len(total_timing['RED']),1),2)])
 
 print_table(offence_headers, offence_content)

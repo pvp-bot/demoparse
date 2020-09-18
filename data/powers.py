@@ -83,7 +83,7 @@ fx = { # fx from actor to target (includes buffs)
 
 	#nature
 	'CORROSIVESAP.FX':'corrosive enzyme',
-	'WILDBASTION.FX':'wild bastion/fortress', # share with plant
+	'WILDBASTION_HIT.FX':'wild bastion', # share with plant
 	'OVERGROWTH.FX':'overgrowth',
 	'WILD_GROWTH.FX':'wild growth',
 	'/REGROWTH2.FX':'regrowth',
@@ -268,6 +268,7 @@ preverse = [
 	'/V_MAKO_SPIRITSHARK_CIRCLE_HIT',
 	'/DEHYDRATE.FX',
 	'ENERVATINGFIELDCONTINUING.FX',
+	'WILDBASTION_HIT.FX',
 ]
 
 
