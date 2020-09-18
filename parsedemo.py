@@ -97,7 +97,13 @@ with open(sys.argv[1],'r') as fp:
 	num_players   = len(player_ids)
 	count_players = 0
 	buff_count	  = 0
-	while line and count_players < num_players:
+	
+	team_groups = []
+	for pid in player_ids:
+		team_groups.append([pid])
+	maxgroupsize = 0
+
+	while line and maxgroupsize<math.floor(num_players/2): #assuming even number teams
 		try:
 			pid = int(line[1])
 			action = line[2] # catches weird lines without anything on it
@@ -109,26 +115,36 @@ with open(sys.argv[1],'r') as fp:
 				buff_count = count
 		elif action == 'TARGET' and count < (buff_count+8) and pid in player_ids:
 			tid = int(line[4]) # target player id
-			if tid in player_ids:
-				if pid in player_ids and players[pid].team == '': # if  the buffer doesn't have a team
-					count_players = count_players + 1
-					players[pid].team = count_players
-				if players[tid].team == '':
-					players[tid].team = players[pid].team
-					count_players = count_players + 1
-				else:
-					players[pid].team = min(players[pid].team,players[tid].team)
-					players[tid].team = min(players[pid].team,players[tid].team)
+			if tid != pid and tid in player_ids:
+				group1 = False
+				group2 = False
+				groupcount = 0
+				for group in team_groups:
+					if pid in group and tid not in group:
+						group1 = groupcount
+					elif tid in group and pid not in group:
+						group2 = groupcount
+					groupcount += 1
+				g1 = min(group1,group2)
+				g2 = max(group1,group2)
+				if g1 != g2: # if a buff is thrown merge lists to first list
+					team_groups[g1]+=team_groups[g2]
+					del team_groups[g2]
+					maxgroupsize = max(maxgroupsize,len(team_groups[g1]))
+					
+				
 		elif action == 'PREVTARGET':
 			buff_count = False
 
 		count = count + 1
 		line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 
+	for group in team_groups:
+		if len(group) == math.floor(num_players/2):
+			for pid in group:
+				players[pid].team = 'BLU' # think this reliably puts the recorder on BLU (if in buff phase)
 	for key, p in players.items():
-		if p.team == 1:
-			p.team = 'BLU'
-		else:
+		if p.team == '':
 			p.team = 'RED'
 		
 
