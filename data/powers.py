@@ -69,6 +69,7 @@ fx = { # fx from actor to target (includes buffs)
 	'THORNS/BUILDUP_ATTACK.FX':'toxins',
 	# 'THORNS/BUILDUP_ATTACK.FX':'build up',
 	'PLANTCONTROLHIT.FX':'strangler', # shared with plant control
+	'ENTANGLEPLANTSEEDTHROW.FX':'entangle', # shared with plant control
 	# 'STRANGLERROOTS.FX': 'strangler', # doesn't spawn on every strangler
 
 	# elec

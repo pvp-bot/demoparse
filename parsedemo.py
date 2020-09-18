@@ -205,7 +205,7 @@ with open(sys.argv[1],'r') as fp:
 	line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 	lineuid = 0
 	t_bundle = 0.0
-
+	csvhold = False
 
 
 
@@ -227,12 +227,18 @@ with open(sys.argv[1],'r') as fp:
 				for p in players.values():
 					csv_log = [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
 					
+					# dealing with stupid entangles
+					if p.action == 'strangler': # hold half second to confirm no entangle
+						csvhold = [t+0.5,csv_log[:]]
+					if p.action == 'entangle': # cancel last strangler when entangle pops up
+						csvhold = False
+
 					# check end target each timestep
 					if p.istarget and (p.death == 1 or (t2-p.targetstart >= targetmaxtime and t-p.recentattacks[-1][0] > targetcooldown)): # if we're over the target window
 						p.endtarget(players,spikes)
 
 					# write to log when applicable
-					if p.death != '' or p.action  != '' or p.target != '' or p.targetinstance == 1:
+					if (p.death != '' or p.action  != '' or p.target != '' or p.targetinstance == 1) and not csvhold:
 						csvw.writerow(csv_log)
 
 						# keep track of extra
@@ -248,6 +254,11 @@ with open(sys.argv[1],'r') as fp:
 						lineuid += 1
 						p.reset()
 
+			# more stupid entangle stuff
+			if csvhold and t > csvhold[0]:
+				csvw.writerow(csvhold[1])
+
+				csvhold = False
 			# aggregate data by time type
 			if t > 0:
 				t_bundle += t2-t
@@ -363,6 +374,7 @@ with open(sys.argv[1],'r') as fp:
 							elif players[pid].reverse:
 								players[tid].target = players[pid].name
 								players[tid].action = players[pid].action
+								players[tid].targetteam = players[pid].team
 								players[pid].action = ''
 								players[pid].target = ''
 								players[pid].reverse = False

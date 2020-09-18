@@ -223,7 +223,7 @@ class Player:
 			if p.team == self.team and p.id != self.id:
 				lastdeath = p.lastdeath/1000
 				respawn = math.ceil((lastdeath)/15)*15+15 # 1 sec safety, includes 15 sec uneffecting
-				if lastdeath < self.targetstart and self.recentattacks[-1][0] < respawn:
+				if lastdeath > 0 and lastdeath < self.targetstart and self.recentattacks[-1][0] < respawn:
 					p.healmisseddead += 1
 
 
@@ -276,8 +276,18 @@ class Player:
 		if not self.istarget and len(self.recentprimaryattacks) == 1 and (t-self.recentprimaryattacks[0][0]) <= targetwindow/2: # with 1 sec of atk
 			self.inittarget(t,players)
 
+	def entanglecheck(self,atk,t,aid):
+		if atk[2] == 'strangler' and atk[1] == aid and atk[0] > t-0.5:
+			return False
+		else:
+			return True
+
 	def targetcount(self,t,aid,players,action,spikes,rogues):
 		players[aid].attackstotal += 1
+
+		# entangle check
+		if action == 'entangle':
+			self.recentattacks = [atk for atk in self.recentattacks if self.entanglecheck(atk,t,aid)]
 
 		if self.istarget: # if already target
 			self.recentattacks.append([t,aid,action]) # add the atk
