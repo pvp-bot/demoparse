@@ -257,8 +257,10 @@ with open(sys.argv[1],'r') as fp:
 			# more stupid entangle stuff
 			if csvhold and t > csvhold[0]:
 				csvw.writerow(csvhold[1])
-
 				csvhold = False
+			if t2 > t:
+				gatherplayercount = {'BLU':0,'RED':0} # reset gather count on time inc
+
 			# aggregate data by time type
 			if t > 0:
 				t_bundle += t2-t
@@ -426,7 +428,6 @@ with open(sys.argv[1],'r') as fp:
 for p in players.values(): # clean up, if target at end of match
 	if p.istarget:
 		p.endtarget(players,spikes)
-
 
 
 # PRINT STATS TO CSV
