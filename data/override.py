@@ -5,12 +5,12 @@ key = 'OVERRIDE'
 
 # add remove kills from blu/red from the summary
 # 0 0 OVERRIDE SCORE 0 1
-score = []
+score = [0,0]
 
 # swap player to other team
 # 0 0 OVERRIDE PLAYERTEAM ghostmaster
-playerteam = []
-
+playerswap = []
+ 
 # swap RED and BLU assignment (for keeping people same team whole night)
 # 0 0 OVERRIDE TEAMSWAP ghostmaster BLU
 teamswap = False

@@ -47,7 +47,7 @@ with open(sys.argv[1],'r') as fp:
 
 	line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 	count = 0
-
+	playerline = 0
 	# initializing line loop - players, teams,
 	while line and count < 30000: # 30k should be enough to find all players
 		try:
@@ -60,19 +60,25 @@ with open(sys.argv[1],'r') as fp:
 			match_map = line[3]
 			match_map = match_map.split('/')[-1]
 			match_map = match_map.split('_')[1].lower()
+		if action == "Player":
+			playerline = count
 		if action == "NEW":
 			if pid not in player_ids and line[3] not in name_filter:
-				player_ids.append(pid)
-				player_list.append(Player(line[3],pid))
+				if count == playerline + 1:
+					player_ids = [pid] + player_ids # if player is recording, they're first
+					player_list = [Player(line[3],pid)] + player_list
+				else:
+					player_ids.append(pid)
+					player_list.append(Player(line[3],pid))
 
 		# read manual demo overrides
 		if action == override.key:
 			if line[3] == 'SCORE':
-				override.score = [line[4],line[5]]
+				override.score = [line[4],line[5]]  # 0 0 OVERRIDE SCORE 0 1 (ex)
 			elif line[3] == "PLAYERTEAM":
-				override.playerteam[[line[4]]] = line[5] 
-			elif line[3] == "TEAMSWAP":
-				override.teamswap == True
+				override.playerswap.append(line[4]) # 0 0 OVERRIDE PLAYERSWAP ghostmaster
+			elif line[3] == "TEAMSWAP": 
+				override.teamswap == True # 0 0 OVERRIDE TEAMSWAP
 		if action in npc and pid in player_ids: #
 			del player_ids[-1]
 			del player_list[-1]
@@ -139,13 +145,36 @@ with open(sys.argv[1],'r') as fp:
 		count = count + 1
 		line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 
+	team1 = 'BLU'
+	team2 = 'RED'
+	teamremaining=''
+	# if team swap override
+	if override.teamswap:
+		team1 = 'RED'
+		team2 = 'BLU'
+
 	for group in team_groups:
-		if len(group) == math.floor(num_players/2):
+		if player_ids[0] in group:
 			for pid in group:
-				players[pid].team = 'BLU' # think this reliably puts the recorder on BLU (if in buff phase)
+				players[pid].team = team1 # think this reliably puts the recorder on BLU (if in buff phase)
+			if len(group) < math.floor(num_players/2):
+				teamremaining = team1
+			else:
+				teamremaining = team2
+		elif len(group) == math.floor(num_players/2):
+			for pid in group:
+				players[pid].team = team2
+
 	for key, p in players.items():
 		if p.team == '':
-			p.team = 'RED'
+			p.team = teamremaining
+
+		# if playerswap override
+		if p.name in override.playerswap:
+			if p.team == team2:
+				p.team = team1
+			else:
+				p.team = team2
 		
 
 
@@ -629,6 +658,9 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		total_ontarget[p.team] += p.ontarget
 		total_timing[p.team].extend(p.spiketiming)
 
+	# fix missing deaths in the score line
+	deaths['RED'] += override.score[1]
+	deaths['BLU'] += override.score[0]
 
 	csvw.writerow([demoname,match_map,'summary','','','','','','score','', '','',  '',''      			,deaths['RED'],deaths['BLU']])
 	csvw.writerow([demoname,match_map,'summary','','','','','','targets called','', '','',  '',''      	,targets['BLU'],targets['RED']])
