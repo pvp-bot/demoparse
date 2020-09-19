@@ -497,6 +497,8 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		# csvw.writerow([demoname,match_map,'rogue_log',r.target,r.team,act_time,'','',act[2],players[act[1]].name,players[act[1]].team,'','',''])
 
 	suid = 1
+	spikes.sort(key=lambda x: x.start)
+
 	for s in spikes:
 
 		csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost']])
@@ -690,7 +692,6 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 print_table(offence_headers, offence_content)
 print_table(healer_headers, healer_content)
 
-print("")
 print("SCORE: " + str(deaths['RED']) + "-" + str(deaths['BLU']))
 print("TARGETS CALLED: " + str(targets['BLU']) + "-" + str(targets['RED']))
 if len(emotes) > 0:
