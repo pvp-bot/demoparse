@@ -344,6 +344,11 @@ with open(sys.argv[1],'r') as fp:
 						players[pid].targethp.append([t,hp])
 					players[pid].lasthp = hp
 
+				if action == "HPMAX":
+					hp  = float(line[3])
+					players[pid].maxhp = max(players[pid].maxhp,hp)
+
+
 
 				elif action == "FX":
 					action = next((substring for substring in fx.keys() if substring in line[5]), None)
