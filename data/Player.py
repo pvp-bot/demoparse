@@ -50,6 +50,7 @@ class Player:
 		self.resets = 0
 		self.lastresdebuff = False
 		self.painted = False
+		self.kbtime = False
 
 		self.dmgtaken = 0
 		self.dmgtakensurv = 0
@@ -175,7 +176,8 @@ class Player:
 			spikes[-1].debufftime = self.lastresdebuff
 		elif self.painted > self.targetstart - paintedtimer:
 			spikes[-1].debufftime = self.recentattacks[0][0]
-
+		if self.kbtime > self.targetstart - targetwindow and self.kbtime < self.recentattacks[-1][0]:
+			spikes[-1].kbtime = self.kbtime
 		if self.death == 1:
 			spikes[-1].spikedeath = self.lastdeath/1000 - self.targetstart
 		if self.lasthp == 0:

@@ -1,11 +1,13 @@
+import os
 import sys
 from google.cloud import bigquery
+from data.secrets import *
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.getcwd()+"/data/"+GOOGLE_APPLICATION_CREDENTIALS
 
 # Construct a BigQuery client object.
 client = bigquery.Client()
 
-projectname = 'demoparse-data'
-datasetname = 'coh_demos'
 tablename = demoname = sys.argv[1].split('/')[-1].split('.')[0]
 
 table_id = projectname+"."+datasetname+"."+tablename
@@ -23,4 +25,4 @@ with open(file_path, "rb") as source_file:
 job.result()  # Waits for the job to complete.
 
 table = client.get_table(table_id)  # Make an API request.
-print(f"{tablename}: uploaded {table.num_rows} rows and {len(table.schema)} columns")
+print(f"{tablename}: uploaded {table.num_rows} rows and {len(table.schema)} columns uploaded to {projectname}.{datasetname}")

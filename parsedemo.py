@@ -453,7 +453,11 @@ with open(sys.argv[1],'r') as fp:
 					# if 'WALL' in mov and players[pid].action == '':
 					# 	players[pid].action = 'ssj'
 
-					elif 'EMOTE' in mov: # WEAPONBACK might be shared with some other sets
+					# add KBs to spike log
+					if mov == 'PLAYERKNOCKBACK':
+						players[pid].kbtime = t
+
+					if 'EMOTE' in mov: # WEAPONBACK might be shared with some other sets
 						emotes.append([players[pid].name,mov])
 
 			line = shlex.split(fp.readline().replace('\\','').replace('\'','').replace('\"',''))
@@ -516,6 +520,9 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,debufftime,'',s.death,'-res painted','--','','','',suid])
 			else:
 				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,debufftime,'',s.death,'-res hit','--','','','',suid])
+		if s.kbtime:
+			kbtime = round(s.kbtime - s.start,2)
+			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,kbtime,'',s.death,'knocked','!','','','',suid])
 		if s.spikedeath:
 			csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,round(s.spikedeath,1),'',s.death,'death','x','','','',suid])
 		
