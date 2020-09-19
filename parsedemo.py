@@ -48,6 +48,9 @@ with open(sys.argv[1],'r') as fp:
 	line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 	count = 0
 	playerline = 0
+
+	player_name_hold = False
+	player_id_hold = False
 	# initializing line loop - players, teams,
 	while line and count < 30000: # 30k should be enough to find all players
 		try:
@@ -62,6 +65,9 @@ with open(sys.argv[1],'r') as fp:
 			match_map = match_map.split('_')[1].lower()
 		if action == "Player":
 			playerline = count
+		if action == "NPC":
+			player_ids = [i for i in player_ids if i != pid]
+			player_list = [i for i in player_list if i.id != pid]
 		if action == "NEW":
 			if pid not in player_ids and line[3] not in name_filter:
 				if count == playerline + 1:
@@ -74,11 +80,13 @@ with open(sys.argv[1],'r') as fp:
 		# read manual demo overrides
 		if action == override.key:
 			if line[3] == 'SCORE':
-				override.score = [line[4],line[5]]  # 0 0 OVERRIDE SCORE 0 1 (ex)
-			elif line[3] == "PLAYERTEAM":
+				override.score = [int(line[5]),int(line[4])]  # 0 0 OVERRIDE SCORE 0 1 (ex), numbers reversed since deaths not score
+			elif line[3] == "PLAYERSWAP":
 				override.playerswap.append(line[4]) # 0 0 OVERRIDE PLAYERSWAP ghostmaster
 			elif line[3] == "TEAMSWAP": 
-				override.teamswap == True # 0 0 OVERRIDE TEAMSWAP
+				override.teamswap = True # 0 0 OVERRIDE TEAMSWAP
+			elif line[3] == "POWERSETS": 
+				override.powersets[line[4]] = [line[5],line[6]] 
 		if action in npc and pid in player_ids: #
 			del player_ids[-1]
 			del player_list[-1]
@@ -89,7 +97,6 @@ with open(sys.argv[1],'r') as fp:
 		count = count + 1
 
 	players = dict(zip(player_ids,player_list))
-
 
 
 
@@ -431,7 +438,7 @@ with open(sys.argv[1],'r') as fp:
 					mov = line[3]
 
 					# this should hopefully catch most insta-respawn deaths w/o hp = 0
-					if mov == 'PLAYER_HITDEATH' and players[pid].lasthp != 0 and (ms - players[pid].lastdeath) > 14000:
+					if 'DEATH' in mov and players[pid].lasthp != 0 and (ms - players[pid].lastdeath) > 14000:
 						players[pid].death = 1
 						players[pid].lastdeath = ms
 						players[pid].deathtotal = players[pid].deathtotal + 1
@@ -582,6 +589,11 @@ for p in players.values():
 		p.set1 = '-'
 	if not p.set2:
 		p.set2 = '-'
+	if p.name in override.powersets:
+		p.set1 = override.powersets[p.name][0]
+		p.set2 = override.powersets[p.name][1]
+
+
 	p.at = p.set1+'/'+p.set2
 
 

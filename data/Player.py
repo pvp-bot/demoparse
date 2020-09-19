@@ -216,7 +216,7 @@ class Player:
 			# count num spikes missed if dead
 			if p.team != self.team:
 				lastdeath = p.lastdeath/1000
-				respawn = math.ceil((lastdeath)/15)*15+15 # 1 sec safety, includes 15 sec uneffecting
+				respawn = math.ceil((lastdeath)/15)*15+15 # includes 15 sec uneffecting
 				if lastdeath < self.targetstart and self.recentattacks[-1][0] < respawn:
 					p.misseddead += 1
 			# count num heals missed if dead
