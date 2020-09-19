@@ -94,6 +94,12 @@ fx = { # fx from actor to target (includes buffs)
 	'/ARROW_STICKY.FX':'glue arrow',
 	'/ARROW_ACID.FX':'acid arrow',
 
+	# warshade
+	'NICTUSQUICKBLAST.FX':'shadow blast',
+	'KHELDIAN_WARSHADE/XRAYBEAM/XRAYBEAM.FX':'ebon eye',
+	'KHELDIAN_WARSHADE/ANIMATEFOE/ANIMATEFOE.FX':'dark extraction',
+	'KHELDIAN_WARSHADE/MELEELIFEDRAIN/MELEELIFEDRAIN.FX':'essence drain',
+
 	# epics
 	'/COMMAND2.FX':'dominate',
 	'SCHOOLOFSHARKS_HIT.FX':'ssj', # not sure about this one
