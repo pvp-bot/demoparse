@@ -425,6 +425,8 @@ powersets = {
 	'power burst':'energy blast',
 	'power burst':'energy blast',
 
+	'shadow blast':'warshade',
+	'ebon eye':'warshade',
 	'greater psi blade':'psi melee',
 	'force bolt':'bubble',
 	'boost range':'energy manip',

@@ -26,3 +26,5 @@ do
 	fi
 	tail -n +2 -q $csv >> "$1"/"$dir_name".csv
 done
+
+python upload_bq.py "$1"/"$dir_name".csv
