@@ -165,7 +165,7 @@ class Player:
 		spikes[-1].spiketime = self.targetstart - self.recentattacks[-1][0]
 		if self.lastresdebuff:
 			spikes[-1].debufftime = self.lastresdebuff
-		elif self.painted > self.targetstart - paintedtimer:
+		elif self.painted and self.painted > self.targetstart - paintedtimer:
 			spikes[-1].debufftime = self.recentattacks[0][0]
 		if self.kbtime > self.targetstart - targetwindow and self.kbtime < self.recentattacks[-1][0]:
 			spikes[-1].kbtime = self.kbtime

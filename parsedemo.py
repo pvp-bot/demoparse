@@ -383,6 +383,10 @@ with open(sys.argv[1],'r') as fp:
 
 					if players[pid].action in evade:
 						players[pid].targetevades.append([t,pid,players[pid].action])
+						
+						if players[pid].action in phases and players[pid].istarget:
+							rogues.append([t,pid,players[pid].action,pid])
+
 
 					# powerset determination
 					if not players[pid].set1:
