@@ -273,7 +273,7 @@ with open(sys.argv[1],'r') as fp:
 					if p.istarget and (p.death == 1 or (t2-p.targetstart >= targetmaxtime and t-p.recentattacks[-1][0] > targetcooldown)): # if we're over the target window
 						p.endtarget(players,spikes)
 
-					# write to log when applicable
+
 					if (p.death != '' or p.action  != '' or p.target != '' or p.targetinstance == 1) and not csvhold:
 						csvw.writerow(csv_log)
 
@@ -287,6 +287,9 @@ with open(sys.argv[1],'r') as fp:
 							p.healpowers[p.action] += 1
 						if p.action in phases:
 							p.lastphase = t
+						
+						if (p.death == 1 and p.lastdeath != p.lastspikedeath):
+							rogues.append([t,p.id,'death',p.id])
 						lineuid += 1
 						p.reset()
 
@@ -374,7 +377,7 @@ with open(sys.argv[1],'r') as fp:
 						if players[pid].istarget:
 							players[pid].targetheals.append([t,pid,players[pid].action])
 						else:
-							rogues.append([t,pid,players[pid].action])
+							rogues.append([t,pid,players[pid].action,pid])
 						players[pid].greens -= 1
 
 
@@ -497,9 +500,9 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 	for gathertime in gathertimes['RED']:
 		csvw.writerow([demoname,match_map,'gathers','','RED',gathertime])
 
-	# spikes to csv
-	# for r in rogues:
-		# csvw.writerow([demoname,match_map,'rogue_log',r.target,r.team,act_time,'','',act[2],players[act[1]].name,players[act[1]].team,'','',''])
+	# 'rogues' to csv (attacks + greens not as target)
+	for r in rogues:
+		csvw.writerow([demoname,match_map,'rogue_log',players[r[1]].name,players[r[1]].team,r[0],'','',r[2],players[r[3]].name,players[r[3]].team,'','',''])
 
 	suid = 1
 	spikes.sort(key=lambda x: x.start)
@@ -585,7 +588,7 @@ targeted = {'BLU':0,'RED':0}
 for p in players.values():
 	deaths[p.team] += p.deathtotal 
 	targeted[p.team] += p.targeted
-	if p.ontargetheals+p.topups > p.attacks/4 and p.ontargetheals > 6:
+	if p.ontargetheals+p.topups > p.attacks/2 and p.ontargetheals > 6:
 		p.support = True
 
 	# setup player powersets in order
@@ -643,15 +646,13 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 			str(p.attacks / max(p.ontarget, 1))[:4]
 		])
 
-		# if p.ontargetheals > 0:
-		if p.support:
+		if p.ontargetheals > 0:
 			hpspike =p.ontargetheals/(p.healontime+p.heallate)
 			healer_content.append([
 				"[" + p.team + "]",
 				'{:<20}'.format(p.name),
 				p.healontime,
 				p.heallate,
-				# p.heallate,
 				p.topups,
 				p.healalpha,
 				str(healtiming)[:4],
@@ -661,6 +662,7 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 				str(hpspike)[:4]
 
 			])
+		if p.support:
 			csvw.writerow([demoname,match_map,'support_stats',p.name,p.team,'','','',p.set1,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.healontime,p.heallate,p.healfollowup,p.topups,p.healalpha,hpspike,healtiming,p.predicts,p.guesses,p.phaseheals,p.healmisseddead,targeted[p.team]])
 			# if p.support:
 			for extra, count in p.supportextras.items():

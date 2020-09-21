@@ -146,6 +146,10 @@ fx = { # fx from actor to target (includes buffs)
 	'/PIERCINGROUNDS_ATTACK.FX':'piercing rounds',
 	'SUPPRESSIVEFIRE_ATTACK.FX':'suppressive fire',
 
+	'RADIATIONCONTROL/XRAYBEAM.FX':'x-ray beam',
+	'COSMICBLAST.FX':'cosmic burst',
+	'PROTONBLAST_QUICK.FX':'proton blast',
+
 	
 	'/WATERJET.FX':'water jet',
 	'WATERJET_FAST.FX':'water jet',
@@ -372,7 +376,7 @@ name_filter  = [
 
 otherfx = { # like toggles and stuff for determining powersets
 	'THORNS_ACTIVATION.FX':'thorns',
-	'AGILITY.FX':'agility',
+	# 'AGILITY.FX':'agility',
 }
 
 powersets = {
@@ -397,8 +401,9 @@ powersets = {
 	
 	'thorns':'plant',
 	'toxins':'plant',
-	# 'agility':'tac',
 	'focus chi':'tac',
+
+	'cosmic burst':'rad blast',
 
 	'ir':'kin',
 	'siphon speed':'kin',

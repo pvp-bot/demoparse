@@ -16,6 +16,7 @@ class Player:
 		self.lasthp = 0
 		self.deathtotal = 0
 		self.lastdeath = -14000
+		self.lastspikedeath = False
 		self.maxhp = 0.0
 
 		self.crey = 0
@@ -122,16 +123,6 @@ class Player:
 		players[aid].spiketiming.append(timing)
 		players[aid].ontarget += 1
 
-	def isrecent(self,time,attacktime):
-		t = time-attacktime
-		if self.istarget:
-			window = targetmaxtime
-		else:
-			window = targetwindow
-		if t < window:
-			return True
-		else:
-			return False
 
 	def endtarget(self,players,spikes):
 		players[self.targetattackers[0]].first += 1
@@ -180,6 +171,7 @@ class Player:
 			spikes[-1].kbtime = self.kbtime
 		if self.death == 1:
 			spikes[-1].spikedeath = self.lastdeath/1000 - self.targetstart
+			self.lastspikedeath = self.lastdeath
 		if self.lasthp == 0:
 			spikes[-1].death = 1
 
@@ -284,10 +276,20 @@ class Player:
 		else:
 			return True
 
+	def isrecent(self,time,attacktime):
+		t = time-attacktime # difference between the atk time and current time 
+		if self.istarget:
+			window = time - self.recentattacks[0][0] + targetcooldown
+		else:
+			window = targetwindow
+		if t < window:
+			return True
+		else:
+			return False
+
 	def targetcount(self,t,aid,players,action,spikes,rogues):
 		players[aid].attackstotal += 1
-
-		# entangle check
+		# entangle check (anim share with strangler)
 		if action == 'entangle':
 			self.recentattacks = [atk for atk in self.recentattacks if self.entanglecheck(atk,t,aid)]
 
@@ -305,7 +307,10 @@ class Player:
 			if action in primaryattacks:
 				self.recentprimaryattacks.append([t,aid,action])
 			
-
+			for atk in self.recentattacks:
+				if not self.isrecent(t,atk[0]):
+					rogues.append([atk[0],atk[1],atk[2],self.id])
+			
 			self.recentattacks = [x for x in self.recentattacks if self.isrecent(t,x[0])] # remove recent attacks outside window
 			self.recentprimaryattacks = [x for x in self.recentprimaryattacks if self.isrecent(t,x[0])]
 
@@ -315,7 +320,7 @@ class Player:
 					self.targetattackers.append(atk[1])
 			if  (
 				len(self.targetattackers) >= targetminattackers and not self.istarget and # at least 2 people on target and not already target
-				(((2*len(self.recentprimaryattacks) + len(self.recentattacks))/2.9>= targetminattacks) # if min 2 primary attacks (weighted)
+				(((len(self.recentprimaryattacks) + len(self.recentattacks))/2 >= targetminattacks) # if min 2 primary attacks (weighted)
 				# or (len(self.recentattacks) >= targetminattacks*2) # or if people throw at least 4x trash damage on someone i.e. 4 BBs on emp at same time
 				or (len(self.recentprimaryattacks) == targetminattacks/2 and t-self.lastjaunt < targetwindow/2) # if jaunt slightly before primary atk activated				# or (len(self.recentprimaryattacks) >= targetminattacks-1 and len(self.recentattacks) >= targetminattacks+2) # if 1
 				)):
@@ -325,10 +330,9 @@ class Player:
 
 
 	def healcount(self, t, targetplayer,action):
-		# todo
+		# TODO:
 		# ignore if player dead
 		# account for phases
-		# account for jaunts?
 		targetplayer.totalhealsreceived += 1
 		if targetplayer.istarget:
 			targetplayer.totalhealsreceivedontarget += 1
@@ -337,7 +341,7 @@ class Player:
 			if self.id not in targetplayer.healedby:
 				if t- targetplayer.targetstart < targethealwindow or len(targetplayer.recentattacks)<4:
 					self.healontime += 1
-					if targetplayer.healedby == []:
+					if targetplayer.healedby == [] or t == targetplayer.targetheals[0][0]:
 						self.healalpha += 1
 				else:
 					self.heallate += 1
@@ -360,4 +364,4 @@ class Player:
 		if self.action in absorbs:
 			if not targetplayer.istarget:
 				self.guesses += 1
-			targetplayer.absorbed.append([t, self.id])
+				targetplayer.absorbed.append([t, self.id])
