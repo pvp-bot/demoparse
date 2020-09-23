@@ -1,5 +1,6 @@
 from data.powers import absorbs
 from data.powers import primaryattacks
+from data.powers import repeatpowers
 from data.config import *
 from data.Target import Target
 import math
@@ -289,44 +290,52 @@ class Player:
 			return False
 
 	def targetcount(self,t,aid,players,action,spikes,rogues):
-		players[aid].attackstotal += 1
-		# entangle check (anim share with strangler)
-		if action == 'entangle':
-			self.recentattacks = [atk for atk in self.recentattacks if self.entanglecheck(atk,t,aid)]
 
-		if self.istarget: # if already target
-			self.recentattacks.append([t,aid,action]) # add the atk
-			if action in primaryattacks:
-				self.recentprimaryattacks.append([t,aid,action])
+		powerrepeat = False # powers that will activate FX multiple times on a spike
+		if action in repeatpowers: # really just enervating field
 			for atk in self.recentattacks:
-				if atk[1] not in self.targetattackers: # add the atkr if needed
-						self.targetattackers.append(atk[1])
-			
+				if atk[2] == action:
+					powerrepeat = True
 
-		if not self.istarget:
-			self.recentattacks.append([t,aid,action]) # add the atk
-			if action in primaryattacks:
-				self.recentprimaryattacks.append([t,aid,action])
-			
-			for atk in self.recentattacks:
-				if not self.isrecent(t,atk[0]):
-					rogues.append([atk[0],atk[1],atk[2],self.id])
-			
-			self.recentattacks = [x for x in self.recentattacks if self.isrecent(t,x[0])] # remove recent attacks outside window
-			self.recentprimaryattacks = [x for x in self.recentprimaryattacks if self.isrecent(t,x[0])]
+		if not powerrepeat:
+			players[aid].attackstotal += 1
+			# entangle check (anim share with strangler)
+			if action == 'entangle':
+				self.recentattacks = [atk for atk in self.recentattacks if self.entanglecheck(atk,t,aid)]
 
-			self.targetattackers = []
-			for atk in self.recentattacks:
-				if atk[1] not in self.targetattackers: # add the atkr if needed
-					self.targetattackers.append(atk[1])
-			if  (
-				len(self.targetattackers) >= targetminattackers and not self.istarget and # at least 2 people on target and not already target
-				(((len(self.recentprimaryattacks) + len(self.recentattacks))/2 >= targetminattacks) # if min 2 primary attacks (weighted)
-				# or (len(self.recentattacks) >= targetminattacks*2) # or if people throw at least 4x trash damage on someone i.e. 4 BBs on emp at same time
-				or (len(self.recentprimaryattacks) == targetminattacks/2 and t-self.lastjaunt < targetwindow/2) # if jaunt slightly before primary atk activated				# or (len(self.recentprimaryattacks) >= targetminattacks-1 and len(self.recentattacks) >= targetminattacks+2) # if 1
-				)):
+			if self.istarget: # if already target
+				self.recentattacks.append([t,aid,action]) # add the atk
+				if action in primaryattacks:
+					self.recentprimaryattacks.append([t,aid,action])
+				for atk in self.recentattacks:
+					if atk[1] not in self.targetattackers: # add the atkr if needed
+							self.targetattackers.append(atk[1])
 				
-				self.inittarget(t,players)
+
+			if not self.istarget:
+				self.recentattacks.append([t,aid,action]) # add the atk
+				if action in primaryattacks:
+					self.recentprimaryattacks.append([t,aid,action])
+				
+				for atk in self.recentattacks:
+					if not self.isrecent(t,atk[0]):
+						rogues.append([atk[0],atk[1],atk[2],self.id])
+				
+				self.recentattacks = [x for x in self.recentattacks if self.isrecent(t,x[0])] # remove recent attacks outside window
+				self.recentprimaryattacks = [x for x in self.recentprimaryattacks if self.isrecent(t,x[0])]
+
+				self.targetattackers = []
+				for atk in self.recentattacks:
+					if atk[1] not in self.targetattackers: # add the atkr if needed
+						self.targetattackers.append(atk[1])
+				if  (
+					len(self.targetattackers) >= targetminattackers and not self.istarget and # at least 2 people on target and not already target
+					(((len(self.recentprimaryattacks) + len(self.recentattacks))/2 >= targetminattacks) # if min 2 primary attacks (weighted)
+					# or (len(self.recentattacks) >= targetminattacks*2) # or if people throw at least 4x trash damage on someone i.e. 4 BBs on emp at same time
+					or (len(self.recentprimaryattacks) == targetminattacks/2 and t-self.lastjaunt < targetwindow/2) # if jaunt slightly before primary atk activated				# or (len(self.recentprimaryattacks) >= targetminattacks-1 and len(self.recentattacks) >= targetminattacks+2) # if 1
+					)):
+					
+					self.inittarget(t,players)
 
 
 

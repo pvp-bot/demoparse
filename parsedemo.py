@@ -277,6 +277,9 @@ with open(sys.argv[1],'r') as fp:
 					if (p.death != '' or p.action  != '' or p.target != '' or p.targetinstance == 1) and not csvhold:
 						csvw.writerow(csv_log)
 
+						if p.action in selffx: # somehow these powers are showing up with targets
+							p.target = ''
+
 						# keep track of extra
 						if p.action != '' and (p.action not in heals or p.action == 'spirit ward') and p.action not in evade and p.action not in filterextras and t > extras_start:
 							if p.action in p.supportextras.keys():
@@ -287,6 +290,10 @@ with open(sys.argv[1],'r') as fp:
 							p.healpowers[p.action] += 1
 						if p.action in phases:
 							p.lastphase = t
+							if not p.istarget:
+								rogues.append([t,p.id,p.action,p.id])
+						if p.action == 'green' and not p.istarget:
+							rogues.append([t,p.id,p.action,p.id])
 						
 						if (p.death == 1 and p.lastdeath != p.lastspikedeath):
 							rogues.append([t,p.id,'death',p.id])
@@ -376,16 +383,11 @@ with open(sys.argv[1],'r') as fp:
 					if players[pid].action == 'green':
 						if players[pid].istarget:
 							players[pid].targetheals.append([t,pid,players[pid].action])
-						else:
-							rogues.append([t,pid,players[pid].action,pid])
 						players[pid].greens -= 1
 
 
 					if players[pid].action in evade:
 						players[pid].targetevades.append([t,pid,players[pid].action])
-						
-						if players[pid].action in phases and players[pid].istarget:
-							rogues.append([t,pid,players[pid].action,pid])
 
 
 					# powerset determination
@@ -441,6 +443,8 @@ with open(sys.argv[1],'r') as fp:
 							players[pid].jauntoffone(t,players)
 						players[pid].target = '!pos'
 						writeline = True
+					
+					writeline = True
 
 				elif action == "PREVTARGET":
 					writeline = True
@@ -508,7 +512,14 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 
 	# 'rogues' to csv (attacks + greens not as target)
 	for r in rogues:
-		csvw.writerow([demoname,match_map,'rogue_log',players[r[1]].name,players[r[1]].team,r[0],'','',r[2],players[r[3]].name,players[r[3]].team,'','',''])
+		p1 = players[r[1]].name
+		p2 = players[r[3]].name
+		t1 = players[r[1]].team
+		t2 = players[r[3]].team
+		if p1 == p2:
+			p2 = '-'
+			t2 = '-'
+		csvw.writerow([demoname,match_map,'rogue_log',p1,t1,r[0],'','',r[2],p2,t2,'','',''])
 
 	suid = 1
 	spikes.sort(key=lambda x: x.start)

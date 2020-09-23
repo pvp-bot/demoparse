@@ -22,7 +22,7 @@ fx = { # fx from actor to target (includes buffs)
 
 	# BEAMRIFLE_DISINTEGRATE
 	'BEAMRIFLE_DISINTEGRATE.FX':'disintegrate',
-	'BEAMRIFLE_CHARGEDSHOT.FX':'penetrating ray/charged shot',
+	'BEAMRIFLE_CHARGEDSHOT.FX':'p-ray/charged',
 	'BEAMRIFLE_LANCERSHOT.FX':'lancer',
 	'BEAMRIFLE_PIERCINGBEAM.FX':'piercing beam',
 
@@ -268,8 +268,12 @@ primaryattacks = [
 	'bib',
 	'lancer',
 	'char', # maybe? depends on lineup
-	'penetrating ray/charged shot',
+	'p-ray/charged',
 
+]
+
+repeatpowers = [ # powers that do multiples of an FX on use
+	'enervating field',
 ]
 
 utility = [	# for filtering out not atk offense powers
@@ -369,6 +373,14 @@ filterextras = [
 npc = [
 	'NPC',
 	'EntTypeFile',
+]
+
+selffx = [
+	'phase shift',
+	'hibernate',
+	'mystic/flight',
+	'raptor pack',
+	'crey pistol',
 ]
 
 # filter out non-player entities - issues if player name = one of these
