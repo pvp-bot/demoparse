@@ -119,6 +119,9 @@ fx = { # fx from actor to target (includes buffs)
 	'KHELDIAN_WARSHADE/ANIMATEFOE/ANIMATEFOE.FX':'dark extraction',
 	'KHELDIAN_WARSHADE/MELEELIFEDRAIN/MELEELIFEDRAIN.FX':'essence drain',
 
+	# pb
+	'PEACEHEALSELFHANDS.FX':'glowing touch',
+
 	# epics
 	'/COMMAND2.FX':'dominate',
 	'SCHOOLOFSHARKS_HIT.FX':'ssj', # not sure about this one
@@ -321,6 +324,7 @@ buffs = [
 	'KINSPEEDBOOSTHIT.FX',
 	'THERMALRADIATION/PROTECTHOLDS.FX',
 	'THERMALRADIATION/BUFFDAMAGE.FX',
+	'PEACEHEALSELFHANDS.FX',
 ]
 
 gatherbuffs = [
@@ -339,6 +343,7 @@ heals = [
 	'insulating circuit',
 	'cauterize',
 	'spirit ward',
+	'glowing touch',
 	# 'alkaloid', # shares antidote fx
 ]
 
