@@ -26,6 +26,14 @@ fx = { # fx from actor to target (includes buffs)
 	'BEAMRIFLE_LANCERSHOT.FX':'lancer',
 	'BEAMRIFLE_PIERCINGBEAM.FX':'piercing beam',
 
+	# dark blast
+	'MOONBEAM_QUICK.FX':'moonbeam',
+
+	# sonic
+	'MASSIVESONICBLAST.FX':'shout',
+	'HEADSONICSCREECH.FX':'screech',
+	'SONICCONTROL/BLASTS/HEROSTANDARDBLAST2.FX':'scream',
+
 	# emp
 	'HEALINGHANDS.FX':'heal other',
 	'ABSORBPAIN.FX':'absorb pain',
@@ -46,6 +54,8 @@ fx = { # fx from actor to target (includes buffs)
 	# psn
 	'/POISONLIQUIDPROJECTILE.FX':'envenom',
 	'/PALMPOISONLIQUIDPROJECTILE.FX':'weaken',
+	'ALCALOIDPOISONPROJECTILE.FX':'alkaloid/antidote',
+	'POISONCONEGASSES.FX':'neurotoxic breath',
 
 	# cold
 	'HEATLOSSBLAST.FX':'heat loss',
@@ -88,6 +98,15 @@ fx = { # fx from actor to target (includes buffs)
 	'OVERGROWTH.FX':'overgrowth',
 	'WILD_GROWTH.FX':'wild growth',
 	'/REGROWTH2.FX':'regrowth',
+
+	# therm
+	'THERMALRADIATION/PROTECTHOLDS.FX':'thaw',
+	'THERMALRADIATION/BUFFDAMAGE.FX':'forge',
+	'THERMALRADIATION/PBAOE.FX':'warmth',
+	'THERMALRADIATION/HEAL/FIREHEALSELFWITHHANDS.FX':'cauterize',
+	'THERMALRADIATION/MELTARMORCAST.FX':'melt armor',
+	# no direct heat exhaustion fx?
+
 
 	# trick arrow
 	'/ARROW_NET.FX':'entangling arrow',
@@ -272,6 +291,8 @@ preverse = [
 	'ENDURANCE.FX',
 	'MINDWALL.FX',
 	'FORTITUDE.FX',
+	'THERMALRADIATION/PROTECTHOLDS.FX',
+	'THERMALRADIATION/BUFFDAMAGE.FX',
 
 	#attacks - note this means misses for these powers don't get counted
 	'/PLANTCONTROLHIT.FX',
@@ -297,7 +318,9 @@ buffs = [
 	'PAINBRINGER_ATTACK.FX',
 	'WILD_GROWTH_HIT.FX',
 	'WILDBASTION_HIT.FX',
-	'KINSPEEDBOOSTHIT.FX'
+	'KINSPEEDBOOSTHIT.FX',
+	'THERMALRADIATION/PROTECTHOLDS.FX',
+	'THERMALRADIATION/BUFFDAMAGE.FX',
 ]
 
 gatherbuffs = [
@@ -312,10 +335,11 @@ heals = [
 	'soothe',
 	'share pain',
 	'aid other',
-	# 'rejuvenating circuit',
+	'rejuvenating circuit',
 	'insulating circuit',
-	'spirit ward'
-	# alkaloid
+	'cauterize',
+	'spirit ward',
+	# 'alkaloid', # shares antidote fx
 ]
 
 absorbs = [
@@ -392,6 +416,8 @@ powersets = {
 	'insulating circuit':'elec aff',
 	'amp up':'elec aff',
 	'shock':'elec aff',
+	'forge':'therm',
+	'cauterize':'therm',
 	
 	'envenom':'poison',
 	'weaken':'poison',

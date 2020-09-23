@@ -445,6 +445,8 @@ with open(sys.argv[1],'r') as fp:
 				elif action == "PREVTARGET":
 					writeline = True
 					
+				elif action == "POS":
+					players[pid].pos = [line[3],line[4],line[5]] # x, z, y? 
 
 				elif action == "MOV":
 					mov = line[3]

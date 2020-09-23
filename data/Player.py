@@ -30,6 +30,7 @@ class Player:
 		self.set1 = False
 		self.set2 = False
 		self.at = ''
+		self.pos = False
 
 		# being spiked
 		self.targetstart = -1
