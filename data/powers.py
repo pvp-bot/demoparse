@@ -1,4 +1,4 @@
-atk = { # fx from actor to target (includes buffs)
+fx = { # fx from actor to target (includes buffs)
 
 	# fire
 	'BLAZE_ATTACK.FX':'blaze',
@@ -6,6 +6,7 @@ atk = { # fx from actor to target (includes buffs)
 	'BLAZINGBOLT_ATTACK.FX':'blazing bolt',
 	'/INFERNOBOLT.FX':'blazing bolt',
 	'FLARES_ATTACK.FX':'flares',
+	'INFERNO_ATTACK.FX':'inferno',
 
 	# ice
 	'BITTERFREEZERAY.FX':'bib', # misleading name
@@ -21,9 +22,17 @@ atk = { # fx from actor to target (includes buffs)
 
 	# BEAMRIFLE_DISINTEGRATE
 	'BEAMRIFLE_DISINTEGRATE.FX':'disintegrate',
-	'BEAMRIFLE_CHARGEDSHOT.FX':'penetrating ray/charged shot',
+	'BEAMRIFLE_CHARGEDSHOT.FX':'p-ray/charged',
 	'BEAMRIFLE_LANCERSHOT.FX':'lancer',
 	'BEAMRIFLE_PIERCINGBEAM.FX':'piercing beam',
+
+	# dark blast
+	'MOONBEAM_QUICK.FX':'moonbeam',
+
+	# sonic
+	'MASSIVESONICBLAST.FX':'shout',
+	'HEADSONICSCREECH.FX':'screech',
+	'SONICCONTROL/BLASTS/HEROSTANDARDBLAST2.FX':'scream',
 
 	# emp
 	'HEALINGHANDS.FX':'heal other',
@@ -37,18 +46,18 @@ atk = { # fx from actor to target (includes buffs)
 	'ADRENALINEFLOW.FX':'recovery aura',
 
 	# pain
-	# 'SOOTH_ATTACK.FX':'soothe',
-	# 'SHAREPAIN_ATTACK.FX':'share pain',
-	'SOOTH_ATTACK.FX':'heal other', # just counting the same as emp for simplicity
-	'SHAREPAIN_ATTACK.FX':'absorb pain',
+	'SOOTH_ATTACK.FX':'soothe',
+	'SHAREPAIN_ATTACK.FX':'share pain',
 	'PAINBRINGER_ATTACK.FX':'painbringer',
+	'WORLDOFPAIN_ATTACK.FX':'world of pain',
 
 	# psn
 	'/POISONLIQUIDPROJECTILE.FX':'envenom',
 	'/PALMPOISONLIQUIDPROJECTILE.FX':'weaken',
+	'ALCALOIDPOISONPROJECTILE.FX':'alkaloid/antidote',
+	'POISONCONEGASSES.FX':'neurotoxic breath',
 
 	# cold
-	'HEATLOSSBLAST.FX':'heat loss',
 	'HEATLOSSBLAST.FX':'heat loss',
 
 	# rad
@@ -67,9 +76,10 @@ atk = { # fx from actor to target (includes buffs)
 	'/GCDIMENSIONSHIFT.FX':'dimension shift', # toggle on
 
 	# plant
-	# 'THORNS/BUILDUP_ATTACK.FX':'toxins',
-	'THORNS/BUILDUP_ATTACK.FX':'build up',
+	'THORNS/BUILDUP_ATTACK.FX':'toxins',
+	# 'THORNS/BUILDUP_ATTACK.FX':'build up',
 	'PLANTCONTROLHIT.FX':'strangler', # shared with plant control
+	'ENTANGLEPLANTSEEDTHROW.FX':'entangle', # shared with plant control
 	# 'STRANGLERROOTS.FX': 'strangler', # doesn't spawn on every strangler
 
 	# elec
@@ -84,14 +94,33 @@ atk = { # fx from actor to target (includes buffs)
 
 	#nature
 	'CORROSIVESAP.FX':'corrosive enzyme',
-	'/WILDBASTION.FX':'wild bastion',
-	'/OVERGROWTH.FX':'overgrowth',
+	'WILDBASTION_HIT.FX':'wild bastion', # share with plant
+	'OVERGROWTH.FX':'overgrowth',
+	'WILD_GROWTH.FX':'wild growth',
 	'/REGROWTH2.FX':'regrowth',
+
+	# therm
+	'THERMALRADIATION/PROTECTHOLDS.FX':'thaw',
+	'THERMALRADIATION/BUFFDAMAGE.FX':'forge',
+	'THERMALRADIATION/PBAOE.FX':'warmth',
+	'THERMALRADIATION/HEAL/FIREHEALSELFWITHHANDS.FX':'cauterize',
+	'THERMALRADIATION/MELTARMORCAST.FX':'melt armor',
+	# no direct heat exhaustion fx?
+
 
 	# trick arrow
 	'/ARROW_NET.FX':'entangling arrow',
 	'/ARROW_STICKY.FX':'glue arrow',
 	'/ARROW_ACID.FX':'acid arrow',
+
+	# warshade
+	'NICTUSQUICKBLAST.FX':'shadow blast',
+	'KHELDIAN_WARSHADE/XRAYBEAM/XRAYBEAM.FX':'ebon eye',
+	'KHELDIAN_WARSHADE/ANIMATEFOE/ANIMATEFOE.FX':'dark extraction',
+	'KHELDIAN_WARSHADE/MELEELIFEDRAIN/MELEELIFEDRAIN.FX':'essence drain',
+
+	# pb
+	'PEACEHEALSELFHANDS.FX':'glowing touch',
 
 	# epics
 	'/COMMAND2.FX':'dominate',
@@ -132,9 +161,16 @@ atk = { # fx from actor to target (includes buffs)
 	'/KINSIPHONSPEED.FX':'siphon speed',
 	'/KINTRANSFERENCE.FX':'transference',
 
+	'ENERVATINGFIELDCONTINUING.FX':'enervating field',
+	'ACCELERATEMETABOLISM.FX':'accelerate metabolism',
+
 	'/EXECUTIONERSSHOT_ATTACK.FX':'executioner shot',
 	'/PIERCINGROUNDS_ATTACK.FX':'piercing rounds',
 	'SUPPRESSIVEFIRE_ATTACK.FX':'suppressive fire',
+
+	'RADIATIONCONTROL/XRAYBEAM.FX':'x-ray beam',
+	'COSMICBLAST.FX':'cosmic burst',
+	'PROTONBLAST_QUICK.FX':'proton blast',
 
 	
 	'/WATERJET.FX':'water jet',
@@ -143,12 +179,17 @@ atk = { # fx from actor to target (includes buffs)
 	
 	'POWERPUSH.FX':'power push',
 	'ENERGYBLAST/MEGA.FX':'power burst', #?!
+	'CUSTOMANIM_MEGA.FX':'power burst', 
 	'ENERGYBLAST/SNIPERBLAST_QUICK.FX':'sniper blast', 
 	'ENERGYBLAST.FX':'energy blast', 
+	'CHRONOLOGICALSELECTION_ATTACK.FX':'chronos', 
+
+	'MARTIALARTS/FOCUSCHI.FX':'upshot/focus', # or tac arrow?
 	
 	
 	'ASSASINSPSIBLADE.FX':'assassin\'s strike', 
 	'PSIBLADEGREAT.FX':'greater psi blade', 
+	'STRENGTHSTREAKSKO.FX':'ko blow', # epic ko blow?
 
 	'/FORCEBOLT.FX':'force bolt',
 	'BOOSTRANGE_ATTACK.FX':'boost range', 
@@ -170,7 +211,7 @@ atk = { # fx from actor to target (includes buffs)
 	'/WILLPOWER.FX':'red',
 	'/INTELLIGENCE.FX':'blue',
 	'/STRENGTH.FX':'purple/orange',
-	'/AGILITY.FX':'yellow',
+	'/AGILITY.FX':'yellow/agility', # shares with tac arrow agility
 
 	# temp
 	'WEBGRENADETHROW.FX':'web nade',
@@ -178,46 +219,22 @@ atk = { # fx from actor to target (includes buffs)
 }
 
 
-atkhit = { # fx on target from actor (includes buffs)
-	# not used yet
+resdebuff = 'DEBUFFDAMRESCONTINUING.FX'
 
-	# nature
-	'CORROSIVESAP_HIT.FX':'corrosive enzyme',
+phases = [
+	'phase shift',
+	'hibernate',
+]
+teleports = [
+	'jaunt',
+	'translocation',
+]
 
-	# fire
-	'BLAZE_HIT.FX':'blaze',
-	'FIREBALLHITNO_RING.FX':'blaze',
-	'BLAZINGBOLT_HIT.FX':'blazing bolt',
-	'/INFERNO_ATTACK.FX':'inferno',
-	'/FIREBLAST_ATTACK.FX':'fire blast',
-	'/FLARES_ATTACK.FX':'flares',
+evade = []
+evade.extend(teleports)
+evade.extend(phases)
 
-	# ice
-	'ICEBOLTHIT.FX':'bfr',
 
-	# plant
-	'PLANTCONTROLHIT.FX':'strangler', # from TARGET
-	# 'STRANGLERROOTS.FX': 'strangler', # from PREVTARGET
-
-	# poison
-	'POISONHITQUICK.FX':'envenom', # or weaken
-
-	# rad
-	'ENERVATINGFIELDCONTINUING.FX': 'enervating field',
-
-	# elec
-	'INSULATINGCIRCUITHIT.FX':'insulating circuit',
-	'DNASIPHON_HIT.FX':'shock', #?
-
-	# epics
-	'MINDCONTROLHIT.FX':'dominate',
-	'CINDERSHIT.FX':'char',
-	'EMBERSHITSOOTANDCINDERS.FX':'char',
-	# 'SCHOOLOFSHARKS_HIT.FX':'ssj',
-	'V_MAKO_SPIRITSHARK_CIRCLE_HIT.FX':'ssj',
-	'SPIRTSHARKJAWS_CONDITIONAL.FX': 'ssj',
-
-}
 
 healhit = {
 	# emp
@@ -234,124 +251,248 @@ healhit = {
 
 
 pmov = { # prepend with 'A_' for flying version
-'DRAW_PISTOL':'crey pistol',
-'DRAW_WEAPONBACK':'crey pistol', # vill
-'WALL':'ssj',
-'MOUTH':'blind',
-#'PLAYER_HITDEATH' # death anim
+	'DRAW_PISTOL':'crey pistol',
+	'DRAW_WEAPONBACK':'crey pistol', # vill
+	'WALL':'ssj',
+	'MOUTH':'blind',
+	#'PLAYER_HITDEATH' # death anim
 }
+
 
 # primary attacks for determining spike instances (i.e. ignore jaunts off flares or snipe only or w/e)
 primaryattacks = [
 	'envenom',
 	'corrosive enzyme',
+	'enervating field',
 	'dominate',
 	'blaze',
 	'bib',
 	'lancer',
-	'char',
-	'penetrating ray/charged shot',
+	'char', # maybe? depends on lineup
+	'p-ray/charged',
+
+]
+
+repeatpowers = [ # powers that do multiples of an FX on use
+	'enervating field',
 ]
 
 utility = [	# for filtering out not atk offense powers
-'shock',
-'entangling arrow',
-'weaken',
-'siphon speed',
-'transference',
-'force bolt',
-'web nade',
-'glue arrow',
-'confuse',
-
+	'shock',
+	'entangling arrow',
+	'weaken',
+	'siphon speed',
+	'transference',
+	'force bolt',
+	'web nade',
+	'glue arrow',
+	'confuse',
+	'thunderous blast',
+	'heat loss',
+	'crey pistol',
 ]
 
 
 # generic FX by the actor - usage determined by target's FX
 preverse = [
-# buffs
-'ENDURANCE.FX',
-'MINDWALL.FX',
-'FORTITUDE.FX',
+	# buffs
+	'ENDURANCE.FX',
+	'MINDWALL.FX',
+	'FORTITUDE.FX',
+	'THERMALRADIATION/PROTECTHOLDS.FX',
+	'THERMALRADIATION/BUFFDAMAGE.FX',
 
-#attacks - note this means misses for these powers don't get counted
-'/PLANTCONTROLHIT.FX',
-'SCHOOLOFSHARKS_HIT.FX',
-'/V_MAKO_SPIRITSHARK_CIRCLE_HIT',
-
-'ENERVATINGFIELDCONTINUING.FX'
-'/DEHYDRATE.FX',
+	#attacks - note this means misses for these powers don't get counted
+	'/PLANTCONTROLHIT.FX',
+	'SCHOOLOFSHARKS_HIT.FX',
+	'/V_MAKO_SPIRITSHARK_CIRCLE_HIT',
+	'/DEHYDRATE.FX',
+	'ENERVATINGFIELDCONTINUING.FX',
+	'WILDBASTION_HIT.FX',
 ]
 
+
 buffs = [
-'HEALINGHANDS.FX',
-'ABSORBPAIN.FX',
-'STRENGTHHANDS2.FX',
-'ENDURANCE.FX',
-'MINDWALL.FX',
-'FORTITUDE.FX',
-'REJUVENATINGCIRCUITATK.FX',
-'EMPOWERINGCIRCUITATK.FX',
-'INSULATINGCIRCUITATK.FX',
-'AMPUPATTACK.FX',
-'PAINBRINGER_ATTACK.FX',
-'WILD_GROWTH_HIT.FX',
-'WILDBASTION_HIT.FX',
-'KINSPEEDBOOSTHIT.FX'
+	'HEALINGHANDS.FX',
+	'ABSORBPAIN.FX',
+	'STRENGTHHANDS2.FX',
+	'ENDURANCE.FX',
+	'MINDWALL.FX',
+	'FORTITUDE.FX',
+	'REJUVENATINGCIRCUITATK.FX',
+	'EMPOWERINGCIRCUITATK.FX',
+	'INSULATINGCIRCUITATK.FX',
+	'AMPUPATTACK.FX',
+	'PAINBRINGER_ATTACK.FX',
+	'WILD_GROWTH_HIT.FX',
+	'WILDBASTION_HIT.FX',
+	'KINSPEEDBOOSTHIT.FX',
+	'THERMALRADIATION/PROTECTHOLDS.FX',
+	'THERMALRADIATION/BUFFDAMAGE.FX',
+	'PEACEHEALSELFHANDS.FX',
 ]
 
 gatherbuffs = [
-'WILDBASTION_HIT.FX',
-'KINSPEEDBOOSTHIT.FX',
-'KININERTIALREDUCTIONSCONTINUING.FX',
+	'WILDBASTION_HIT.FX',
+	'KINSPEEDBOOSTHIT.FX',
+	'KININERTIALREDUCTIONSCONTINUING.FX',
 ]
 
 heals = [
-'heal other',
-'absorb pain',
-'rejuvenating circuit',
-'insulating circuit',
-'spirit ward'
+	'heal other',
+	'absorb pain',
+	'soothe',
+	'share pain',
+	'aid other',
+	'rejuvenating circuit',
+	'insulating circuit',
+	'cauterize',
+	'spirit ward',
+	'glowing touch',
+	# 'alkaloid', # shares antidote fx
 ]
 
 absorbs = [
-# 'insulating circuit',
-'spirit ward'
+	# 'insulating circuit',
+	'spirit ward'
+]
+
+filterextras = [
+	'crey pistol',
+	'raptor pack',
+	'mystic/flight',
+	'green',
+	'red',
+	'blue',
+	'purple/orange',
+	'yellow',
+	'clear mind',
+	'healing aura',
+	'power boost',
 ]
 
 npc = [
-'NPC',
-'EntTypeFile',
+	'NPC',
+	'EntTypeFile',
+]
+
+selffx = [
+	'phase shift',
+	'hibernate',
+	'hibernate',
+	'mystic/flight',
+	'raptor pack',
+	'crey pistol',
 ]
 
 # filter out non-player entities - issues if player name = one of these
 # probably a better way to do this
 name_filter  = [
-'Mu Guardian',
-'Phantasm',
-'Decoy Phantasm',
-'Decoy',
-'Coralax Blue Hybrid',
-'Dr',
-'Poison Trap',
-'Animated Stone',
-'Superior Vigilant Assault',
-'Blind',
-'Galvanic Sentinel',
-'Voltaic Geyser',
-'Voltaic Sentinel',
-'Water Spout',
-'Fortunata Mistress',
-'Superior Scourging Blast',
-'German Shepherd',
-'Ice Storm',
-'Energy Font',
-'Spectral Terror',
-'Coralax Red Hybrid',
-'Faraday Cage',
-'Architect Entertainment Instructor',
-'Architect Contact',
-'Spirit Panther',
-'Ticket Vendor',
-'Architect Entertainment Greeter',
+	'Mu Guardian',
+	'Phantasm',
+	'Decoy Phantasm',
+	'Decoy',
+	'Coralax Blue Hybrid',
+	'Dr',
+	'Poison Trap',
+	'Animated Stone',
+	'Superior Vigilant Assault',
+	'Blind',
+	'Galvanic Sentinel',
+	'Voltaic Geyser',
+	'Voltaic Sentinel',
+	'Water Spout',
+	'Fortunata Mistress',
+	'Superior Scourging Blast',
+	'German Shepherd',
+	'Ice Storm',
+	'Energy Font',
+	'Spectral Terror',
+	'Coralax Red Hybrid',
+	'Faraday Cage',
+	'Architect Entertainment Instructor',
+	'Architect Contact',
+	'Spirit Panther',
+	'Ticket Vendor',
+	'Architect Entertainment Greeter',
+]
+
+otherfx = { # like toggles and stuff for determining powersets
+	'THORNS_ACTIVATION.FX':'thorns',
+	# 'AGILITY.FX':'agility',
+}
+
+powersets = {
+	'bib':'ice',
+	'blaze':'fire',
+	'blazing bolt':'fire',
+	'lancer':'beam',
+	
+	'heal other':'emp',
+	'absorb pain':'emp',
+	'soothe':'pain',
+	'share pain':'pain',
+	'insulating circuit':'elec aff',
+	'amp up':'elec aff',
+	'shock':'elec aff',
+	'forge':'therm',
+	'cauterize':'therm',
+	
+	'envenom':'poison',
+	'weaken':'poison',
+	'corrosive enzyme':'nature',
+	'overgrowth':'nature',
+	'wild growth':'nature',
+	
+	'thorns':'plant',
+	'toxins':'plant',
+	'focus chi':'tac',
+
+	'cosmic burst':'rad blast',
+
+	'ir':'kin',
+	'siphon speed':'kin',
+
+	'accelerate metabolism':'rad',
+	'enervating field':'rad',
+
+	'entangling arrow':'trick',
+	'heat loss':'cold',
+	'phantom army':'ill',
+	'dimension shift':'grav',
+	'crush':'grav',
+	'fossilize':'earth',
+	'chilblain':'ice control',
+	'shiver':'ice control',
+
+	'thunderous blast':'elec blast',
+	'lightning bolt':'elec blast',
+	'executioner shot':'dual pistol',
+	'suppressive fire':'dual pistol',
+	'water jet':'water',
+	'tidal forces':'water',
+	'power push':'energy blast',
+	'power burst':'energy blast',
+	'power burst':'energy blast',
+
+	'shadow blast':'warshade',
+	'ebon eye':'warshade',
+	'greater psi blade':'psi melee',
+	'force bolt':'bubble',
+	'boost range':'energy manip',
+	'chronos':'temporal',
+}
+
+primarysupport = [ #order of importance?
+	'emp',
+	'pain',
+	'elec aff',
+]
+primaryoffence = [ #order of importance?
+	'poison',
+	'fire',
+	'ice',
+	'beam',
+	'psi',
+	'energy blast',
 ]
