@@ -4,3 +4,5 @@ examples/
 out.csv
 
 __pycache__/
+
+data/gcredentials.json
