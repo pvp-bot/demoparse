@@ -341,7 +341,7 @@ class Player:
 
 	def healcount(self, t, targetplayer,action):
 		# TODO:
-		# ignore if player dead
+		# rewrite following targetcount() format
 		# account for phases
 		targetplayer.totalhealsreceived += 1
 		if targetplayer.istarget:
