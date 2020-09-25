@@ -131,7 +131,6 @@ fx = { # fx from actor to target (includes buffs)
 	'/HIBERNATE_CONTINUING.FX':'hibernate',
 	'/SOOT.FX':'char',
 	'/BUILDUPPOWERBOOST.FX':'power boost',
-	# '/EMBERSHITSOOTANDCINDERS.FX':'char', # hit?
 
 	# pools
 	'JAUNT_ATTACK.FX':'jaunt',
@@ -446,7 +445,7 @@ powersets = {
 	
 	'thorns':'plant',
 	'toxins':'plant',
-	'focus chi':'tac',
+	'upshot/focus':'tac',
 
 	'cosmic burst':'rad blast',
 
