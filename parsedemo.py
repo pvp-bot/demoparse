@@ -274,11 +274,8 @@ with open(sys.argv[1],'r') as fp:
 						p.endtarget(players,spikes)
 
 
-					if (p.death != '' or p.action  != '' or p.target != '' or p.targetinstance == 1) and not csvhold:
+					if (p.death == 1 or p.action  != '' or p.target != '' or p.targetinstance == 1) and not csvhold:
 						csvw.writerow(csv_log)
-
-						if p.action in selffx: # somehow these powers are showing up with targets
-							p.target = ''
 
 						# keep track of extra
 						if p.action != '' and (p.action not in heals or p.action == 'spirit ward') and p.action not in evade and p.action not in filterextras and t > extras_start:
@@ -329,7 +326,7 @@ with open(sys.argv[1],'r') as fp:
 
 			if pid in players:
 
-				if writeline: # write to csv if new action but team hasn't elapsed
+				if writeline and not csvhold: # write to csv if new action but team hasn't elapsed
 					players[lastactor].reset()
 					writeline = False
 				lastactor = pid
@@ -366,6 +363,10 @@ with open(sys.argv[1],'r') as fp:
 						if any(substring for substring in preverse if substring in line[5]):
 							players[pid].reverse = True
 						players[pid].action = fx[action]
+					else:
+						players[pid].action = ''
+						players[pid].target = ''
+
 
 					# gather check
 					if (any(substring for substring in gatherbuffs if substring in line[5]) and
@@ -442,12 +443,17 @@ with open(sys.argv[1],'r') as fp:
 							players[pid].lastjaunt = t
 							players[pid].jauntoffone(t,players)
 						players[pid].target = '!pos'
-						writeline = True
+
+					else:
+						players[pid].target = ''
+					if players[pid].action == 'jaunt' and players[pid].target != '!pos':
+						print(f'{count} {players[pid].name} {players[pid].target}')
+
 					
 					writeline = True
 
-				elif action == "PREVTARGET":
-					writeline = True
+				# elif action == "PREVTARGET":
+				# 	pass
 					
 				elif action == "POS":
 					players[pid].pos = [line[3],line[4],line[5]] # x, z, y? 

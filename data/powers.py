@@ -189,6 +189,7 @@ fx = { # fx from actor to target (includes buffs)
 	
 	'ASSASINSPSIBLADE.FX':'assassin\'s strike', 
 	'PSIBLADEGREAT.FX':'greater psi blade', 
+	'STRENGTHSTREAKSKO.FX':'ko blow', # epic ko blow?
 
 	'/FORCEBOLT.FX':'force bolt',
 	'BOOSTRANGE_ATTACK.FX':'boost range', 
@@ -377,6 +378,7 @@ npc = [
 
 selffx = [
 	'phase shift',
+	'hibernate',
 	'hibernate',
 	'mystic/flight',
 	'raptor pack',
