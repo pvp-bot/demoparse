@@ -5,4 +5,4 @@ out.csv
 
 __pycache__/
 
-gcredentials.json
+data/gcredentials.json
