@@ -139,11 +139,11 @@ class Player:
 					atkchain += atk[2]+' - ' # change atk chain to string
 					
 					# followup attack timing stats
-					if atkchain.count('-') == 1:
+					if atkchain.count(' - ') == 1:
 						players[aid].firstatktiming = atk[0]
 						if atk[0] > self.targetstart + targetwindow:
 							players[aid].lateatks += 1
-					elif atkchain.count('-') == 2:
+					elif atkchain.count(' - ') == 2:
 						players[aid].followuptiming.append(atk[0]-players[aid].firstatktiming)
 			players[aid].firstatktiming = False		
 
