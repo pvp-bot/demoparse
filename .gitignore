@@ -6,3 +6,7 @@ out.csv
 __pycache__/
 
 data/gcredentials.json
+
+data/__init__.py
+
+data/secrets.py
