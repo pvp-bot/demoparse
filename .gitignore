@@ -10,3 +10,5 @@ data/gcredentials.json
 data/__init__.py
 
 data/secrets.py
+
+*.json

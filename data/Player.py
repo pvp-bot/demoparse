@@ -145,6 +145,7 @@ class Player:
 							players[aid].lateatks += 1
 					elif atkchain.count(' - ') == 2:
 						players[aid].followuptiming.append(atk[0]-players[aid].firstatktiming)
+
 			players[aid].firstatktiming = False		
 
 			atkchain = atkchain[:-3] # trailing " - "
@@ -194,10 +195,37 @@ class Player:
 		spikes[-1].stats['attackers'] = len(self.targetattackers)
 		spikes[-1].stats['attacks'] = len(self.recentattacks)
 		healsreceived = 0
-		# to not count greens
+		
+		# calc spike heals at end of spike
 		for h in self.targetheals:
-			if h[2] != 'green':
+			if h[2] != 'green': # to not count greens as heals
 				healsreceived += 1
+				self.totalhealsreceivedontarget += 1
+				if h[1] not in self.healedby:
+					if len(self.healedby) == 0 or h[0] == self.targetheals[0][0]:
+						players[h[1]].healalpha += 1
+					self.healedby.append(h[1])
+
+					players[h[1]].healtiming.append(h[0]-self.targetstart)
+
+					if h[0]-self.targetstart < 0:
+						print(h[0])
+					
+					atkcount = 0
+					for atk in self.recentattacks:
+						if atk[0]<h[0]:
+							atkcount += 1
+					if atkcount <= targethealatks or h[0] < self.targetstart + targethealwindow:
+						players[h[1]].healontime += 1
+					else:
+						players[h[1]].heallate += 1
+					players[h[1]].healontarget += 1 # times on a heal target
+
+				else:
+					players[h[1]].healfollowup += 1
+
+				players[h[1]].ontargetheals += 1 # heals thrown on target
+
 		spikes[-1].stats['heals received'] = healsreceived
 		spikes[-1].stats['greens available'] = self.greensavailable # at the start of the spike
 		spikes[-1].stats['greens used'] = self.greensavailable - self.greens
@@ -338,40 +366,22 @@ class Player:
 					self.inittarget(t,players)
 
 
-
 	def healcount(self, t, targetplayer,action):
 		# TODO:
-		# rewrite following targetcount() format
 		# account for phases
+
 		targetplayer.totalhealsreceived += 1
-		if targetplayer.istarget:
-			targetplayer.totalhealsreceivedontarget += 1
-			targetplayer.targetheals.append([t,self.id,action])
+		targetplayer.targetheals.append([t,self.id,action])
 
-			if self.id not in targetplayer.healedby:
-				if t- targetplayer.targetstart < targethealwindow or len(targetplayer.recentattacks)<4:
-					self.healontime += 1
-					if targetplayer.healedby == [] or t == targetplayer.targetheals[0][0]:
-						self.healalpha += 1
-				else:
-					self.heallate += 1
+		if not targetplayer.istarget:
 
-				targetplayer.healedby.append(self.id)
-				self.healtiming.append(t-targetplayer.targetstart)
+			for heal in targetplayer.targetheals:
+				if not targetplayer.isrecent(t,heal[0]):
+					self.topups += 1
 
-				self.healontarget += 1
-			else:
-				self.healfollowup += 1
-
-			self.ontargetheals += 1
-
-		else:
-			self.topups += 1
-
-		if t > targetplayer.lastphase+2 and t < targetplayer.lastphase+6:
-			self.phaseheals += 1
-
-		if self.action in absorbs:
-			if not targetplayer.istarget:
-				self.guesses += 1
-				targetplayer.absorbed.append([t, self.id])
+			targetplayer.targetheals = [x for x in targetplayer.targetheals if targetplayer.isrecent(t,x[0])] # remove recent attacks outside window
+			
+			if action in absorbs:
+				if not targetplayer.istarget:
+					self.guesses += 1
+					targetplayer.absorbed.append([t, self.id])
