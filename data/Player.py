@@ -103,7 +103,7 @@ class Player:
 		self.phaseheals = 0
 		self.supportextras = {}
 		self.healmisseddead = 0
-		self.healpowers = {'absorb pain':0,'heal other':0,'insulating circuit':0,'rejuvenating circuit':0,'share pain':0,'soothe':0,'aid other':0}
+		self.healpowers = {'absorb pain':0,'heal other':0,'insulating circuit':0,'rejuvenating circuit':0,'share pain':0,'soothe':0,'aid other':0,'glowing touch':0,'cauterize':0}
 
 		self.stats = {}
 		self.atkchains = {}
@@ -207,9 +207,6 @@ class Player:
 					self.healedby.append(h[1])
 
 					players[h[1]].healtiming.append(h[0]-self.targetstart)
-
-					if h[0]-self.targetstart < 0:
-						print(h[0])
 					
 					atkcount = 0
 					for atk in self.recentattacks:
@@ -296,6 +293,13 @@ class Player:
 				if (t-lastevade[0] < targetwindow):
 					self.targetevades.append(lastevade)
 
+			for heal in self.targetheals: # clear old heals in array
+				if not self.isrecentheal(t,heal[0]) and heal[2] != 'spirit ward':
+					print(heal)
+					players[heal[1]].topups += 1
+			self.targetheals = [x for x in self.targetheals if self.isrecentheal(t,x[0])] # remove recent attacks outside window
+
+
 	def jauntoffone(self,t,players): # count as target if jaunt off single primary attack
 		if not self.istarget and len(self.recentprimaryattacks) == 1 and (t-self.recentprimaryattacks[0][0]) <= targetwindow/2: # with 1 sec of atk
 			self.inittarget(t,players)
@@ -313,6 +317,19 @@ class Player:
 		else:
 			window = targetwindow
 		if t < window:
+			return True
+		else:
+			return False
+
+	def isrecentheal(self,time,healtime):
+		t = time-healtime # difference between the atk time and current time 
+		if self.istarget:
+			window = time - self.recentattacks[0][0] + targetcooldown
+		else:
+			window = targetwindow
+		if t < window:
+			if self.istarget and healtime < self.targetstart + 0.5:
+				return False
 			return True
 		else:
 			return False
@@ -373,15 +390,16 @@ class Player:
 		targetplayer.totalhealsreceived += 1
 		targetplayer.targetheals.append([t,self.id,action])
 
-		if not targetplayer.istarget:
+		if not targetplayer.istarget and action != 'spirit ward':
 
 			for heal in targetplayer.targetheals:
-				if not targetplayer.isrecent(t,heal[0]):
+				if not targetplayer.isrecentheal(t,heal[0]) and heal[2] != '':
+					print(heal)
 					self.topups += 1
 
-			targetplayer.targetheals = [x for x in targetplayer.targetheals if targetplayer.isrecent(t,x[0])] # remove recent attacks outside window
+			targetplayer.targetheals = [x for x in targetplayer.targetheals if targetplayer.isrecentheal(t,x[0])] # remove recent attacks outside window
 			
-			if action in absorbs:
-				if not targetplayer.istarget:
-					self.guesses += 1
-					targetplayer.absorbed.append([t, self.id])
+		elif action in absorbs:
+			if not targetplayer.istarget:
+				self.guesses += 1
+				targetplayer.absorbed.append([t, self.id])

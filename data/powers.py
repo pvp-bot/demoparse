@@ -121,6 +121,12 @@ fx = { # fx from actor to target (includes buffs)
 
 	# pb
 	'PEACEHEALSELFHANDS.FX':'glowing touch',
+	'/PEACEHEALSELF.FX':'reform essence',
+	'ENERGYDRONES/PEACEDRONEHANDS3.FX':'photon seekers',
+	'KHELDIAN_PEACEBRINGER/DAMAGEBUIDUP/DAMAGEBUIDUP.FX':'inner light',
+	'PEACEQUICKBLAST/PEACEAOEBLAST.FX':'luminous blast',
+	'PEACEBRINGER/XRAYBEAM/XRAYBEAM.FX':'glinting eye',
+	'PEACEBRINGER/PUNCH/HEAVYPEACEPUNCHHIT.FX':'incandescent strike',
 
 	# epics
 	'/COMMAND2.FX':'dominate',
