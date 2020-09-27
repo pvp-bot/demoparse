@@ -252,7 +252,6 @@ with open(sys.argv[1],'r') as fp:
 		csvw = csv.writer(csvfile, delimiter=',')
 
 		while line and t <= matchtime: # ignore data after match end with small buffer time
-			# print(count)
 			ms = ms + int(line[0]) # running demo time
 			t2 = (ms/1000) # to seconds
 
@@ -439,8 +438,6 @@ with open(sys.argv[1],'r') as fp:
 
 					else:
 						players[pid].target = ''
-					if players[pid].action == 'jaunt' and players[pid].target != '!pos':
-						print(f'{count} {players[pid].name} {players[pid].target}')
 					
 					writeline = True
 
@@ -487,8 +484,6 @@ for p in players.values(): # clean up, if target at end of match
 		players[heal[1]].topups += 1
 	for atk in p.recentattacks:
 		rogues.append([atk[0],atk[1],atk[2],p.id])
-	if p.id == 32:
-		print(p.healontime+p.heallate+p.healfollowup+p.topups)
 
 # PRINT STATS TO CSV
 

@@ -8,6 +8,6 @@ dir_name=$(basename $1)
 for dir in $1/*
 do
 	if [ -d "$dir" ]; then
-		sh parsefolder.sh $dir
+		sh parsefolder.sh -i $dir
 	fi
 done
