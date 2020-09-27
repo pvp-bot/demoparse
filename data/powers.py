@@ -126,7 +126,7 @@ fx = { # fx from actor to target (includes buffs)
 	'KHELDIAN_PEACEBRINGER/DAMAGEBUIDUP/DAMAGEBUIDUP.FX':'inner light',
 	'PEACEQUICKBLAST/PEACEAOEBLAST.FX':'luminous blast',
 	'PEACEBRINGER/XRAYBEAM/XRAYBEAM.FX':'glinting eye',
-	'PEACEBRINGER/PUNCH/HEAVYPEACEPUNCHHIT.FX':'incandescent strike',
+	'/HEAVYPEACEPUNCHHIT.FX':'incandescent strike',
 
 	# epics
 	'/COMMAND2.FX':'dominate',
@@ -351,9 +351,9 @@ heals = [
 	'aid other',
 	'rejuvenating circuit',
 	'insulating circuit',
+	'glowing touch',
 	'cauterize',
 	'spirit ward',
-	'glowing touch',
 	# 'alkaloid', # shares antidote fx
 ]
 
@@ -480,6 +480,8 @@ powersets = {
 	'power burst':'energy blast',
 	'power burst':'energy blast',
 
+	'luminous blast':'peacebringer',
+	'incandescent strike':'peacebringer',
 	'shadow blast':'warshade',
 	'ebon eye':'warshade',
 	'greater psi blade':'psi melee',
@@ -500,4 +502,6 @@ primaryoffence = [ #order of importance?
 	'beam',
 	'psi',
 	'energy blast',
+	'rad blast',
+	'water',
 ]

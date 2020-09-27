@@ -54,6 +54,7 @@ class Player:
 		self.lastresdebuff = False
 		self.painted = False
 		self.kbtime = False
+		self.csvhold = False
 
 		self.dmgtaken = 0
 		self.dmgtakensurv = 0
@@ -159,6 +160,37 @@ class Player:
 		# new spike
 		spikes.append(Target(self.name,self.team,self.targetstart))
 
+		# calc spike heals at end of spike
+		for h in self.targetheals:
+			if h[2] != 'green': # to not count greens as heals
+				if h[0] > self.targetstart+0.5:
+					self.totalhealsreceivedontarget += 1
+					if h[1] not in self.healedby:
+						if len(self.healedby) == 0 or h[0] == self.targetheals[0][0]:
+							players[h[1]].healalpha += 1
+						self.healedby.append(h[1])
+
+						players[h[1]].healtiming.append(h[0]-self.targetstart)
+						
+						atkcount = 0
+						for atk in self.recentattacks:
+							if atk[0]<h[0]:
+								atkcount += 1
+						if atkcount <= targethealatks or h[0] < self.targetstart + targethealwindow:
+							players[h[1]].healontime += 1
+						else:
+							players[h[1]].heallate += 1
+
+						players[h[1]].healontarget += 1 # times on a heal target
+					else:
+						players[h[1]].healfollowup += 1
+
+					players[h[1]].ontargetheals += 1 # heals thrown on target
+
+				else:
+					players[h[1]].topups += 1
+		self.targetheals = [x for x in self.targetheals if self.isrecentheal(self.targetstart,x[0])] # remove recent attacks outside window
+
 		# spike data
 		spikes[-1].attacks = self.recentattacks[:]
 		spikes[-1].attackers = self.targetattackers[:]
@@ -196,32 +228,6 @@ class Player:
 		spikes[-1].stats['attacks'] = len(self.recentattacks)
 		healsreceived = 0
 		
-		# calc spike heals at end of spike
-		for h in self.targetheals:
-			if h[2] != 'green': # to not count greens as heals
-				healsreceived += 1
-				self.totalhealsreceivedontarget += 1
-				if h[1] not in self.healedby:
-					if len(self.healedby) == 0 or h[0] == self.targetheals[0][0]:
-						players[h[1]].healalpha += 1
-					self.healedby.append(h[1])
-
-					players[h[1]].healtiming.append(h[0]-self.targetstart)
-					
-					atkcount = 0
-					for atk in self.recentattacks:
-						if atk[0]<h[0]:
-							atkcount += 1
-					if atkcount <= targethealatks or h[0] < self.targetstart + targethealwindow:
-						players[h[1]].healontime += 1
-					else:
-						players[h[1]].heallate += 1
-					players[h[1]].healontarget += 1 # times on a heal target
-
-				else:
-					players[h[1]].healfollowup += 1
-
-				players[h[1]].ontargetheals += 1 # heals thrown on target
 
 		spikes[-1].stats['heals received'] = healsreceived
 		spikes[-1].stats['greens available'] = self.greensavailable # at the start of the spike
@@ -293,13 +299,6 @@ class Player:
 				if (t-lastevade[0] < targetwindow):
 					self.targetevades.append(lastevade)
 
-			for heal in self.targetheals: # clear old heals in array
-				if not self.isrecentheal(t,heal[0]) and heal[2] != 'spirit ward':
-					print(heal)
-					players[heal[1]].topups += 1
-			self.targetheals = [x for x in self.targetheals if self.isrecentheal(t,x[0])] # remove recent attacks outside window
-
-
 	def jauntoffone(self,t,players): # count as target if jaunt off single primary attack
 		if not self.istarget and len(self.recentprimaryattacks) == 1 and (t-self.recentprimaryattacks[0][0]) <= targetwindow/2: # with 1 sec of atk
 			self.inittarget(t,players)
@@ -321,21 +320,13 @@ class Player:
 		else:
 			return False
 
-	def isrecentheal(self,time,healtime):
-		t = time-healtime # difference between the atk time and current time 
-		if self.istarget:
-			window = time - self.recentattacks[0][0] + targetcooldown
-		else:
-			window = targetwindow
-		if t < window:
-			if self.istarget and healtime < self.targetstart + 0.5:
-				return False
+	def isrecentheal(self,targetstart,healtime):
+		if healtime > targetstart + 0.5:
 			return True
 		else:
 			return False
 
 	def targetcount(self,t,aid,players,action,spikes,rogues):
-
 		powerrepeat = False # powers that will activate FX multiple times on a spike
 		if action in repeatpowers: # really just enervating field
 			for atk in self.recentattacks:
@@ -390,16 +381,7 @@ class Player:
 		targetplayer.totalhealsreceived += 1
 		targetplayer.targetheals.append([t,self.id,action])
 
-		if not targetplayer.istarget and action != 'spirit ward':
-
-			for heal in targetplayer.targetheals:
-				if not targetplayer.isrecentheal(t,heal[0]) and heal[2] != '':
-					print(heal)
-					self.topups += 1
-
-			targetplayer.targetheals = [x for x in targetplayer.targetheals if targetplayer.isrecentheal(t,x[0])] # remove recent attacks outside window
-			
-		elif action in absorbs:
+		if action in absorbs:
 			if not targetplayer.istarget:
 				self.guesses += 1
 				targetplayer.absorbed.append([t, self.id])

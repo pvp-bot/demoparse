@@ -241,8 +241,6 @@ with open(sys.argv[1],'r') as fp:
 	line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 	lineuid = 0
 	t_bundle = 0.0
-	csvhold = False
-
 
 
 
@@ -259,22 +257,24 @@ with open(sys.argv[1],'r') as fp:
 			# print(count)
 			ms = ms + int(line[0]) # running demo time
 			t2 = (ms/1000) # to seconds
+
+
 			if t2 > t or writeline:
 				for p in players.values():
 					csv_log = [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
 					
 					# dealing with stupid entangles
 					if p.action == 'strangler': # hold half second to confirm no entangle
-						csvhold = [t+0.5,csv_log[:]]
+						p.csvhold = [t+0.3,csv_log[:]]
 					if p.action == 'entangle': # cancel last strangler when entangle pops up
-						csvhold = False
+						p.csvhold = False
 
 					# check end target each timestep
 					if p.istarget and (p.death == 1 or (t2-p.targetstart >= targetmaxtime and t-p.recentattacks[-1][0] > targetcooldown)): # if we're over the target window
 						p.endtarget(players,spikes)
 
 
-					if (p.death == 1 or p.action  != '' or p.target != '' or p.targetinstance == 1) and not csvhold:
+					if (p.death == 1 or p.action  != '' or p.target != '' or p.targetinstance == 1) and not p.csvhold:
 						csvw.writerow(csv_log)
 
 						# keep track of extra
@@ -283,7 +283,7 @@ with open(sys.argv[1],'r') as fp:
 								p.supportextras[p.action] += 1
 							else:
 								p.supportextras[p.action] = 1
-						if p.action != '' and (p.action in heals and p.action != 'spirit ward'):
+						if p.action in heals and p.action != 'spirit ward':
 							p.healpowers[p.action] += 1
 						if p.action in phases:
 							p.lastphase = t
@@ -296,11 +296,16 @@ with open(sys.argv[1],'r') as fp:
 							rogues.append([t,p.id,'death',p.id])
 						lineuid += 1
 						p.reset()
+				writeline = False
 
 			# more stupid entangle stuff
-			if csvhold and t > csvhold[0]:
-				csvw.writerow(csvhold[1])
-				csvhold = False
+			for p in players.values():
+				if p.csvhold and t > p.csvhold[0]:
+					csvw.writerow(p.csvhold[1])
+					p.csvhold = False
+					p.reset()
+
+
 			if t2 > t:
 				gatherplayercount = {'BLU':0,'RED':0} # reset gather count on time inc
 
@@ -313,10 +318,6 @@ with open(sys.argv[1],'r') as fp:
 					csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,math.floor(t2/t_bundle_step)*t_bundle_step,'','','','','','','',lineuid,p.greens])
 				t_bundle = 0
 			t = t2
-				
-
-
-
 
 			try:
 				pid = int(line[1])
@@ -325,11 +326,6 @@ with open(sys.argv[1],'r') as fp:
 				pid = 0 # ignore special
 
 			if pid in players:
-
-				if writeline and not csvhold: # write to csv if new action but team hasn't elapsed
-					players[lastactor].reset()
-					writeline = False
-				lastactor = pid
 
 				if action == "HP":
 					hp  = float(line[3])
@@ -418,7 +414,6 @@ with open(sys.argv[1],'r') as fp:
 					if line[3] == 'ENT':
 						tid = int(line[4])
 						if tid != pid and tid in player_ids: # if target is a player
-
 							players[pid].target = players[tid].name
 							players[pid].targetteam = players[tid].team
 
@@ -448,7 +443,6 @@ with open(sys.argv[1],'r') as fp:
 						players[pid].target = ''
 					if players[pid].action == 'jaunt' and players[pid].target != '!pos':
 						print(f'{count} {players[pid].name} {players[pid].target}')
-
 					
 					writeline = True
 
@@ -487,11 +481,14 @@ with open(sys.argv[1],'r') as fp:
 			line = shlex.split(fp.readline().replace('\\','').replace('\'','').replace('\"',''))
 			count = count + 1
 
-
-
 for p in players.values(): # clean up, if target at end of match
 	if p.istarget:
 		p.endtarget(players,spikes)
+
+	for heal in p.targetheals:
+		players[heal[1]].topups += 1
+	for atk in p.recentattacks:
+		rogues.append([atk[0],atk[1],atk[2],p.id])
 
 
 # PRINT STATS TO CSV
