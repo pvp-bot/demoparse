@@ -242,8 +242,6 @@ with open(sys.argv[1],'r') as fp:
 	lineuid = 0
 	t_bundle = 0.0
 
-
-
 	# ################################################ #
 	# ################################################ #
 	# MAIN PARSING LOOP ############################## # 
@@ -263,7 +261,7 @@ with open(sys.argv[1],'r') as fp:
 				for p in players.values():
 					csv_log = [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
 					
-					# dealing with stupid entangles
+					# dealing with stupid entangles (same fx as strangler hit)
 					if p.action == 'strangler': # hold half second to confirm no entangle
 						p.csvhold = [t+0.3,csv_log[:]]
 					if p.action == 'entangle': # cancel last strangler when entangle pops up
@@ -489,7 +487,8 @@ for p in players.values(): # clean up, if target at end of match
 		players[heal[1]].topups += 1
 	for atk in p.recentattacks:
 		rogues.append([atk[0],atk[1],atk[2],p.id])
-
+	if p.id == 32:
+		print(p.healontime+p.heallate+p.healfollowup+p.topups)
 
 # PRINT STATS TO CSV
 

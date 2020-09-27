@@ -162,8 +162,8 @@ class Player:
 
 		# calc spike heals at end of spike
 		for h in self.targetheals:
-			if h[2] != 'green': # to not count greens as heals
-				if h[0] > self.targetstart+0.5:
+			if h[2] != 'green' and h[2] != 'spirit ward': # to not count greens as heals
+				if self.isrecentheal(self.targetstart,h[0]):
 					self.totalhealsreceivedontarget += 1
 					if h[1] not in self.healedby:
 						if len(self.healedby) == 0 or h[0] == self.targetheals[0][0]:
@@ -189,6 +189,7 @@ class Player:
 
 				else:
 					players[h[1]].topups += 1
+
 		self.targetheals = [x for x in self.targetheals if self.isrecentheal(self.targetstart,x[0])] # remove recent attacks outside window
 
 		# spike data
