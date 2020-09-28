@@ -3,6 +3,8 @@
 # run parsedemo.py on all demos in folder
 # append resulting csvs together w/ name of folder
 
+SKIP=false
+
 while getopts 'i:s' flag; do
         case "${flag}" in
                 i) INPUT=${OPTARG} ;;

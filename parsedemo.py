@@ -463,6 +463,7 @@ with open(sys.argv[1],'r') as fp:
 					if 'DRAW_PISTOL' in mov or 'DRAW_WEAPONBACK' in mov: # WEAPONBACK might be shared with some other sets
 						players[pid].crey = players[pid].crey + 1
 						players[pid].action = 'crey pistol'
+						writeline=True
 					# if 'WALL' in mov and players[pid].action == '':
 					# 	players[pid].action = 'ssj'
 
