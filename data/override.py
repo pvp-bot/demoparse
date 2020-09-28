@@ -15,5 +15,5 @@ playerswap = []
 # 0 0 OVERRIDE TEAMSWAP ghostmaster BLU
 teamswap = False
 
-# 
+# 0 0 OVERRIDE POWERSETS "player name" mind ff (assigned "player name" the powersets: mind/ff)
 powersets = {} # [name,set1,set2]
