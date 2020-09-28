@@ -425,8 +425,10 @@ with open(sys.argv[1],'r') as fp:
 								players[pid].reverse = False
 								if players[pid].team != players[tid].team:
 									players[pid].targetcount(t, tid, players,players[tid].action,spikes,rogues)
+								elif players[tid].action in heals and t>1:
+									players[tid].healcount(t, players[pid],players[tid].action)
 							else:
-								if players[pid].action in heals:
+								if players[pid].action in heals and t>0:
 									players[pid].healcount(t, players[tid],players[pid].action)
 
 

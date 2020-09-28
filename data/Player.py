@@ -104,7 +104,7 @@ class Player:
 		self.phaseheals = 0
 		self.supportextras = {}
 		self.healmisseddead = 0
-		self.healpowers = {'absorb pain':0,'heal other':0,'insulating circuit':0,'rejuvenating circuit':0,'share pain':0,'soothe':0,'aid other':0,'glowing touch':0,'cauterize':0}
+		self.healpowers = {'absorb pain':0,'heal other':0,'insulating circuit':0,'rejuvenating circuit':0,'share pain':0,'soothe':0,'aid other':0,'glowing touch':0,'cauterize':0,'alkaloid':0}
 
 		self.stats = {}
 		self.atkchains = {}

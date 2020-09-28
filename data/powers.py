@@ -54,7 +54,7 @@ fx = { # fx from actor to target (includes buffs)
 	# psn
 	'/POISONLIQUIDPROJECTILE.FX':'envenom',
 	'/PALMPOISONLIQUIDPROJECTILE.FX':'weaken',
-	'ALCALOIDPOISONPROJECTILE.FX':'alkaloid/antidote',
+	'ALCALOIDEHEAL.FX':'alkaloid',
 	'POISONCONEGASSES.FX':'neurotoxic breath',
 
 	# cold
@@ -241,7 +241,7 @@ evade.extend(phases)
 
 
 
-healhit = {
+healhit = { # not in use yet
 	# emp
 	'EMPATHY/HEALINGDRAINBALL.FX':'absorb pain',
 	'/HEALING.FX':'heal other', # or aid other
@@ -306,6 +306,7 @@ preverse = [
 	'FORTITUDE.FX',
 	'THERMALRADIATION/PROTECTHOLDS.FX',
 	'THERMALRADIATION/BUFFDAMAGE.FX',
+	'ALCALOIDEHEAL.FX',
 
 	#attacks - note this means misses for these powers don't get counted
 	'/PLANTCONTROLHIT.FX',
@@ -354,7 +355,7 @@ heals = [
 	'glowing touch',
 	'cauterize',
 	'spirit ward',
-	# 'alkaloid', # shares antidote fx
+	'alkaloid',
 ]
 
 absorbs = [
@@ -379,15 +380,6 @@ filterextras = [
 npc = [
 	'NPC',
 	'EntTypeFile',
-]
-
-selffx = [
-	'phase shift',
-	'hibernate',
-	'hibernate',
-	'mystic/flight',
-	'raptor pack',
-	'crey pistol',
 ]
 
 # filter out non-player entities - issues if player name = one of these
