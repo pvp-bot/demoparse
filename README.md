@@ -44,18 +44,18 @@ For ease of use I'd recommend storing your demo files in the same way as I am: a
 
 From the repo folder you have a few options on how to run it.
 Running the `parsedemo.py` on a .cohdemo file will generate a parsed .csv file of that demo with the same name as well as spit out some high level stats from that match.  
-`parsedemo.py /path/to/demofile/skywayexample.cohdemo`
+`python parsedemo.py /path/to/demofile/skywayexample.cohdemo`
 
 `upload_bq.py` will upload a parsed .csv file to your Google Big Query cloud account as a query table if you have it configured. Typically you want to run this on a merged csv file (i.e. not just a single match) so that you can view mupltiple matches from within the same Datastudio report.  
-`upload_bq.py /path/to/demofile/skywayexample.csv`
+`python upload_bq.py /path/to/demofile/skywayexample.csv`
 
 Instead of running the python scripts directly, I recommend running the shell script `parsefolder.sh` on an entire folder. Run this script by giving it an input `-i` folder and it will run the `parsedemo.py` script on every demo file in that folder, append all the .csvs to a single one, then upload the final .csv to your Big Query project under a table with the same name as your folder. e.g.
 
 
-`parsefolder.sh -i /path/to/demofolder/`  
+`./parsefolder.sh -i /path/to/demofolder/`  
 
 
-Adding a `-s` to the command will 'skip' the parsing step and only append+upload the final .csv (in case you've already run the parsedemo.py individually and don't want to rerun it on all files). Rerunning the script will overwrite the existing Big Query table of the same name if it exists.
+Adding a `-s` to the command will 'skip' the parsing step and only append+upload the final .csv (in case you've already run the parsedemo.py individually and don't want to rerun it on all files). Rerunning the script will overwrite the existing Big Query table of the same name if it exists. You may need to make the script executable first, `chmod +x parsefolder.sh`.
 
 ### creating the Datastudio report
 Find a recent report with copying enabled (either one of your previous version or one of mine if you have it) and hit the _Make a copy of this report_ button in the top right, then go _New Data Source>Create New Source>Big Query>My Projects>Your Project>Your Dataset_ then select the data table corresponding to the demo folder you've just uploaded.
