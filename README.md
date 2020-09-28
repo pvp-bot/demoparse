@@ -58,6 +58,9 @@ Instead of running the python scripts directly, I recommend running the shell sc
 Adding a `-s` to the command will 'skip' the parsing step and only append+upload the final .csv (in case you've already run the parsedemo.py individually and don't want to rerun it on all files). Rerunning the script will overwrite the existing Big Query table of the same name if it exists.
 
 ### creating the Datastudio report
-Find a recent report with copying enabled (either one of you previous version or one of mine if you have it) and hit the _Make a copy of this report_ button in the top right, then go _New Data Source>Create New Source>Big Query>My Projects>Your Project>Your Dataset_ then select the data table corresponding to the demo folder you've just uploaded.
+Find a recent report with copying enabled (either one of your previous version or one of mine if you have it) and hit the _Make a copy of this report_ button in the top right, then go _New Data Source>Create New Source>Big Query>My Projects>Your Project>Your Dataset_ then select the data table corresponding to the demo folder you've just uploaded.
 
 Update the 2 names of the report in the top left and whatever other adjustments you want to make. Update the share permissions to allow others to view if you want to share it.
+
+## other stuff
+The demorecord will miss some things in the match occasionally, especially on larger maps when you can get out of render range (note: perception range is irrelevant). You can manually add override lines to the start of the demofile (using any text editor) to change the match score, player team assignment, player powersets, or swap red and blue entirely. See `data/override.py` for examples.
