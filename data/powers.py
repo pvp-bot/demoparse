@@ -207,7 +207,7 @@ fx = { # fx from actor to target (includes buffs)
 	'ALIGNMENT_JUSTICE.FX':'call to justice',
 	# 'WEAPONS/LASER_PISTOL_1.FX':'crey pistol', # using MOV count
 	# '/STOLLEN_IMOBILIZER_PISTOL.FX':'crey pistol', #  'stollen'
-	'GEASTHEKINDONESCONTINUING.FX':'geas',
+	# 'GEASTHEKINDONESCONTINUING.FX':'geas', # can pop multiple FX continuing
 	'/ALIGNMENT_FRENZY.FX':'frenzy', # or other insp?
 	'/BRAWL_ATTACK.FX':'brawl',
 
