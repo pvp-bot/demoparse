@@ -183,9 +183,9 @@ fx = { # fx from actor to target (includes buffs)
 	'/DEHYDRATE.FX':'dehydrate',
 	
 	'POWERPUSH.FX':'power push',
-	'ENERGYBLAST/MEGA.FX':'power burst', #?!
-	'CUSTOMANIM_MEGA.FX':'power burst', 
-	'ENERGYBLAST/SNIPERBLAST_QUICK.FX':'sniper blast', 
+	'MEGA.FX':'power burst',
+	# 'CUSTOMANIM_MEGA.FX':'power burst', 
+	'SNIPERBLAST_QUICK.FX':'sniper blast', 
 	'ENERGYBLAST.FX':'energy blast', 
 	'CHRONOLOGICALSELECTION_ATTACK.FX':'chronos', 
 
@@ -463,13 +463,14 @@ powersets = {
 	'shiver':'ice control',
 
 	'thunderous blast':'elec blast',
+	'shout':'sonic blast',
+	'screech':'sonic blast',
 	'lightning bolt':'elec blast',
 	'executioner shot':'dual pistol',
 	'suppressive fire':'dual pistol',
 	'water jet':'water',
 	'tidal forces':'water',
 	'power push':'energy blast',
-	'power burst':'energy blast',
 	'power burst':'energy blast',
 
 	'luminous blast':'peacebringer',
