@@ -385,22 +385,23 @@ with open(sys.argv[1],'r') as fp:
 
 
 					# powerset determination
-					if not players[pid].set1:
-						othercheck = next((substring for substring in otherfx.keys() if substring in line[5]), None)
-						if othercheck:
-							othercheck = otherfx[othercheck] 
-						if players[pid].action in powersets:
-							players[pid].set1 = powersets[players[pid].action]						
-						elif othercheck in powersets:
-							players[pid].set1 = powersets[othercheck]
-					if not players[pid].set2:
-						othercheck = next((substring for substring in otherfx.keys() if substring in line[5]), None)
-						if othercheck:
-							othercheck = otherfx[othercheck] 
-						if players[pid].action in powersets and powersets[players[pid].action] != players[pid].set1:
-							players[pid].set2 = powersets[players[pid].action]						
-						elif othercheck in powersets and  powersets[othercheck] != players[pid].set1:
-							players[pid].set2 = powersets[othercheck]
+					if not players[pid].reverse:
+						if not players[pid].set1:
+							othercheck = next((substring for substring in otherfx.keys() if substring in line[5]), None)
+							if othercheck:
+								othercheck = otherfx[othercheck] 
+							if players[pid].action in powersets:
+								players[pid].set1 = powersets[players[pid].action]						
+							elif othercheck in powersets:
+								players[pid].set1 = powersets[othercheck]
+						if not players[pid].set2:
+							othercheck = next((substring for substring in otherfx.keys() if substring in line[5]), None)
+							if othercheck:
+								othercheck = otherfx[othercheck] 
+							if players[pid].action in powersets and powersets[players[pid].action] != players[pid].set1:
+								players[pid].set2 = powersets[players[pid].action]						
+							elif othercheck in powersets and  powersets[othercheck] != players[pid].set1:
+								players[pid].set2 = powersets[othercheck]
 
 
 

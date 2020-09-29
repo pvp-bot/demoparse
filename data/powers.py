@@ -50,6 +50,7 @@ fx = { # fx from actor to target (includes buffs)
 	'SHAREPAIN_ATTACK.FX':'share pain',
 	'PAINBRINGER_ATTACK.FX':'painbringer',
 	'WORLDOFPAIN_ATTACK.FX':'world of pain',
+	'ENFORCEDMORALE_ATTACK.FX':'enforced morale',
 
 	# psn
 	'/POISONLIQUIDPROJECTILE.FX':'envenom',
@@ -126,7 +127,7 @@ fx = { # fx from actor to target (includes buffs)
 	'KHELDIAN_PEACEBRINGER/DAMAGEBUIDUP/DAMAGEBUIDUP.FX':'inner light',
 	'PEACEQUICKBLAST/PEACEAOEBLAST.FX':'luminous blast',
 	'PEACEBRINGER/XRAYBEAM/XRAYBEAM.FX':'glinting eye',
-	'/HEAVYPEACEPUNCHHIT.FX':'incandescent strike',
+	'/HEAVYPEACEPUNCH.FX':'incandescent strike',
 
 	# epics
 	'/COMMAND2.FX':'dominate',
@@ -177,6 +178,8 @@ fx = { # fx from actor to target (includes buffs)
 	'COSMICBLAST.FX':'cosmic burst',
 	'PROTONBLAST_QUICK.FX':'proton blast',
 
+	'BIOARMOR/ABLATIVE_CARAPACE.FX':'ablative carapace',
+	'PSIONICMELEE/PSIBUFF.FX':'concentration',
 	
 	'/WATERJET.FX':'water jet',
 	'WATERJET_FAST.FX':'water jet',
@@ -416,6 +419,7 @@ name_filter  = [
 
 otherfx = { # like toggles and stuff for determining powersets
 	'THORNS_ACTIVATION.FX':'thorns',
+	'ENERVATINGFIELDHAND.FX':'ef toggle on',
 	# 'AGILITY.FX':'agility',
 }
 
@@ -451,7 +455,7 @@ powersets = {
 	'siphon speed':'kin',
 
 	'accelerate metabolism':'rad',
-	'enervating field':'rad',
+	'ef toggle on':'rad',
 
 	'entangling arrow':'trick',
 	'heat loss':'cold',
@@ -481,6 +485,7 @@ powersets = {
 	'force bolt':'bubble',
 	'boost range':'energy manip',
 	'chronos':'temporal',
+	'ablative carapace':'bio',
 }
 
 primarysupport = [ #order of importance?

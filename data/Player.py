@@ -233,10 +233,13 @@ class Player:
 		spikes[-1].stats['heals received'] = healsreceived
 		spikes[-1].stats['greens available'] = self.greensavailable # at the start of the spike
 		spikes[-1].stats['greens used'] = self.greensavailable - self.greens
-		spikes[-1].stats['spike duration'] = self.recentattacks[-1][0] - self.targetstart
 		spikes[-1].stats['total hp lost'] = -self.dmgtaken
 		if self.death != 1:
 			self.dmgtakensurv += -self.dmgtaken
+			spikes[-1].stats['spike duration'] = self.recentattacks[-1][0] - self.recentattacks[0][0]
+		else:
+			spikes[-1].stats['spike duration'] = self.lastspikedeath/1000 - self.recentattacks[0][0]
+
 		# spikes[-1].stats['total hp recovered'] = self.healreceived
 		spikes[-1].stats['hp after spike'] = self.lasthp
 
