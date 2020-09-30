@@ -33,6 +33,8 @@ class Player:
 		self.at = ''
 		self.pos = False
 
+		self.writelog = False
+
 		# being spiked
 		self.targetstart = -1
 		self.attackcounter = 0
@@ -120,6 +122,7 @@ class Player:
 		self.death = ''
 		self.reverse = False
 		self.targetinstance = 0
+		self.writelog = False
 
 	def _update_ontarget(self, t, aid, players):
 		timing = (t - self.targetstart)
@@ -276,6 +279,7 @@ class Player:
 			self.istarget = True
 			self.targeted += 1
 			self.targetinstance = 1 # for spreadsheet
+			self.writelog = True
 
 			self.greensavailable = self.greens
 

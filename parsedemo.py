@@ -30,10 +30,6 @@ header.extend(header_log)
 
 emotes = []
 
-lastactor = 0
-writeline = False # flag to write line to csv
-
-lasttarget = {'BLU':'','RED':''}
 lastgather = {'BLU':0,'RED':0}
 gatherplayercount = {'BLU':0,'RED':0}
 gathertimes = {'BLU':[],'RED':[]}
@@ -248,52 +244,58 @@ with open(sys.argv[1],'r') as fp:
 	# ################################################ #
 	# ################################################ #
 
+
+	
+
 	with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		csvw = csv.writer(csvfile, delimiter=',')
+
+		for p in players.values(): # append stats
+			csvw.writerow([demoname,match_map,'log',p.name,p.team,0,'',0,'','','',0,])
 
 		while line and t <= matchtime: # ignore data after match end with small buffer time
 			ms = ms + int(line[0]) # running demo time
 			t2 = (ms/1000) # to seconds
 
 
-			if t2 > t or writeline:
-				for p in players.values():
-					csv_log = [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
-					
-					# dealing with stupid entangles (same fx as strangler hit)
-					if p.action == 'strangler': # hold half second to confirm no entangle
-						p.csvhold = [t+0.3,csv_log[:]]
-					if p.action == 'entangle': # cancel last strangler when entangle pops up
-						p.csvhold = False
+			
+			for p in players.values():
+				csv_log = [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
+				
+				# dealing with stupid entangles (same fx as strangler hit)
+				if p.action == 'strangler': # hold half second to confirm no entangle
+					p.csvhold = [t+0.25,csv_log[:]]
+				if p.action == 'entangle': # cancel last strangler when entangle pops up
+					p.csvhold = False
 
-					# check end target each timestep
-					if p.istarget and (p.death == 1 or (t2-p.targetstart >= targetmaxtime and t-p.recentattacks[-1][0] > targetcooldown)): # if we're over the target window
-						p.endtarget(players,spikes)
+				# check end target each timestep
+				if p.istarget and (p.death == 1 or (t2-p.targetstart >= targetmaxtime and t-p.recentattacks[-1][0] > targetcooldown)): # if we're over the target window
+					p.endtarget(players,spikes)
 
 
-					if (p.death == 1 or p.action  != '' or p.target != '' or p.targetinstance == 1) and not p.csvhold:
-						csvw.writerow(csv_log)
+				# if (p.death == 1 or p.action  != '' or p.target != '' or p.targetinstance == 1) and not p.csvhold:
+				if p.writelog:
+					csvw.writerow(csv_log)
 
-						# keep track of extra
-						if p.action != '' and (p.action not in heals or p.action == 'spirit ward') and p.action not in evade and p.action not in filterextras and t > extras_start:
-							if p.action in p.supportextras.keys():
-								p.supportextras[p.action] += 1
-							else:
-								p.supportextras[p.action] = 1
-						if p.action in heals and p.action != 'spirit ward':
-							p.healpowers[p.action] += 1
-						if p.action in phases:
-							p.lastphase = t
-							if not p.istarget:
-								rogues.append([t,p.id,p.action,p.id])
-						if p.action == 'green' and not p.istarget:
+					# keep track of extra
+					if p.action != '' and (p.action not in heals or p.action == 'spirit ward') and p.action not in evade and p.action not in filterextras and t > extras_start:
+						if p.action in p.supportextras.keys():
+							p.supportextras[p.action] += 1
+						else:
+							p.supportextras[p.action] = 1
+					if p.action in heals and p.action != 'spirit ward':
+						p.healpowers[p.action] += 1
+					if p.action in phases:
+						p.lastphase = t
+						if not p.istarget:
 							rogues.append([t,p.id,p.action,p.id])
-						
-						if (p.death == 1 and p.lastdeath != p.lastspikedeath):
-							rogues.append([t,p.id,'death',p.id])
-						lineuid += 1
-						p.reset()
-				writeline = False
+					if p.action == 'green' and not p.istarget:
+						rogues.append([t,p.id,p.action,p.id])
+					
+					if (p.death == 1 and p.lastdeath != p.lastspikedeath):
+						rogues.append([t,p.id,'death',p.id])
+					lineuid += 1
+					p.reset()
 
 			# more stupid entangle stuff
 			for p in players.values():
@@ -334,6 +336,7 @@ with open(sys.argv[1],'r') as fp:
 						players[pid].death = 1
 						players[pid].lastdeath = ms
 						players[pid].deathtotal = players[pid].deathtotal + 1
+						players[pid].writelog = True
 
 					players[pid].totaldmgtaken += min(0,hp-players[pid].lasthp)
 					players[pid].totalhprecovered += max(0,hp-players[pid].lasthp)
@@ -442,7 +445,7 @@ with open(sys.argv[1],'r') as fp:
 					else:
 						players[pid].target = ''
 					
-					writeline = True
+					players[pid].writelog = True
 
 				# elif action == "PREVTARGET":
 				# 	pass
@@ -466,7 +469,7 @@ with open(sys.argv[1],'r') as fp:
 					if 'DRAW_PISTOL' in mov or 'DRAW_WEAPONBACK' in mov: # WEAPONBACK might be shared with some other sets
 						players[pid].crey = players[pid].crey + 1
 						players[pid].action = 'crey pistol'
-						writeline=True
+						players[pid].writelog = True
 					# if 'WALL' in mov and players[pid].action == '':
 					# 	players[pid].action = 'ssj'
 
@@ -493,7 +496,7 @@ for p in players.values(): # clean up, if target at end of match
 
 with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 	csvw = csv.writer(csvfile, delimiter=',')
-	for key, p in players.items(): # append stats
+	for p in players.values(): # append stats
 		csvw.writerow([demoname,match_map,'log',p.name,p.team,0,'',0,'','','',0,])
 		csvw.writerow([demoname,match_map,'log',p.name,p.team,600,'',0,'','','',0])
 		csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,0,'','','','','','','','',20])
@@ -522,8 +525,8 @@ with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 			t2 = '-'
 		csvw.writerow([demoname,match_map,'rogue_log',p1,t1,r[0],'','',r[2],p2,t2,'','',''])
 
-	suid = 1
-	spikes.sort(key=lambda x: x.start)
+	suid = 1 # spike uid
+	spikes.sort(key=lambda x: x.start) # sort spikes by start time
 
 	for s in spikes:
 
