@@ -245,17 +245,17 @@ class Player:
 
 		for p in players.values(): 
 			# count num spikes missed if dead
-			if p.team != self.team:
+			if p.lastdeath > 0:
 				lastdeath = p.lastdeath/1000
-				respawn = math.ceil((lastdeath)/15)*15+15 # includes 15 sec uneffecting
-				if lastdeath < self.targetstart and self.recentattacks[-1][0] < respawn:
-					p.misseddead += 1
-			# count num heals missed if dead
-			if p.team == self.team and p.id != self.id:
-				lastdeath = p.lastdeath/1000
-				respawn = math.ceil((lastdeath)/15)*15+15 # 1 sec safety, includes 15 sec uneffecting
-				if lastdeath > 0 and lastdeath < self.targetstart and self.recentattacks[-1][0] < respawn:
-					p.healmisseddead += 1
+				if p.team != self.team:
+					respawn = math.ceil((lastdeath)/15)*15+15 # includes 15 sec uneffecting
+					if lastdeath < self.targetstart and self.recentattacks[-1][0] < respawn:
+						p.misseddead += 1
+				# count num heals missed if dead
+				if p.team == self.team and p.id != self.id:
+					respawn = math.ceil((lastdeath)/15)*15+15 # 1 sec safety, includes 15 sec uneffecting
+					if lastdeath > 0 and lastdeath < self.targetstart and self.recentattacks[-1][0] < respawn:
+						p.healmisseddead += 1
 
 
 		self.targetstart = False # restart timer

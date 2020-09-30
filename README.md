@@ -3,7 +3,7 @@ message me (xhiggy) on discord if you have questions
 
 ## notes
 
-Quick how-to use for people. These instructions will assume a small amount of familiarity with Python and the Unix shell. I've made some bash scripts for my own ease of use, if you don't have bash they're probably straight forward enough that you could rewrite them in python or as a Windows batch file. If you're on Windows you can use the _Window Subsystem for Linux_ as an easy way to access a Linux shell.
+Quick how-to use for people. These instructions will assume a small amount of familiarity with Python and command line stuff. I've made some bash scripts for my own ease of use, if you don't have bash they're probably straight forward enough that you could rewrite them in python or as a Windows batch file. If you're on Windows you can use the _Window Subsystem for Linux_ as an easy way to access a Linux shell.
 
 This program is made for typical team arena matches. If you're running it for non-standard matches (i.e. smaller than 6v6, more than 10 minutes, more than 2 teams) you'll have to go into the code and change parameters to get actually useful outputs.
 

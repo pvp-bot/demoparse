@@ -6,6 +6,7 @@ fx = { # fx from actor to target (includes buffs)
 	'BLAZINGBOLT_ATTACK.FX':'blazing bolt',
 	'/INFERNOBOLT.FX':'blazing bolt',
 	'FLARES_ATTACK.FX':'flares',
+	'FIREBLAST_ATTACK.FX':'fire blast',
 	'INFERNO_ATTACK.FX':'inferno',
 
 	# ice
