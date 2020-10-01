@@ -163,9 +163,12 @@ class Player:
 		# new spike
 		spikes.append(Target(self.name,self.team,self.targetstart))
 
+		healsreceived = 0
+		
 		# calc spike heals at end of spike
 		for h in self.targetheals:
 			if h[2] != 'green' and h[2] != 'spirit ward': # to not count greens as heals
+				healsreceived += 1
 				if self.isrecentheal(self.targetstart,h[0]):
 					self.totalhealsreceivedontarget += 1
 					if h[1] not in self.healedby:
@@ -230,8 +233,6 @@ class Player:
 		
 		spikes[-1].stats['attackers'] = len(self.targetattackers)
 		spikes[-1].stats['attacks'] = len(self.recentattacks)
-		healsreceived = 0
-		
 
 		spikes[-1].stats['heals received'] = healsreceived
 		spikes[-1].stats['greens available'] = self.greensavailable # at the start of the spike

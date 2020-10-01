@@ -45,8 +45,6 @@ with open(sys.argv[1],'r') as fp:
 	count = 0
 	playerline = 0
 
-	player_name_hold = False
-	player_id_hold = False
 	# initializing line loop - players, teams,
 	while line and count < 30000: # 30k should be enough to find all players
 		try:
@@ -244,20 +242,12 @@ with open(sys.argv[1],'r') as fp:
 	# ################################################ #
 	# ################################################ #
 
-
-	
-
 	with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		csvw = csv.writer(csvfile, delimiter=',')
-
-		for p in players.values(): # append stats
-			csvw.writerow([demoname,match_map,'log',p.name,p.team,0,'',0,'','','',0,])
 
 		while line and t <= matchtime: # ignore data after match end with small buffer time
 			ms = ms + int(line[0]) # running demo time
 			t2 = (ms/1000) # to seconds
-
-
 			
 			for p in players.values():
 				csv_log = [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
@@ -279,11 +269,11 @@ with open(sys.argv[1],'r') as fp:
 
 					# keep track of extra
 					if p.action != '' and (p.action not in heals or p.action == 'spirit ward') and p.action not in evade and p.action not in filterextras and t > extras_start:
-						if p.action in p.supportextras.keys():
+						if p.action in p.supportextras.keys() and t>0:
 							p.supportextras[p.action] += 1
 						else:
 							p.supportextras[p.action] = 1
-					if p.action in heals and p.action != 'spirit ward':
+					if p.action in heals and p.action != 'spirit ward' and t>0:
 						p.healpowers[p.action] += 1
 					if p.action in phases:
 						p.lastphase = t
@@ -414,6 +404,13 @@ with open(sys.argv[1],'r') as fp:
 				elif action == "TARGET" and players[pid].action != '':
 					if line[3] == 'ENT':
 						tid = int(line[4])
+
+
+						if players[pid].reverse:
+							players[tid].writelog = True
+						else:
+							players[pid].writelog = True
+
 						if tid != pid and tid in player_ids: # if target is a player
 							players[pid].target = players[tid].name
 							players[pid].targetteam = players[tid].team
@@ -441,12 +438,12 @@ with open(sys.argv[1],'r') as fp:
 							players[pid].lastjaunt = t
 							players[pid].jauntoffone(t,players)
 						players[pid].target = '!pos'
+						players[pid].writelog = True
 
 					else:
 						players[pid].target = ''
+						players[pid].writelog = True
 					
-					players[pid].writelog = True
-
 				# elif action == "PREVTARGET":
 				# 	pass
 					
