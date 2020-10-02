@@ -1,5 +1,6 @@
 coh demo parser for team arena matches  
-message me (xhiggy) on discord if you have questions
+message me (xhiggy) on discord if you have questions  
+I usually find some bugs whenever I use this, so it's an ongoing process of work and fine tuning  
 
 ## notes
 
