@@ -35,6 +35,8 @@ If you want to use Big Query as your data storage method you will need
   
 Alternatively, you _can_ use Google Sheets to store the .csv data however I don't recommend this for several reasons. The storage is noticably slower than Big Query, my Big Query parse and upload method is mostly automated which means a lot more time spent if not using it, and, more importantly, it will require you to relink all data fields and conditional formatting in the Datastudio report (and will miss further template updates unless you go through the relinking process again).
 
+I can maybe set you up on my cloud storage if you can't get it to work.
+
 ### folder setup
 
 For ease of use I'd recommend storing your demo files in the same way as I am: a top level folder for all your demos and in it a subfolder for each night of matches. E.g. the `~/Documents/demos` folder houses things like `~/Documents/demos/200930_kickball/` and in that you have the several demo files such as `~/Documents/demos/200930_kickball/match1_skyway.cohdemo`. I name demos just single numbers based on the order they're played (e.g. `1.cohdemo` is the first match of the night), but any name should work.
