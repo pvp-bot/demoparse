@@ -65,5 +65,7 @@ Find a recent report with copying enabled (either one of your previous version o
 
 Update the 2 names of the report in the top left and whatever other adjustments you want to make. Update the share permissions to allow others to view if you want to share it.
 
+[v0.3 template](https://datastudio.google.com/reporting/df9bb94c-17b8-4add-8c0a-fbdcfd7ce0cb)
+
 ## other stuff
 The demorecord will miss some things in the match occasionally, especially on larger maps when you can get out of render range (note: perception range is irrelevant). You can manually add override lines to the start of the demofile (using any text editor) to change the match score, player team assignment, player powersets, or swap red and blue entirely. See `data/override.py` for examples.
