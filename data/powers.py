@@ -376,7 +376,7 @@ filterextras = [
 	'blue',
 	'purple/orange',
 	'yellow',
-	'clear mind',
+	# 'clear mind',
 	'healing aura',
 	'power boost',
 ]
@@ -398,6 +398,7 @@ name_filter  = [
 	'Poison Trap',
 	'Animated Stone',
 	'Superior Vigilant Assault',
+	'Victory Rush',
 	'Blind',
 	'Galvanic Sentinel',
 	'Voltaic Geyser',

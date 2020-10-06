@@ -406,7 +406,7 @@ with open(sys.argv[1],'r') as fp:
 						tid = int(line[4])
 
 
-						if players[pid].reverse:
+						if players[pid].reverse and tid in players:
 							players[tid].writelog = True
 						else:
 							players[pid].writelog = True
