@@ -264,7 +264,7 @@ with open(sys.argv[1],'r') as fp:
 
 
 				# if (p.death == 1 or p.action  != '' or p.target != '' or p.targetinstance == 1) and not p.csvhold:
-				if p.writelog:
+				if p.writelog and not p.csvhold:
 					csvw.writerow(csv_log)
 
 					# keep track of extra
