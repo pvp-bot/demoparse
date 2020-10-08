@@ -368,7 +368,7 @@ heals = [
 ]
 
 absorbs = [
-	# 'insulating circuit',
+	# 'insulating circuit', # need to rewrite for duration
 	'spirit ward'
 ]
 

@@ -107,6 +107,7 @@ class Player:
 		self.supportextras = {}
 		self.healmisseddead = 0
 		self.healpowers = {'absorb pain':0,'heal other':0,'insulating circuit':0,'rejuvenating circuit':0,'share pain':0,'soothe':0,'aid other':0,'glowing touch':0,'cauterize':0,'alkaloid':0}
+		self.healstotal = 0
 
 		self.stats = {}
 		self.atkchains = {}
@@ -394,3 +395,5 @@ class Player:
 			if not targetplayer.istarget:
 				self.guesses += 1
 				targetplayer.absorbed.append([t, self.id])
+		else:
+			self.healstotal += 1
