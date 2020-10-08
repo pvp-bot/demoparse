@@ -45,6 +45,7 @@ fx = { # fx from actor to target (includes buffs)
 	'FORTITUDE.FX':'fortitude',
 	'EMPATHYCUREWOUNDS.FX':'regen aura',
 	'ADRENALINEFLOW.FX':'recovery aura',
+	'EMPATHY/RESURECTION.FX':'resurrect',
 
 	# pain
 	'SOOTH_ATTACK.FX':'soothe',
@@ -299,6 +300,10 @@ utility = [	# for filtering out not atk offense powers
 	'thunderous blast',
 	'heat loss',
 	'crey pistol',
+]
+
+rez = [
+'resurrect',
 ]
 
 
