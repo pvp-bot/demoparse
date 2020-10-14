@@ -253,7 +253,7 @@ with open(sys.argv[1],'r') as fp:
 				csv_log = [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
 				
 				# dealing with stupid entangles (same fx as strangler hit)
-				if p.action == 'strangler': # hold half second to confirm no entangle
+				if p.action == 'strangler' and p.target != '': # hold half second to confirm no entangle
 					p.csvhold = [t+0.25,csv_log[:]]
 					# p.reset()
 				if p.action == 'entangle': # cancel last strangler when entangle pops up
