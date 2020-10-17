@@ -76,6 +76,7 @@ fx = { # fx from actor to target (includes buffs)
 	# grav
 	'/GCDISTORTION.FX':'gravity distortion',
 	'/GCCRUSH_SINGULARITY.FX':'crush',
+	'GCLIFT.FX':'lift',
 	'/GCDIMENSIONSHIFT.FX':'dimension shift', # toggle on
 
 	# plant
@@ -140,6 +141,8 @@ fx = { # fx from actor to target (includes buffs)
 	'/HIBERNATE_CONTINUING.FX':'hibernate',
 	'/SOOT.FX':'char',
 	'/BUILDUPPOWERBOOST.FX':'power boost',
+	'GHOSTWIDOW/SOULSTORM.FX':'soul storm',
+	'GHOSTWIDOW/DARKSOULBLAST.FX':'dark blast',
 
 	# pools
 	'JAUNT_ATTACK.FX':'jaunt',
@@ -156,6 +159,8 @@ fx = { # fx from actor to target (includes buffs)
 	# misc powerset
 	'FOSSILIZEHANDS.FX':'fossilize',
 	'/STALAGMITESTOMP.FX':'stalagmites',
+
+	'CLAWS/CLAWSTWIRL.FX':'focus',
 
 	'/SHIVER.FX':'shiver',
 	'/CHILLBLAINSHANDS.FX':'chilblain',
@@ -182,6 +187,8 @@ fx = { # fx from actor to target (includes buffs)
 
 	'BIOARMOR/ABLATIVE_CARAPACE.FX':'ablative carapace',
 	'PSIONICMELEE/PSIBUFF.FX':'concentration',
+	
+	'/THUGS_UPGRADE_TOSS_2.FX':'thugs upgrade',
 	
 	'/WATERJET.FX':'water jet',
 	'WATERJET_FAST.FX':'water jet',
@@ -215,6 +222,7 @@ fx = { # fx from actor to target (includes buffs)
 	# 'GEASTHEKINDONESCONTINUING.FX':'geas', # can pop multiple FX continuing
 	'/ALIGNMENT_FRENZY.FX':'frenzy', # or other insp?
 	'/BRAWL_ATTACK.FX':'brawl',
+	'FORCEOFWILL/WEAKENRESOLVE.FX':'weaken resolve',
 
 	# insps
 	'/STAMINA.FX':'green',
@@ -485,8 +493,10 @@ powersets = {
 	'power burst':'energy blast',
 
 	'luminous blast':'peacebringer',
+	'focus':'claws',
 	'incandescent strike':'peacebringer',
 	'shadow blast':'warshade',
+	'thugs upgrade':'thugs',
 	'ebon eye':'warshade',
 	'greater psi blade':'psi melee',
 	'force bolt':'bubble',
@@ -509,4 +519,6 @@ primaryoffence = [ #order of importance?
 	'energy blast',
 	'rad blast',
 	'water',
+	'thugs',
+	'claws',
 ]
