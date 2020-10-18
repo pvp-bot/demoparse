@@ -53,6 +53,7 @@ fx = { # fx from actor to target (includes buffs)
 	'PAINBRINGER_ATTACK.FX':'painbringer',
 	'WORLDOFPAIN_ATTACK.FX':'world of pain',
 	'ENFORCEDMORALE_ATTACK.FX':'enforced morale',
+	'/CONDUITOFPAIN_HIT.FX':'conduit of pain', # not reversed
 
 	# psn
 	'/POISONLIQUIDPROJECTILE.FX':'envenom',
@@ -309,6 +310,50 @@ utility = [	# for filtering out not atk offense powers
 	'heat loss',
 	'crey pistol',
 ]
+
+utilitycount = [	# for filtering out not atk offense powers
+	'adreneline boost',
+	'fortitude',
+	'clear mind',
+	'recovery aura',
+	'regeneration aura',
+	'resurrect',
+	
+	'conduit of pain',
+	'painbringer',
+	'enforced morale',
+	'world of pain',
+
+	'siphon speed',
+	'speed boost',
+	'transference',
+	'ir',
+
+	'entangling arrow',
+	'glue arrow',
+	'acid arrow',
+	
+	'overgrowth',
+	'wild growth',
+	'wild bastion',
+	'regrowth',
+
+	'weaken',
+	'neurotoxic breath',
+
+	'photon seekers',
+	'phantom army',
+	'galvanic sentinel',
+	'spectral terror',
+	'dimension shift',
+
+	'confuse',
+	'thunderous blast',
+	'heat loss',
+
+	'web nade',
+]
+
 
 rez = [
 'resurrect',

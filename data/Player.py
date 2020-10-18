@@ -114,6 +114,7 @@ class Player:
 		self.firstatktiming = False
 		self.followuptiming = []
 		self.lateatks = 0
+		self.utilcount = 0
 
 	def reset(self):
 		self.hp = ''
@@ -326,6 +327,12 @@ class Player:
 		else:
 			window = targetwindow
 		if t < window:
+			return True
+		else:
+			return False
+
+	def isphased(self,time):
+		if self.lastphase < t and self.lastphase > t:
 			return True
 		else:
 			return False
