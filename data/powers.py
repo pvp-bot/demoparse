@@ -341,9 +341,14 @@ utilitycount = [	# for filtering out not atk offense powers
 	'weaken',
 	'neurotoxic breath',
 
+	'galvanic sentinel',
+	'shock',
+	'energizing circuit',
+	'empowering circuit',
+	'amp up',
+
 	'photon seekers',
 	'phantom army',
-	'galvanic sentinel',
 	'spectral terror',
 	'dimension shift',
 
@@ -475,6 +480,10 @@ name_filter  = [
 	'Spirit Panther',
 	'Ticket Vendor',
 	'Architect Entertainment Greeter',
+	'Howler Wolf',
+	'Alpha Howler Wolf',
+	'Dire Wolf',
+	'Lioness',
 ]
 
 otherfx = { # like toggles and stuff for determining powersets

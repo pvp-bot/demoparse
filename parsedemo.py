@@ -60,7 +60,7 @@ def main():
 				match_map = match_map.split('_')[1].lower()
 			if action == "Player":
 				playerline = count
-			if action == "NPC":
+			if action == "NPC" and line[3] != 'FRK_45':
 				player_ids = [i for i in player_ids if i != pid]
 				player_list = [i for i in player_list if i.id != pid]
 			if action == "NEW":
@@ -71,6 +71,7 @@ def main():
 					else:
 						player_ids.append(pid)
 						player_list.append(Player(line[3],pid))
+					
 
 			# read manual demo overrides
 			if action == override.key:
@@ -82,17 +83,17 @@ def main():
 					override.teamswap = True # 0 0 OVERRIDE TEAMSWAP
 				elif line[3] == "POWERSETS": 
 					override.powersets[line[4]] = [line[5],line[6]] 
-			if action in npc and pid in player_ids: #
+			if action in npc and pid in player_ids and line[3] != 'FRK_45': #
 				del player_ids[-1]
 				del player_list[-1]
 			try:
 				line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
 			except:
-				print(count) # find broken lines
+				print(f'{count} line error') # find broken lines
 			count = count + 1
-
+			
 		players = dict(zip(player_ids,player_list))
-
+		
 
 
 		# back to start of file

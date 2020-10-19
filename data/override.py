@@ -12,8 +12,9 @@ score = [0,0]
 playerswap = []
  
 # swap RED and BLU assignment (for keeping people same team whole night)
-# 0 0 OVERRIDE TEAMSWAP ghostmaster BLU
+# 0 0 OVERRIDE TEAMSWAP
 teamswap = False
 
 # 0 0 OVERRIDE POWERSETS "player name" mind ff (assigned "player name" the powersets: mind/ff)
 powersets = {} # [name,set1,set2]
+

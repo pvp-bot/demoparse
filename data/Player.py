@@ -332,7 +332,7 @@ class Player:
 			return False
 
 	def isphased(self,time):
-		if self.lastphase < t and self.lastphase > t:
+		if self.lastphase + phasemax > time and self.lastphase + phasedelay < time:
 			return True
 		else:
 			return False
