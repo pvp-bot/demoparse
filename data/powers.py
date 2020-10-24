@@ -93,7 +93,8 @@ fx = { # fx from actor to target (includes buffs)
 	'INSULATINGCIRCUITATK.FX':'insulating circuit',
 	'AMPUPATTACK.FX':'amp up',
 	'/ENERGIZINGCIRCUITATK.FX':'energizing circuit',
-	'WITCHESLIGHTNINGBOLTMEGA.FX':'shock',
+	'SHOCKTHERAPY/WITCHESLIGHTNINGBOLTMEGA.FX':'shock',
+	'ELECTRICITYCONTROL/WITCHESLIGHTNINGBOLTMEGA':'shocking bolt',
 	'/GALVANICSENTINELSUMMON.FX':'galvanic sentinel',
 	# 'ENERGYSINKCASTATTACK.FX':'shock', # galvanic shock
 
