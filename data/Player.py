@@ -316,7 +316,7 @@ class Player:
 
 	def entanglecheck(self,atk,t,aid):
 		if atk[2] == 'strangler' and atk[1] == aid and atk[0] > t-0.5:
-			return False
+			return False # strangler cast by attacker in the last .5 sec
 		else:
 			return True
 

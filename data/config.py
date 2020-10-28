@@ -15,6 +15,6 @@ predictspiketime = 10 # time before someone gets spiked where they can receive a
 matchtime = 600
 t_bundle_step = 60
 phasedelay = 0.5 # delay after activation when unaffecting (estimate, same value for hibe and phase)
-phasemin = 4 #
+phasemax = 4 #
 paintedtimer = 16 # ~how long after a debuff indicator it's still valid, not sure when the second pops up?
 extras_start = 5

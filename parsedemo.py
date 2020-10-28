@@ -613,7 +613,7 @@ def main():
 	for p in players.values():
 		deaths[p.team] += p.deathtotal 
 		targeted[p.team] += p.targeted
-		if p.ontargetheals+p.topups > p.attacks/2 and p.ontargetheals > 4:
+		if p.ontargetheals+p.topups > p.attacks/1.5 and p.ontargetheals > 4 and p.healontime > 0:
 			p.support = True
 
 		# setup player powersets in order
