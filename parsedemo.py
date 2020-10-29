@@ -664,7 +664,7 @@ def main():
 				p.targeted,
 				"{:.0%}".format(1-p.deathtotal/max(p.targeted,1)),
 				p.ontarget,
-				"{:.0%}".format(p.ontarget/max(targets[p.team],1)),
+				"{:.0%}".format(p.ontarget/max(targets[p.team]-p.targeted,1)),
 				str(spiketiming)[:4],
 				str(spiketimingvar)[:4],
 				p.first,
@@ -703,7 +703,7 @@ def main():
 
 			
 			# header_log = ['demo','map',   'linetype',    'playr','team',t, hp d  a  tgt tt tgtd,'value','uid','stat1','stat2','stat3','stat4','stat5',stat6,stat7,stat8,...]
-			csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/targeted[p.team] if p.healontarget > 0 else '',p.attackstotal,p.healstotal,p.utilcount]) 
+			csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/(targeted[p.team]-p.targeted) if p.healontarget > 0 else '',p.attackstotal,p.healstotal,p.utilcount]) 
 			csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/max(targets[p.team],1),spiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.lateatks])
 			csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken,20-p.greens,p.dmgtakensurv])
 			
