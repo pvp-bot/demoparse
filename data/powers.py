@@ -191,6 +191,8 @@ fx = { # fx from actor to target (includes buffs)
 	'PSIONICMELEE/PSIBUFF.FX':'concentration',
 	
 	'/THUGS_UPGRADE_TOSS_2.FX':'thugs upgrade',
+	'PARAMILITARY/PARAMILITARY_BOOSTEQUIP.FX':'merc upgrade',
+	'PLAYER_MERCENARIES_GUNFIRE_SHOTGUN.FX':'slug',
 	
 	'/WATERJET.FX':'water jet',
 	'WATERJET_FAST.FX':'water jet',
@@ -547,11 +549,14 @@ powersets = {
 	'power push':'energy blast',
 	'power burst':'energy blast',
 
+	'thugs upgrade':'thugs',
+	'merc upgrade':'merc',
+
+
 	'luminous blast':'peacebringer',
 	'focus':'claws',
 	'incandescent strike':'peacebringer',
 	'shadow blast':'warshade',
-	'thugs upgrade':'thugs',
 	'ebon eye':'warshade',
 	'greater psi blade':'psi melee',
 	'force bolt':'bubble',
@@ -575,5 +580,6 @@ primaryoffence = [ #order of importance?
 	'rad blast',
 	'water',
 	'thugs',
+	'merc',
 	'claws',
 ]
