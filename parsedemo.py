@@ -465,6 +465,13 @@ def main():
 							players[pid].death = 1
 							players[pid].lastdeath = ms
 							players[pid].deathtotal = players[pid].deathtotal + 1
+							
+							# count hp loss when HP bar doesn't move
+							players[pid].dmgtaken += min(0,0-players[pid].lasthp)
+							players[pid].totaldmgtaken += min(0,0-players[pid].lasthp)
+							if players[pid].istarget:
+								players[pid].totaldmgtakenonspike += min(0,0-players[pid].lasthp)
+
 							players[pid].hp = 0
 							players[pid].lasthp = 0
 
@@ -664,7 +671,7 @@ def main():
 				p.targeted,
 				"{:.0%}".format(1-p.deathtotal/max(p.targeted,1)),
 				p.ontarget,
-				"{:.0%}".format(p.ontarget/max(targets[p.team]-p.targeted,1)),
+				"{:.0%}".format(p.ontarget/max(targets[p.team],1)),
 				str(spiketiming)[:4],
 				str(spiketimingvar)[:4],
 				p.first,
@@ -681,8 +688,8 @@ def main():
 					p.topups,
 					p.healalpha,
 					str(healtiming)[:4],
-					"{:.0%}".format(p.healontarget/targeted[p.team],1),
-					"{:.0%}".format(p.healontime/targeted[p.team],1),
+					"{:.0%}".format(p.healontarget/(targeted[p.team]-p.targeted),1),
+					"{:.0%}".format(p.healontime/(targeted[p.team]-p.targeted),1),
 					p.predicts,
 					str(hpspike)[:4]
 
