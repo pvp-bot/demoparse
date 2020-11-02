@@ -192,6 +192,7 @@ fx = { # fx from actor to target (includes buffs)
 	
 	'/THUGS_UPGRADE_TOSS_2.FX':'thugs upgrade',
 	'PARAMILITARY/PARAMILITARY_BOOSTEQUIP.FX':'merc upgrade',
+	'NECROMACY/MINIONBOOSTHIGH.FX':'necro upgrade',
 	'PLAYER_MERCENARIES_GUNFIRE_SHOTGUN.FX':'slug',
 	
 	'/WATERJET.FX':'water jet',
@@ -551,6 +552,7 @@ powersets = {
 
 	'thugs upgrade':'thugs',
 	'merc upgrade':'merc',
+	'necro upgrade':'necro',
 
 
 	'luminous blast':'peacebringer',
