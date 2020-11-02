@@ -29,6 +29,7 @@ fx = { # fx from actor to target (includes buffs)
 
 	# dark blast
 	'MOONBEAM_QUICK.FX':'moonbeam',
+	'DARKNESSCONTROL/LIFEDRAIN.FX':'life drain',
 
 	# sonic
 	'MASSIVESONICBLAST.FX':'shout',
@@ -228,6 +229,7 @@ fx = { # fx from actor to target (includes buffs)
 	'/ALIGNMENT_FRENZY.FX':'frenzy', # or other insp?
 	'/BRAWL_ATTACK.FX':'brawl',
 	'FORCEOFWILL/WEAKENRESOLVE.FX':'weaken resolve',
+	'SUPERSPEED/BURNOUT.FX':'burnout',
 
 	# insps
 	'/STAMINA.FX':'green',
@@ -583,5 +585,6 @@ primaryoffence = [ #order of importance?
 	'water',
 	'thugs',
 	'merc',
+	'necro',
 	'claws',
 ]
