@@ -58,7 +58,7 @@ Instead of running the python scripts directly, I recommend running the shell sc
 `./parsefolder.sh -i /path/to/demofolder/`  
 
 
-Adding a `-s` to the command will 'skip' the parsing step and only append+upload the final .csv (in case you've already run the parsedemo.py individually and don't want to rerun it on all files). Rerunning the script will overwrite the existing Big Query table of the same name if it exists. You may need to make the script executable first, `chmod +x parsefolder.sh`.
+Adding a `-s` parameter to the command will 'skip' the parsing step and only append+upload the final .csv (in case you've already run the parsedemo.py individually and don't want to rerun it on all files). Rerunning the script will overwrite the existing Big Query table of the same name if it exists. You may need to make the script executable first, `chmod +x parsefolder.sh`.
 
 ### creating the Datastudio report
 Find a recent report with copying enabled (either one of your previous version or one of mine if you have it) and hit the _Make a copy of this report_ button in the top right, then go _New Data Source>Create New Source>Big Query>My Projects>Your Project>Your Dataset_ then select the data table corresponding to the demo folder you've just uploaded.
