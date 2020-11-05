@@ -201,6 +201,7 @@ fx = { # fx from actor to target (includes buffs)
 	'/DEHYDRATE.FX':'dehydrate',
 	
 	'POWERPUSH.FX':'power push',
+	'/SMOKEHIT.FX':'smoke',
 	'MEGA.FX':'power burst',
 	# 'CUSTOMANIM_MEGA.FX':'power burst', 
 	'SNIPERBLAST_QUICK.FX':'sniper blast', 
@@ -312,6 +313,8 @@ utility = [	# for filtering out not atk offense powers
 	# 'web nade',
 	'glue arrow',
 	'confuse',
+	'smoke',
+	'shiver',
 	'thunderous blast',
 	'heat loss',
 	'crey pistol',
@@ -357,6 +360,8 @@ utilitycount = [	# for filtering out not atk offense powers
 	'phantom army',
 	'spectral terror',
 	'dimension shift',
+	'smoke',
+	'shiver',
 
 	'confuse',
 	'thunderous blast',
@@ -388,12 +393,13 @@ preverse = [
 	'/DEHYDRATE.FX',
 	'ENERVATINGFIELDCONTINUING.FX',
 	'WILDBASTION_HIT.FX',
+	'/SMOKEHIT.FX',
 ]
 
 
 buffs = [
-	'HEALINGHANDS.FX',
-	'ABSORBPAIN.FX',
+	'HEALINGHANDS.FX', # 0.93 delay
+	'ABSORBPAIN.FX', # 1.47 delay
 	'STRENGTHHANDS2.FX',
 	'ENDURANCE.FX',
 	'MINDWALL.FX',
@@ -539,7 +545,8 @@ powersets = {
 	'crush':'grav',
 	'fossilize':'earth',
 	'chilblain':'ice control',
-	'shiver':'ice control',
+	'shiver':'ice ctrl',
+	'smoke':'fire ctrl',
 
 	'thunderous blast':'elec blast',
 	'shout':'sonic blast',

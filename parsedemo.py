@@ -431,7 +431,7 @@ def main():
 									players[pid].action = ''
 									players[pid].target = ''
 									players[pid].reverse = False
-									if players[pid].team != players[tid].team:
+									if players[pid].team != players[tid].team and players[tid].action not in utility:
 										players[pid].targetcount(t, tid, players,players[tid].action,spikes,rogues)
 									elif players[tid].action in heals and t>0:
 										players[tid].healcount(t, players[pid],players[tid].action)
@@ -489,7 +489,7 @@ def main():
 							players[pid].kbtime = t
 
 						if 'EMOTE' in mov: # WEAPONBACK might be shared with some other sets
-							emotes.append([players[pid].name,mov])
+							emotes.append([players[pid].name,mov,t])
 
 				line = shlex.split(fp.readline().replace('\\','').replace('\'','').replace('\"',''))
 				count = count + 1
@@ -509,7 +509,7 @@ def main():
 		csvw = csv.writer(csvfile, delimiter=',')
 		for p in players.values(): # append stats
 			csvw.writerow([demoname,match_map,'log',p.name,p.team,0,'',0,'','','',0,])
-			csvw.writerow([demoname,match_map,'log',p.name,p.team,600,'',0,'','','',0])
+			csvw.writerow([demoname,match_map,'log',p.name,p.team,matchtime,'',0,'','','',0])
 			csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,0,'','','','','','','','',20])
 			csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,matchtime,'','','','','','','',lineuid,p.greens])
 			csvw.writerow([demoname,match_map,'greens_log','','',0,'','','','','','','','',0])
