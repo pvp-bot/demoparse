@@ -168,6 +168,8 @@ fx = { # fx from actor to target (includes buffs)
 	'/SHIVER.FX':'shiver',
 	'/CHILLBLAINSHANDS.FX':'chilblain',
 
+	'HAUNT_ATTACK.FX':'haunt',
+
 	'/THUNDEROUSBLAST.FX':'thunderous blast',
 	'ZAPP_QUICK.FX':'zapp',
 	'LIGHTNINGBOLT.FX':'lightning bolt',
@@ -547,6 +549,7 @@ powersets = {
 	'chilblain':'ice control',
 	'shiver':'ice ctrl',
 	'smoke':'fire ctrl',
+	'haunt':'dark ctrl',
 
 	'thunderous blast':'elec blast',
 	'shout':'sonic blast',
