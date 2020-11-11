@@ -57,7 +57,10 @@ def main():
 			if action == "Map":
 				match_map = line[3]
 				match_map = match_map.split('/')[-1]
-				match_map = match_map.split('_')[1].lower()
+				if match_map in map_aliases:
+					match_map = map_aliases[match_map]
+				else:
+					match_map = match_map.split('_')[1].lower()
 			if action == "Player":
 				playerline = count
 			if action == "NPC" and line[3] != 'FRK_45':

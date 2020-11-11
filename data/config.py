@@ -18,3 +18,13 @@ phasedelay = 0.4 # delay after activation when unaffecting (estimate, same value
 phasemax = 4 #
 paintedtimer = 16 # ~how long after a debuff indicator it's still valid, not sure when the second pops up?
 extras_start = 5
+
+map_aliases = {
+	'Arena_OutbreakRuin_01.txt':'outbreak',
+	'Arena_Founders_01.txt':'liberty',
+	'Arena_Praetoria_01.txt':'last bastion', #aka ruined eden
+	'Arena_Industrial_01.txt':'factory',
+	'Arena_Industrial_02.txt':'industrial',
+	'Arena_Outdoor_01.txt':'council earth',
+	'Arena_Outdoor_02.txt':'luna square',
+}
