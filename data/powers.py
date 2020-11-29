@@ -29,12 +29,16 @@ fx = { # fx from actor to target (includes buffs)
 
 	# dark blast
 	'MOONBEAM_QUICK.FX':'moonbeam',
+	'MOOMBEAM_ATTACK.FX':'moonbeam (slow)', # mooMbeam
 	'DARKNESSCONTROL/LIFEDRAIN.FX':'life drain',
 
 	# sonic
 	'MASSIVESONICBLAST.FX':'shout',
 	'HEADSONICSCREECH.FX':'screech',
 	'SONICCONTROL/BLASTS/HEROSTANDARDBLAST2.FX':'scream',
+
+	# sonic manip
+	'SONICRESONANCE/SONICCAGE.FX':'echo chamber', # could be sonic resonance cage also? cross that bridge when we get to it
 
 	# emp
 	'HEALINGHANDS.FX':'heal other',
@@ -80,6 +84,7 @@ fx = { # fx from actor to target (includes buffs)
 	'/GCCRUSH_SINGULARITY.FX':'crush',
 	'GCLIFT.FX':'lift',
 	'/GCDIMENSIONSHIFT.FX':'dimension shift', # toggle on
+	'GRAVITYCONTROL/SUBTRACTIVE/GCDISTORTIONFIELD.FX':'singularity', # could be distortion field also? but banned so doesn't matter
 
 	# plant
 	'THORNS/BUILDUP_ATTACK.FX':'toxins',
@@ -192,6 +197,8 @@ fx = { # fx from actor to target (includes buffs)
 
 	'BIOARMOR/ABLATIVE_CARAPACE.FX':'ablative carapace',
 	'PSIONICMELEE/PSIBUFF.FX':'concentration',
+	'ENERGYAURA/SUBTRACTIVE/BUILDUPENDURENCE.FX':'energize',
+	'ENERGYAURA/SUBTRACTIVE/OVERLOAD.FX':'overload',
 	
 	'/THUGS_UPGRADE_TOSS_2.FX':'thugs upgrade',
 	'PARAMILITARY/PARAMILITARY_BOOSTEQUIP.FX':'merc upgrade',
@@ -214,8 +221,11 @@ fx = { # fx from actor to target (includes buffs)
 	
 	
 	'ASSASINSPSIBLADE.FX':'assassin\'s strike', 
+	'BRAWLING/ASSASSINSSTRIKE_ATTACK.FX':'assassin\'s strike', 
 	'PSIBLADEGREAT.FX':'greater psi blade', 
 	'STRENGTHSTREAKSKO.FX':'ko blow', # epic ko blow?
+	'BRAWLING/BUILDUP_ACTIVATION.FX':'combat readiness',
+	'RAWLING/CRUSHINGUPPERCUT_ATTACK.FX':'crushing uppercut',
 
 	'/FORCEBOLT.FX':'force bolt',
 	'BOOSTRANGE_ATTACK.FX':'boost range', 
@@ -279,8 +289,8 @@ healhit = { # not in use yet
 
 
 pmov = { # prepend with 'A_' for flying version
-	'DRAW_PISTOL':'crey pistol',
-	'DRAW_WEAPONBACK':'crey pistol', # vill
+	'DRAW_PISTOL':'crey pistol', # aka Nullifier now
+	'DRAW_WEAPONBACK':'crey pistol', # defunct now with new Nullifier
 	'WALL':'ssj',
 	'MOUTH':'blind',
 	#'PLAYER_HITDEATH' # death anim
@@ -319,6 +329,8 @@ utility = [	# for filtering out not atk offense powers
 	'shiver',
 	'thunderous blast',
 	'heat loss',
+	'singularity',
+	'phantasm',
 	'crey pistol',
 ]
 
@@ -543,8 +555,10 @@ powersets = {
 	'entangling arrow':'trick',
 	'heat loss':'cold',
 	'phantom army':'ill',
+	'phantasm':'ill',
 	'dimension shift':'grav',
-	'crush':'grav',
+	'singularity':'grav',
+	'lift':'grav',
 	'fossilize':'earth',
 	'chilblain':'ice control',
 	'shiver':'ice ctrl',
@@ -573,10 +587,14 @@ powersets = {
 	'shadow blast':'warshade',
 	'ebon eye':'warshade',
 	'greater psi blade':'psi melee',
+	'crushing uppercut':'street justice',
 	'force bolt':'bubble',
 	'boost range':'energy manip',
 	'chronos':'temporal',
+	'echo chamber':'sonic manip',
 	'ablative carapace':'bio',
+	'energize':'energy aura',
+	'overload':'energy aura',
 }
 
 primarysupport = [ #order of importance?
