@@ -43,7 +43,6 @@ class Player:
 		self.targeted = 0
 		self.targetlock = False
 		self.targetinstance = 0
-		self.cleanspiked = 0
 		self.absorbed = [] # List[[time, pid]] where time is when the absorb was placed, pid was the player who placed it
 
 		# new spike count system
