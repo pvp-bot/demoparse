@@ -151,6 +151,8 @@ fx = { # fx from actor to target (includes buffs)
 	'/BUILDUPPOWERBOOST.FX':'power boost',
 	'GHOSTWIDOW/SOULSTORM.FX':'soul storm',
 	'GHOSTWIDOW/DARKSOULBLAST.FX':'dark blast',
+	'MU_HANDLIGHTNINGFX/REDMU_CAGEBOLTS.FX':'electric shackles',
+	'CALTROPSTHROW.FX':'caltrops',
 
 	# pools
 	'JAUNT_ATTACK.FX':'jaunt',
@@ -199,6 +201,7 @@ fx = { # fx from actor to target (includes buffs)
 	'PSIONICMELEE/PSIBUFF.FX':'concentration',
 	'ENERGYAURA/SUBTRACTIVE/BUILDUPENDURENCE.FX':'energize',
 	'ENERGYAURA/SUBTRACTIVE/OVERLOAD.FX':'overload',
+	'/ARMORMELTDOWN.FX':'meltdown',
 	
 	'/THUGS_UPGRADE_TOSS_2.FX':'thugs upgrade',
 	'PARAMILITARY/PARAMILITARY_BOOSTEQUIP.FX':'merc upgrade',
@@ -219,13 +222,16 @@ fx = { # fx from actor to target (includes buffs)
 
 	'MARTIALARTS/FOCUSCHI.FX':'upshot/focus', # or tac arrow?
 	
-	
+	# melee
 	'ASSASINSPSIBLADE.FX':'assassin\'s strike', 
 	'BRAWLING/ASSASSINSSTRIKE_ATTACK.FX':'assassin\'s strike', 
 	'PSIBLADEGREAT.FX':'greater psi blade', 
 	'STRENGTHSTREAKSKO.FX':'ko blow', # epic ko blow?
 	'BRAWLING/BUILDUP_ACTIVATION.FX':'combat readiness',
 	'RAWLING/CRUSHINGUPPERCUT_ATTACK.FX':'crushing uppercut',
+	'SPINES/IMPALE_ATTACK.FX':'impale',
+	'SPINES/THROWSPINES_ATTACK.FX':'throw spines',
+	'TOTALFOCUSFAST_ATTACK.FX':'total focus',
 
 	'/FORCEBOLT.FX':'force bolt',
 	'BOOSTRANGE_ATTACK.FX':'boost range', 
@@ -588,6 +594,7 @@ powersets = {
 	'ebon eye':'warshade',
 	'greater psi blade':'psi melee',
 	'crushing uppercut':'street justice',
+	'impale':'spines',
 	'force bolt':'bubble',
 	'boost range':'energy manip',
 	'chronos':'temporal',
@@ -595,6 +602,7 @@ powersets = {
 	'ablative carapace':'bio',
 	'energize':'energy aura',
 	'overload':'energy aura',
+	'meltdown':'rad armor',
 }
 
 primarysupport = [ #order of importance?
