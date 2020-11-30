@@ -202,6 +202,7 @@ fx = { # fx from actor to target (includes buffs)
 	'ENERGYAURA/SUBTRACTIVE/BUILDUPENDURENCE.FX':'energize',
 	'ENERGYAURA/SUBTRACTIVE/OVERLOAD.FX':'overload',
 	'/ARMORMELTDOWN.FX':'meltdown',
+	'/MOMENTOFGLORY.FX':'moment of glory',
 	
 	'/THUGS_UPGRADE_TOSS_2.FX':'thugs upgrade',
 	'PARAMILITARY/PARAMILITARY_BOOSTEQUIP.FX':'merc upgrade',
@@ -592,17 +593,25 @@ powersets = {
 	'incandescent strike':'peacebringer',
 	'shadow blast':'warshade',
 	'ebon eye':'warshade',
+
+	#melee
 	'greater psi blade':'psi melee',
 	'crushing uppercut':'street justice',
+	'total focus':'energy melee', # maybe an issue with the power pool total focus
 	'impale':'spines',
+
+	# assorted
 	'force bolt':'bubble',
 	'boost range':'energy manip',
 	'chronos':'temporal',
 	'echo chamber':'sonic manip',
+
+	# armor
 	'ablative carapace':'bio',
 	'energize':'energy aura',
 	'overload':'energy aura',
 	'meltdown':'rad armor',
+	'moment of glory':'regen',
 }
 
 primarysupport = [ #order of importance?
@@ -623,4 +632,8 @@ primaryoffence = [ #order of importance?
 	'merc',
 	'necro',
 	'claws',
+	'psi melee',
+	'energy melee',
+	'street justice',
+	'spines',
 ]
