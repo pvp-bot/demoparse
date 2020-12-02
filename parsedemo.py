@@ -587,8 +587,8 @@ def main():
 
 	# console output
 
-	print("\ndemo time " + str(round((t+starttime/1000)/60,2)) + " minutes")
-	print("map: " + match_map)
+	print("demo time " + str(round((t+starttime/1000)/60,2)) + " minutes")
+	print("map: " + match_map + "\n")
 
 	score1 = 0
 	clean1 = 0
@@ -600,7 +600,7 @@ def main():
 
 	def print_table(headers, content):
 		first_red = True
-		header_str = ' | '.join([i.center(8) for i in headers])
+		header_str = ' | '.join([i.center(6) for i in headers])
 		print(header_str)
 		print('|'.join([('-' * len(i)) for i in header_str.split('|')]))
 
@@ -608,13 +608,13 @@ def main():
 			if first_red and '[RED]' in row[0]:
 				print('|'.join([('-' * len(i)) for i in header_str.split('|')]))
 				first_red = False
-			print(' | '.join([str(i).center(8) for i in row]))
+			print(' | '.join([str(i).center(6) for i in row]))
 
 		print('')
 
-	offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'targeted', 'survival', 'ontarget', 'otp', 'timing', 'variance','first', 'apspike']
+	offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'tgt\'d', 'surv', 'on tgt', 'otp', 'timing', 'var','first', 'atk/sp','#atks']
 	offence_content = []
-	healer_headers = ['team', '{:<20}'.format('name'), 'on time', 'late','topups', 'alpha', 'timing','ontrgt%', 'ontime%','predicts','hpspike']
+	healer_headers = ['team', '{:<20}'.format('name'), 'ontime', 'late','top up', 'alpha', 'timing','otp', 'timely','prdict','h/spk','#heals']
 	healer_content = []
 
 
@@ -668,7 +668,7 @@ def main():
 			healtimingvar = sum((x-healtiming)**2 for x in p.healtiming) / max(len(p.healtiming),1)
 
 			offence_content.append([
-				"[" + p.team + "]",
+				" [" + p.team + "]",
 				'{:<20}'.format(p.name),
 				p.deathtotal,
 				p.targeted,
@@ -678,13 +678,14 @@ def main():
 				str(spiketiming)[:4],
 				str(spiketimingvar)[:4],
 				p.first,
-				str(p.attacks / max(p.ontarget, 1))[:4]
+				str(p.attacks / max(p.ontarget, 1))[:4],
+				p.attackstotal
 			])
 
 			if p.ontargetheals > 0:
 				hpspike =p.ontargetheals/(p.healontime+p.heallate)
 				healer_content.append([
-					"[" + p.team + "]",
+					" [" + p.team + "]",
 					'{:<20}'.format(p.name),
 					p.healontime,
 					p.heallate,
@@ -694,7 +695,8 @@ def main():
 					"{:.0%}".format(p.healontarget/(targeted[p.team]-p.targeted),1),
 					"{:.0%}".format(p.healontime/(targeted[p.team]-p.targeted),1),
 					p.predicts,
-					str(hpspike)[:4]
+					str(hpspike)[:4],
+					p.healstotal
 
 				])
 			if p.support:
