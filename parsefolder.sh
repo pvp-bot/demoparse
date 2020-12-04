@@ -3,12 +3,14 @@
 # run parsedemo.py on all demos in folder
 # append resulting csvs together w/ name of folder
 
-SKIP=false
+SKIPPARSE=false
+SKIPUPLOAD=false
 
-while getopts 'i:s' flag; do
+while getopts 'i:su' flag; do
         case "${flag}" in
                 i) INPUT=${OPTARG} ;;
-                s) SKIP=true ;;
+                s) SKIPPARSE=true ;;
+				u) SKIPUPLOAD=true ;;
         esac
 done
 
@@ -16,7 +18,7 @@ done
 
 dir_name=$(basename $INPUT)
 
-if [ "$SKIP" = false ]; then
+if [ "$SKIPPARSE" = false ]; then
 	for demo in $INPUT/*.cohdemo
 	do
 		python parsedemo.py "$demo"
@@ -44,4 +46,6 @@ do
 done
 
 # upload the appended csv to BQ
-python upload_bq.py "$INPUT"/"$dir_name".csv
+if [ "$SKIPUPLOAD" = false ]; then
+	python upload_bq.py "$INPUT"/"$dir_name".csv
+fi
