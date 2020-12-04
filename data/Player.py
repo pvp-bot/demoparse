@@ -394,7 +394,7 @@ class Player:
 	def healcount(self, t, targetplayer,action):
 		# TODO:
 		# account for phases
-		if not self.isphased(t):
+		if not targetplayer.isphased(t):
 			targetplayer.totalhealsreceived += 1
 			targetplayer.targetheals.append([t,self.id,action])
 
@@ -404,3 +404,4 @@ class Player:
 					targetplayer.absorbed.append([t, self.id])
 			else:
 				self.healstotal += 1
+		
