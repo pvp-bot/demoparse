@@ -404,4 +404,5 @@ class Player:
 					targetplayer.absorbed.append([t, self.id])
 			else:
 				self.healstotal += 1
-		
+		else:
+			self.phaseheals += 1
