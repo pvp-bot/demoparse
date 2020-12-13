@@ -6,11 +6,11 @@ I usually find some bugs whenever I use this, so it's an ongoing process of work
 
 Quick how-to use for people. These instructions will assume a small amount of familiarity with Python and command line stuff. I've made some bash scripts for my own ease of use, if you don't have bash they're probably straight forward enough that you could rewrite them in python or as a Windows batch file. If you're on Windows you can use the _Window Subsystem for Linux_ as an easy way to access a Linux shell.
 
-
-
 ## foreword
 
-This program is made for typical team arena matches. If you're running it for non-standard matches (i.e. smaller than 6v6, more than 10 minutes, more than 2 teams) you'll have to go into the code and change parameters to get actually useful outputs.
+This program is made for the standard structure of team arena matches: 8 vs 8, 10 minute area matches based around calling targets with multiple people attacking. The further you deviate from this structure the less useful this script becomes.
+
+*to be expanded*
 
 ## setup
 
@@ -71,5 +71,5 @@ Update the 2 names of the report in the top left and whatever other adjustments 
 
 [v0.5 template](https://datastudio.google.com/reporting/b68f5662-83b9-4c70-a18e-0f1e7e47aa1b)
 
-## other stuff
-The demorecord will miss some things in the match occasionally, especially on larger maps when you can get out of render range (note: perception range is irrelevant). You can manually add override lines to the start of the demofile (using any text editor) to change the match score, player team assignment, player powersets, or swap red and blue entirely. See `data/override.py` for examples.
+## overrides
+The demorecord will miss some things in the match occasionally, especially on larger maps when you can get out of render range (note: perception range is irrelevant). You can manually add override lines to the start of the demofile (using any text editor) to adjust the final match score, player team assignment, player powersets, or swap red and blue sides. See `data/override.py` for examples.
