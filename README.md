@@ -6,6 +6,10 @@ I usually find some bugs whenever I use this, so it's an ongoing process of work
 
 Quick how-to use for people. These instructions will assume a small amount of familiarity with Python and command line stuff. I've made some bash scripts for my own ease of use, if you don't have bash they're probably straight forward enough that you could rewrite them in python or as a Windows batch file. If you're on Windows you can use the _Window Subsystem for Linux_ as an easy way to access a Linux shell.
 
+
+
+## foreword
+
 This program is made for typical team arena matches. If you're running it for non-standard matches (i.e. smaller than 6v6, more than 10 minutes, more than 2 teams) you'll have to go into the code and change parameters to get actually useful outputs.
 
 ## setup
@@ -20,7 +24,7 @@ If cloned it previously, pull to get the latest updates (from the repo folder)
 
 Python (v3+) requirements: numpy, google-cloud-bigquery
 
-To record a demo file in-game use the `/demorecord nameofdemohere` in the buff phase of a match after you've loaded onto the map. Use the `/demostop` command after the match ends (the demo will also stop when you load out of the map). Demos are saved under the `client_demos` folder in your City of Heroes folder. If you use the same name when recording a demo it will overwrite the existing demo.
+To record a demo file in-game use the `/demorecord nameofdemohere` in the buff phase of a match after you've loaded onto the map. Use the `/demostop` command after the match ends (the demo will also stop when you load out of the map). Demos are saved under the `client_demos` folder in your City of Heroes folder. Default configuration is for 10 minute match time. If you use the same name when recording a demo it will overwrite the existing demo.
 
 ### storage method
 
@@ -49,7 +53,7 @@ From the repo folder you have a few options on how to run it.
 Running the `parsedemo.py` on a .cohdemo file will generate a parsed .csv file of that demo with the same name as well as spit out some high level stats from that match.  
 `python parsedemo.py /path/to/demofile/skywayexample.cohdemo`
 
-`upload_bq.py` will upload a parsed .csv file to your Google Big Query cloud account as a query table if you have it configured. Typically you want to run this on a merged csv file (i.e. not just a single match) so that you can view mupltiple matches from within the same Datastudio report.  
+`upload_bq.py` will upload a parsed .csv file to your Google Big Query cloud account as a query table if you have it configured. Typically you want to run this on a merged csv file (i.e. not just a single match) so that you can view multiple matches from within the same Datastudio report.  
 `python upload_bq.py /path/to/demofile/skywayexample.csv`
 
 Instead of running the python scripts directly, I recommend running the shell script `parsefolder.sh` on an entire folder. Run this script by giving it an input `-i` folder and it will run the `parsedemo.py` script on every demo file in that folder, append all the .csvs to a single one, then upload the final .csv to your Big Query project under a table with the same name as your folder. e.g.
@@ -58,7 +62,7 @@ Instead of running the python scripts directly, I recommend running the shell sc
 `./parsefolder.sh -i /path/to/demofolder/`  
 
 
-Adding a `-s` parameter to the command will 'skip' the parsing step and only append+upload the final .csv (in case you've already run the parsedemo.py individually and don't want to rerun it on all files). Rerunning the script will overwrite the existing Big Query table of the same name if it exists. You may need to make the script executable first, `chmod +x parsefolder.sh`.
+Adding a `-s` parameter to the command will 'skip' the parsing step and only append+upload the final .csv (in case you've already run the parsedemo.py individually and don't want to rerun it on all files). Rerunning the script will overwrite the existing Big Query table of the same name if it exists. You may need to make the script executable first, `chmod +x parsefolder.sh`. A `-u` parameter will skip the upload and only parse and append the .csvs.
 
 ### creating the Datastudio report
 Find a recent report with copying enabled (either one of your previous version or one of mine if you have it) and hit the _Make a copy of this report_ button in the top right, then go _New Data Source>Create New Source>Big Query>My Projects>Your Project>Your Dataset_ then select the data table corresponding to the demo folder you've just uploaded.
