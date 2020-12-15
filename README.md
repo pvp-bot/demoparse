@@ -1,5 +1,7 @@
 coh demo parser for team arena matches
 
+[example](https://datastudio.google.com/u/0/reporting/c64893fe-7f45-4dd0-b6cd-dd68b6a4fd80/)
+
 message me (xhiggy) on discord if you have questions on how stuff works or is calculated. if you find errors let me know or feel free to submit a pull request.
 
 ## foreword
@@ -18,7 +20,7 @@ Quick how-to use for people. These instructions will assume a small amount of fa
 
 ### program setup
 
-If you haven't already, clone the repo somewhere (or use your favourite git gui)
+If you haven't already, clone the repo somewhere (or use your favourite git client)
 `git clone https://github.com/pvp-bot/demoparse.git`
 
 If cloned it previously, pull to get the latest updates (from the repo folder)  
@@ -26,7 +28,7 @@ If cloned it previously, pull to get the latest updates (from the repo folder)
 
 Python (v3+) requirements: numpy, google-cloud-bigquery
 
-To record a demo file in-game use the `/demorecord nameofdemohere` in the buff phase of a match after you've loaded onto the map. Use the `/demostop` command after the match ends (the demo will also stop when you load out of the map). Demos are saved under the `client_demos` folder in your City of Heroes folder. Default configuration is for 10 minute match time. If you use the same name when recording a demo it will overwrite the existing demo.
+To record a demo file in-game use the `/demorecord nameofdemohere` in the buff phase of a match after you've loaded onto the map. Use the `/demostop` command after the match ends (the demo will also stop when you load out of the map). Demos are saved under the `client_demos` folder in your City of Heroes folder. Default configuration is for 10 minute match time. If you use the same name when recording a demo it will overwrite the existing demo. Note: the demo takes a few seconds to populate with data after you stop it, so don't try to parse it or move the file immediately.
 
 ### folder setup
 
@@ -67,11 +69,9 @@ Alternatively, you _can_ use Google Sheets to store the .csv data however I don'
 I can maybe set you up on my cloud storage if you can't get it to work.
 
 ### creating the Datastudio report
-Find a recent report with copying enabled (either one of your previous version or one of mine if you have it) and hit the _Make a copy of this report_ button in the top right, then go _New Data Source>Create New Source>Big Query>My Projects>Your Project>Your Dataset_ then select the data table corresponding to the demo folder you've just uploaded.
+Find a recent report with copying enabled (see top of the README for a recent one) and hit the _Make a copy of this report_ button in the top right, then go _New Data Source>Create New Source>Big Query>My Projects>Your Project>Your Dataset_ then select the data table corresponding to the demo folder you've just uploaded.
 
 Update the 2 names of the report in the top left and whatever other adjustments you want to make. Update the share permissions to allow others to view if you want to share it.
-
-[v0.6 template](https://datastudio.google.com/u/0/reporting/c64893fe-7f45-4dd0-b6cd-dd68b6a4fd80/)
 
 ## overrides
 The demorecord will miss some things in the match occasionally, especially on larger maps when you can get out of render range (note: perception range is irrelevant). You can manually add override lines to the start of the demofile (using any text editor) to adjust the final match score, player team assignment, player powersets, or swap red and blue sides. See `data/override.py` for examples.
