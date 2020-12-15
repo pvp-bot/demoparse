@@ -16,6 +16,7 @@ phasedelay = 0.54 # delay after activation when unaffecting (max delay for phase
 phasemax = 4 # window after phase where heals on target don't count
 paintedtimer = 16 # ~how long after a (psn) debuff indicator it's still valid, not sure when the second pops up?
 extras_start = 5
+repeat_reset = 4 # how long to ignore duplicate of repeating power (i.e. enervating field)
 
 map_aliases = {
 	'Arena_OutbreakRuin_01.txt':'outbreak',

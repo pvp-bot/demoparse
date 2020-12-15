@@ -115,6 +115,8 @@ class Player:
 		self.lateatks = 0
 		self.utilcount = 0
 
+		self.lastrepeat = -30 # last time player used a repeat power (EF) - to prevent padding atk stats
+
 	def reset(self):
 		self.hp = ''
 		self.action = ''
@@ -345,13 +347,18 @@ class Player:
 
 	def targetcount(self,t,aid,players,action,spikes,rogues):
 		powerrepeat = False # powers that will activate FX multiple times on a spike
+
+
 		if action in repeatpowers: # really just enervating field
 			for atk in self.recentattacks:
 				if atk[2] == action:
 					powerrepeat = True
 
 		if not powerrepeat:
-			players[aid].attackstotal += 1
+
+			if action not in repeatpowers or t > players[aid].lastrepeat + repeat_reset: # only count if not a repeat power OR if the repeat power hasn't been used resently
+				players[aid].attackstotal += 1 
+
 			# entangle check (anim share with strangler)
 			if action == 'entangle':
 				self.recentattacks = [atk for atk in self.recentattacks if self.entanglecheck(atk,t,aid)]

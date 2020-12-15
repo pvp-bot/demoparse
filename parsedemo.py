@@ -434,6 +434,11 @@ def main():
 									players[pid].action = ''
 									players[pid].target = ''
 									players[pid].reverse = False
+
+									if players[tid].action in repeatpowers and t > players[tid].lastrepeat + repeat_reset: # timer to prevent multiple counts of a repeating atk (EF)
+										players[tid].attackstotal += 1 # workaround to prevent atk stat padding w/ EF
+										players[tid].lastrepeat = t
+
 									if players[pid].team != players[tid].team and players[tid].action not in utility:
 										players[pid].targetcount(t, tid, players,players[tid].action,spikes,rogues)
 									elif players[tid].action in heals and t>0:
