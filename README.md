@@ -49,7 +49,7 @@ Instead of running the python scripts directly, I recommend running the shell sc
 `sh ./parsefolder.sh -i /path/to/demofolder/`  
 
 
-Adding a `-s` parameter to the command will 'skip' the parsing step and only append+upload the final .csv (in case you've already run the parsedemo.py individually and don't want to rerun it on all files). Rerunning the script will overwrite the existing Big Query table of the same name if it exists. You may need to make the script executable first, `chmod +x parsefolder.sh`. A `-u` parameter will skip the upload and only parse and append the .csvs.
+Adding a `-s` parameter to the command will 'skip' the parsing step and only append+upload the final .csv (in case you've already run the parsedemo.py individually and don't want to rerun it on all files). Rerunning the script will overwrite the existing Big Query table of the same name if it exists. A `-u` parameter will skip the upload and only parse and append the .csvs.
 
 ### Datastudio storage method
 
@@ -75,3 +75,6 @@ Update the 2 names of the report in the top left and whatever other adjustments 
 
 ## overrides
 The demorecord will miss some things in the match occasionally, especially on larger maps when you can get out of render range (note: perception range is irrelevant). You can manually add override lines to the start of the demofile (using any text editor) to adjust the final match score, player team assignment, player powersets, or swap red and blue sides. See `data/override.py` for examples.
+
+## issues
+There was an issue with numpy on Windows when I ran it last which required downgrading to an older version. The error message included a URL which had instructions on which version to downgrade to. Not sure if numpy has been updated to fix this yet.
