@@ -4,9 +4,9 @@ message me (xhiggy) on discord if you have questions on how stuff works or is ca
 
 ## foreword
 
-This program is made for the standard structure of team arena matches: 8 vs 8, 10 minute area matches based around calling targets with multiple people attacking. The further you deviate from this structure the less useful this script becomes. 
+This program is made for the standard structure of team arena matches: 8 vs 8, 10 minute area matches based around calling targets with multiple people attacking. The further you deviate from the usual structure the less useful this script becomes (though some parameters could be changed to make it work for different match types). 
 
-This was made to provide a useful breakdown of matches for me and weights certain info more, but I've tried to include most of what I can to where you can find info if you look for it. Some of the parameters in the reporting are based around calibration of my matches along side my own vods, so there are a few numbers that are somewhat subjective. 
+This was made to provide a useful breakdown of matches and weights certain info more, but I've tried to include most of what I can to where you can find info if you look for it. Some of the parameters in the reporting are based around calibration of my matches along side my own vods, so there are a few numbers that are somewhat subjective. 
 
 There are some limitations with demorecords where you may get some missing information. It will only record info within render range from your character (note this is different from perception range) so on larger maps you can miss some data, especially when you respawn away from the fight. Some powers don't have effects, difficult to isolate effects, or share the same effects with other powers which makes some things difficult to code for. Since spikes are based on certain actions in-game there will be a few false positives here and there but I've found the script to be pretty reliable in practice.
 
@@ -32,7 +32,7 @@ To record a demo file in-game use the `/demorecord nameofdemohere` in the buff p
 
 I'd recommend storing your demo files in a similar way to me: a top level folder for all your demos and in it a subfolder for each night of matches. E.g. the `~/Documents/demos` folder houses things like `~/Documents/demos/200930_kickball/` and in that you have the several demo files such as `~/Documents/demos/200930_kickball/match1_skyway.cohdemo`. I name demos just single numbers based on the order they're played (e.g. `1.cohdemo` is the first match of the night), but any name should work with a few changes in the report.
 
-## use instructions
+## usage
 
 ### parsing the demos
 
