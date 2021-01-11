@@ -307,14 +307,14 @@ pmov = { # prepend with 'A_' for flying version
 # primary attacks for determining spike instances (i.e. ignore jaunts off flares or snipe only or w/e)
 primaryattacks = [
 	'envenom',
-	'corrosive enzyme',
+	#'corrosive enzyme',
 	'enervating field',
 	'dominate',
 	'blaze',
 	'bib',
 	'lancer',
-	'char', # maybe? depends on lineup
-	'p-ray/charged',
+	#'char',
+	#'p-ray/charged',
 
 ]
 
