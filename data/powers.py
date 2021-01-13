@@ -313,9 +313,14 @@ primaryattacks = [
 	'blaze',
 	'bib',
 	'lancer',
-	#'char',
-	#'p-ray/charged',
+	'char',
+	'p-ray/charged',
+]
 
+jauntoffoneattacks= [
+	'enervating field',
+	'blaze',
+	'bib',
 ]
 
 repeatpowers = [ # powers that do multiples of an FX on use

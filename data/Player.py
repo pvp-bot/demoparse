@@ -1,5 +1,6 @@
 from data.powers import absorbs
 from data.powers import primaryattacks
+from data.powers import jauntoffoneattacks
 from data.powers import repeatpowers
 from data.config import *
 from data.Target import Target
@@ -313,7 +314,7 @@ class Player:
 					self.targetevades.append(lastevade)
 
 	def jauntoffone(self,t,players): # count as target if jaunt off single primary attack
-		if not self.istarget and len(self.recentprimaryattacks) == 1 and (t-self.recentprimaryattacks[0][0]) <= targetwindow/2: # with 1 sec of atk
+		if not self.istarget and len(self.recentprimaryattacks) == 1 and abs(t-self.recentprimaryattacks[0][0]) <= targetwindow/2 and self.recentprimaryattacks[0] in jauntoffoneattacks: # with 1 sec of atk
 			self.inittarget(t,players)
 
 	def entanglecheck(self,atk,t,aid):
@@ -388,6 +389,7 @@ class Player:
 				for atk in self.recentattacks:
 					if atk[1] not in self.targetattackers: # add the atkr if needed
 						self.targetattackers.append(atk[1])
+				self.jauntoffone(t,players)
 				if  (
 					len(self.targetattackers) >= targetminattackers and not self.istarget and # at least 2 people on target and not already target
 					(((len(self.recentprimaryattacks) + len(self.recentattacks))/2 >= targetminattacks) # if min 2 primary attacks (weighted)
