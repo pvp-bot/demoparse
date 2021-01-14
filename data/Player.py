@@ -311,7 +311,7 @@ class Player:
 			if len(self.targetevades) > 0:
 				lastevade = self.targetevades[-1]
 				self.targetevades = []
-				if (t-lastevade[0] < targetwindow):
+				if (t-lastevade[0] < targetwindow*2):
 					self.targetevades.append(lastevade)
 
 	def jauntoffone(self,t,players): # count as target if jaunt off single primary attack
