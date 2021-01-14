@@ -320,12 +320,12 @@ primaryattacks = [
 ]
 
 
-# reduced weighting on these primary attacks
-weightedprimaryattacks = [
-	'disintegrate',
-	'char',
-	'p-ray/charged',
-]
+# reduced weighting on these attacks
+weightedattacks = {
+	'disintegrate':-0.5,
+	'char':-0.5,
+	'p-ray/charged':-0.5,
+}
 
 jauntoffoneattacks= [
 	'enervating field',

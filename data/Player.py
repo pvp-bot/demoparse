@@ -1,7 +1,7 @@
 from data.powers import absorbs
 from data.powers import primaryattacks
 from data.powers import jauntoffoneattacks
-from data.powers import weightedprimaryattacks
+from data.powers import weightedattacks
 from data.powers import repeatpowers
 from data.config import *
 from data.Target import Target
@@ -392,14 +392,14 @@ class Player:
 						self.targetattackers.append(atk[1])
 				self.jauntoffone(t,players)
 
-				primaryattacksadjustment = 0
-				for atk in self.recentprimaryattacks:
-					if atk[2] in weightedprimaryattacks:
-						primaryattacksadjustment += reducedprimaryweighting
+				weightedattackadj = 0
+				for atk in self.recentattacks:
+					if atk[2] in weightedattacks:
+						weightedattackadj += weightedattacks[atk[2]]
 
 				if  (
 					len(self.targetattackers) >= targetminattackers and not self.istarget and # at least 2 people on target and not already target
-					(((len(self.recentprimaryattacks) - primaryattacksadjustment + len(self.recentattacks))/2 >= targetminattacks) # if min 2 primary attacks (weighted)
+					(((len(self.recentprimaryattacks) + weightedattackadj + len(self.recentattacks))/2 >= targetminattacks) # if min 2 primary attacks (weighted)
 					# or (len(self.recentattacks) >= targetminattacks*2) # or if people throw at least 4x trash damage on someone i.e. 4 BBs on emp at same time
 					or (len(self.recentprimaryattacks) == targetminattacks/2 and t-self.lastjaunt < targetwindow/2) # if jaunt slightly before primary atk activated				# or (len(self.recentprimaryattacks) >= targetminattacks-1 and len(self.recentattacks) >= targetminattacks+2) # if 1
 					)):
