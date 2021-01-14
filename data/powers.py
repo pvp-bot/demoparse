@@ -536,6 +536,7 @@ name_filter  = [
 
 otherfx = { # like toggles and stuff for determining powersets
 	'THORNS_ACTIVATION.FX':'thorns',
+	'/REACTIONTIME.FX':'reaction time',
 	'ENERVATINGFIELDHAND.FX':'ef toggle on',
 	# 'AGILITY.FX':'agility',
 }
@@ -565,6 +566,7 @@ powersets = {
 	'thorns':'plant',
 	'toxins':'plant',
 	'upshot/focus':'tac',
+	'reaction time':'martial',
 
 	'cosmic burst':'rad blast',
 
