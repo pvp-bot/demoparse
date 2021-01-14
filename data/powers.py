@@ -214,7 +214,7 @@ fx = { # fx from actor to target (includes buffs)
 	'/DEHYDRATE.FX':'dehydrate',
 	
 	'POWERPUSH.FX':'power push',
-	'/SMOKEHIT.FX':'smoke',
+	#'/SMOKEHIT.FX':'smoke',
 	'MEGA.FX':'power burst',
 	# 'CUSTOMANIM_MEGA.FX':'power burst', 
 	'SNIPERBLAST_QUICK.FX':'sniper blast', 
@@ -297,6 +297,7 @@ healhit = { # not in use yet
 
 pmov = { # prepend with 'A_' for flying version
 	'DRAW_PISTOL':'crey pistol', # aka Nullifier now
+	'DRAW_SABER':'crey pistol', # aka Nullifier now
 	'DRAW_WEAPONBACK':'crey pistol', # defunct now with new Nullifier
 	'WALL':'ssj',
 	'MOUTH':'blind',
@@ -310,9 +311,18 @@ primaryattacks = [
 	#'corrosive enzyme',
 	'enervating field',
 	'dominate',
+	'disintegrate',
 	'blaze',
 	'bib',
 	'lancer',
+	'char',
+	'p-ray/charged',
+]
+
+
+# reduced weighting on these primary attacks
+weightedprimaryattacks = [
+	'disintegrate',
 	'char',
 	'p-ray/charged',
 ]
@@ -419,7 +429,7 @@ preverse = [
 	'/DEHYDRATE.FX',
 	'ENERVATINGFIELDCONTINUING.FX',
 	'WILDBASTION_HIT.FX',
-	'/SMOKEHIT.FX',
+	#'/SMOKEHIT.FX',
 ]
 
 
