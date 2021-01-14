@@ -485,7 +485,7 @@ def main():
 
 						# think this may be more accurate than the FX crey
 						# doesn't catch villain crey yet
-						if 'DRAW_PISTOL' in mov or 'DRAW_WEAPONBACK' in mov: # WEAPONBACK might be shared with some other sets
+						if 'DRAW_PISTOL' in mov or 'DRAW_WEAPONBACK' in mov or 'DRAW_SABER' in mov: # WEAPONBACK might be shared with some other sets
 							players[pid].crey = players[pid].crey + 1
 							players[pid].action = 'crey pistol'
 							players[pid].writelog = True
