@@ -333,6 +333,11 @@ jauntoffoneattacks= [
 	'bib',
 ]
 
+powerdelay = {
+	'strangler':0.83,
+	'ssj':0.83,
+}
+
 repeatpowers = [ # powers that do multiples of an FX on use
 	'enervating field',
 ]

@@ -1,8 +1,4 @@
-from data.powers import absorbs
-from data.powers import primaryattacks
-from data.powers import jauntoffoneattacks
-from data.powers import weightedattacks
-from data.powers import repeatpowers
+from data.powers import *
 from data.config import *
 from data.Target import Target
 import math
@@ -364,6 +360,10 @@ class Player:
 			# entangle check (anim share with strangler)
 			if action == 'entangle':
 				self.recentattacks = [atk for atk in self.recentattacks if self.entanglecheck(atk,t,aid)]
+
+			# adjust attack timing for irregular attacks
+			if action in powerdelay:
+				t = t - powerdelay[action]
 
 			if self.istarget: # if already target
 				self.recentattacks.append([t,aid,action]) # add the atk
