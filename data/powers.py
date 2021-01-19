@@ -106,7 +106,7 @@ fx = { # fx from actor to target (includes buffs)
 
 	#nature
 	'CORROSIVESAP.FX':'corrosive enzyme',
-	'WILDBASTION_HIT.FX':'wild bastion', # share with plant
+	'WILDBASTION.FX':'wild bastion', # share with plant
 	'OVERGROWTH.FX':'overgrowth',
 	'WILD_GROWTH.FX':'wild growth',
 	'/REGROWTH2.FX':'regrowth',
@@ -336,7 +336,7 @@ jauntoffoneattacks= [
 powerdelay = {
 	'strangler':0.67,
 	'ssj':0.83,
-	'enervating field':1.67,
+	'enervating field':1.50,
 }
 
 repeatpowers = [ # powers that do multiples of an FX on use
@@ -538,6 +538,7 @@ name_filter  = [
 	'Alpha Howler Wolf',
 	'Dire Wolf',
 	'Lioness',
+	'Burst of Speed',
 ]
 
 otherfx = { # like toggles and stuff for determining powersets
