@@ -334,8 +334,9 @@ jauntoffoneattacks= [
 ]
 
 powerdelay = {
-	'strangler':0.83,
+	'strangler':0.67,
 	'ssj':0.83,
+	'enervating field':1.67,
 }
 
 repeatpowers = [ # powers that do multiples of an FX on use
@@ -551,6 +552,8 @@ powersets = {
 	'blaze':'fire',
 	'blazing bolt':'fire',
 	'lancer':'beam',
+	'will dom':'psi',
+	'psi lance':'psi',
 	
 	'heal other':'emp',
 	'absorb pain':'emp',
