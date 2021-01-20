@@ -291,7 +291,7 @@ def main():
 						if (p.death == 1 and p.lastdeath != p.lastspikedeath):
 							rogues.append([t,p.id,'death',p.id])
 
-						if p.action in utilitycount:
+						if p.action in utilitycount and t > 5:
 							p.utilcount += 1 
 
 						lineuid += 1 # for debugging

@@ -207,7 +207,7 @@ fx = { # fx from actor to target (includes buffs)
 	'/THUGS_UPGRADE_TOSS_2.FX':'thugs upgrade',
 	'PARAMILITARY/PARAMILITARY_BOOSTEQUIP.FX':'merc upgrade',
 	'NECROMACY/MINIONBOOSTHIGH.FX':'necro upgrade',
-	'PLAYER_MERCENARIES_GUNFIRE_SHOTGUN.FX':'slug',
+	'PLAYER_MERCENARIES_GUNFIRE_SHOTGUN.FX':'thugs slug',
 	
 	'/WATERJET.FX':'water jet',
 	'WATERJET_FAST.FX':'water jet',
@@ -545,6 +545,7 @@ otherfx = { # like toggles and stuff for determining powersets
 	'THORNS_ACTIVATION.FX':'thorns',
 	'/REACTIONTIME.FX':'reaction time',
 	'ENERVATINGFIELDHAND.FX':'ef toggle on',
+	'WILDFORTRESS.FX':'wild fortress',
 	# 'AGILITY.FX':'agility',
 }
 
@@ -553,6 +554,8 @@ powersets = {
 	'blaze':'fire',
 	'blazing bolt':'fire',
 	'lancer':'beam',
+	'disintegrate':'beam',
+	'p-ray/charged':'beam',
 	'will dom':'psi',
 	'psi lance':'psi',
 	
@@ -574,6 +577,7 @@ powersets = {
 	
 	'thorns':'plant',
 	'toxins':'plant',
+	'wild fortress':'plant',
 	'upshot/focus':'tac',
 	'reaction time':'martial',
 
@@ -610,6 +614,7 @@ powersets = {
 	'power burst':'energy blast',
 
 	'thugs upgrade':'thugs',
+	'thugs slug':'thugs',
 	'merc upgrade':'merc',
 	'necro upgrade':'necro',
 
