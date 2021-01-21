@@ -3,6 +3,8 @@ import shlex
 import sys
 import math
 import numpy as np
+import os.path
+import time
 
 from data.powers import *
 from data.config import *
@@ -593,7 +595,8 @@ def main():
 	# console output
 
 	print("demo time " + str(round((t+starttime/1000)/60,2)) + " minutes")
-	print("map: " + match_map + "\n")
+	print("map: " + match_map)
+	print("demo date: " + time.ctime(os.path.getmtime(sys.argv[1])) + "\n")
 
 	score1 = 0
 	clean1 = 0
