@@ -29,8 +29,12 @@ fx = { # fx from actor to target (includes buffs)
 
 	# dark blast
 	'MOONBEAM_QUICK.FX':'moonbeam',
+	'MOONBEAMWITHSKULL_QUICK.FX':'moonbeam',
 	'MOOMBEAM_ATTACK.FX':'moonbeam (slow)', # mooMbeam
 	'DARKNESSCONTROL/LIFEDRAIN.FX':'life drain',
+
+	'/PETRIFYINGGAZE.FX':'petrifying gaze',
+	'DARKBLAST/SOULDRAIN.FX':'soul drain',
 
 	# sonic
 	'MASSIVESONICBLAST.FX':'shout',
@@ -558,6 +562,7 @@ powersets = {
 	'p-ray/charged':'beam',
 	'will dom':'psi',
 	'psi lance':'psi',
+	'soul drain':'dark blast',
 	
 	'heal other':'emp',
 	'absorb pain':'emp',
