@@ -43,6 +43,7 @@ fx = { # fx from actor to target (includes buffs)
 
 	# sonic manip
 	'SONICRESONANCE/SONICCAGE.FX':'echo chamber', # could be sonic resonance cage also? cross that bridge when we get to it
+	'SONICRESONANCE/BUILDUP.FX':'sound booster',
 
 	# emp
 	'HEALINGHANDS.FX':'heal other',
@@ -92,7 +93,6 @@ fx = { # fx from actor to target (includes buffs)
 
 	# plant
 	'THORNS/BUILDUP_ATTACK.FX':'toxins',
-	# 'THORNS/BUILDUP_ATTACK.FX':'build up',
 	'PLANTCONTROLHIT.FX':'strangler', # shared with plant control
 	'ENTANGLEPLANTSEEDTHROW.FX':'entangle', # shared with plant control
 	# 'STRANGLERROOTS.FX': 'strangler', # doesn't spawn on every strangler
@@ -171,6 +171,7 @@ fx = { # fx from actor to target (includes buffs)
 	'AIRSUPERIORITY_ATTACK.FX':'air superiority', # 
 
 	# misc powerset
+	'BUILDUP_ATTACK.FX':'build up',
 	'FOSSILIZEHANDS.FX':'fossilize',
 	'/STALAGMITESTOMP.FX':'stalagmites',
 
@@ -514,19 +515,25 @@ name_filter  = [
 	'Phantasm',
 	'Decoy Phantasm',
 	'Decoy',
+	'Singularity',
 	'Coralax Blue Hybrid',
 	'Dr',
 	'Poison Trap',
 	'Animated Stone',
-	'Superior Vigilant Assault',
 	'Victory Rush',
+	'Bruiser',
 	'Blind',
 	'Galvanic Sentinel',
 	'Voltaic Geyser',
 	'Voltaic Sentinel',
+	'Power Disruptor',
+	'Protected Area',
+	'Rain of Fire',
 	'Water Spout',
 	'Fortunata Mistress',
+	'Superior Vigilant Assault',
 	'Superior Scourging Blast',
+	'Superior Defenders Bastion',
 	'German Shepherd',
 	'Ice Storm',
 	'Energy Font',
