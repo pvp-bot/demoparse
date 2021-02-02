@@ -498,7 +498,7 @@ filterextras = [
 	'blue',
 	'purple/orange',
 	'yellow',
-	# 'clear mind',
+	'clear mind',
 	'healing aura',
 	'power boost',
 ]
