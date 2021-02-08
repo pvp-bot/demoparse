@@ -344,6 +344,29 @@ powerdelay = {
 	'enervating field':1.50,
 }
 
+hittiming = { # :[delay,speed]
+	'blaze':[16/30,90],
+	'blazing bolt':[22/30,450],
+	'bib':[17/30,84],
+	'bfr':[69/30,90],
+	'strangler':[16/30,1000000],
+	
+	'envenom':[25/30,66],
+	'enervating field':[45/30,1000000],
+
+	'dominate':[20/30,1000000],
+	'ssj':[21/30,1000000],
+	'char':[23/30,51],
+
+	'heal other':[22/30,1000000],
+	'absorb pain':[37/30,1000000],
+
+	'green':[0,1000000],
+	'hibernate':[1/30,1000000],
+	'phase shift':[16/30,1000000],
+	'jaunt':[2/30,1000000],
+}
+
 repeatpowers = [ # powers that do multiples of an FX on use
 	'enervating field',
 ]
