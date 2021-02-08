@@ -381,12 +381,12 @@ def main():
 								players[pid].lastresdebuff = t
 						if players[pid].action == 'green':
 							if players[pid].istarget:
-								players[pid].targetheals.append([t,pid,players[pid].action])
+								players[pid].targetheals.append([t,pid,players[pid].action,0])
 							players[pid].greens -= 1
 
 
 						if players[pid].action in evade:
-							players[pid].targetevades.append([t,pid,players[pid].action])
+							players[pid].targetevades.append([t,pid,players[pid].action,t])
 
 
 						# powerset determination
@@ -465,7 +465,8 @@ def main():
 					# 	pass
 						
 					elif action == "POS":
-						players[pid].pos = [line[3],line[4],line[5]] # x, z, y? 
+						players[pid].pos.append([float(line[3]),float(line[4]),float(line[5]),t]) # x, z, y, time
+						players[pid].pos = [pos for pos in players[pid].pos if (pos[3]>t-2)]
 
 					elif action == "MOV":
 						mov = line[3]
@@ -486,7 +487,6 @@ def main():
 							players[pid].lasthp = 0
 
 						# think this may be more accurate than the FX crey
-						# doesn't catch villain crey yet
 						if 'DRAW_PISTOL' in mov or 'DRAW_WEAPONBACK' in mov or 'DRAW_SABER' in mov: # WEAPONBACK might be shared with some other sets
 							players[pid].crey = players[pid].crey + 1
 							players[pid].action = 'crey pistol'
@@ -551,21 +551,30 @@ def main():
 
 		for s in spikes:
 
-			csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost']])
+			csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost'],s.stats['greens available']])
 
 			# spike log data
 			for act in s.attacks:
 				act_time = round(act[0] - s.start,2)
-				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid])
+				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid,round(act[3],0)])
+				if act[2] in hittiming:
+					hit_time = round(act_time + hittiming[act[2]][0] + act[3]/hittiming[act[2]][1],2)
+					csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,hit_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid,hit_time])
 			for act in s.heals:
 				healer = players[act[1]].name
 				if act[2] == 'green':
 					healer = '+'
 				act_time = round(act[0] - s.start,2)
-				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],healer,players[act[1]].team,'','',suid])
+				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],healer,players[act[1]].team,'','',suid,round(act[3],0)])
+				if act[2] in hittiming:
+					hit_time = round(act_time + hittiming[act[2]][0] + act[3]/hittiming[act[2]][1],2)
+					csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,hit_time,'',s.death,act[2],healer,players[act[1]].team,'','',suid,hit_time])
 			for act in s.evades:
 				act_time = round(act[0] - s.start,2)
 				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],'-',players[act[1]].team,'','',suid])
+				if act[2] in hittiming:
+					hit_time = round(act_time + hittiming[act[2]][0] + act[3]/hittiming[act[2]][1],2)
+					csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,hit_time,'',s.death,act[2],'-',players[act[1]].team,'','',suid,hit_time])
 			if s.debufftime:
 				debufftime = round(s.debufftime - s.start,2)
 				if debufftime <= 0:
@@ -577,6 +586,7 @@ def main():
 				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,kbtime,'',s.death,'knocked','!','','','',suid])
 			if s.spikedeath:
 				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,round(s.spikedeath,1),'',s.death,'death','x','','','',suid])
+				csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,round(s.spikedeath,1),'',s.death,'death','x','','','',suid])
 			
 			# graphing spike hp
 			if len(s.hp)>1:
@@ -622,7 +632,7 @@ def main():
 
 	offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'tgt\'d', 'surv', 'on tgt', 'otp', 'timing', 'var','first', 'atk/sp','#atks']
 	offence_content = []
-	healer_headers = ['team', '{:<20}'.format('name'), 'ontime', 'late','top up', 'alpha', 'timing','otp', 'timely','prdict','h/spk','#heals']
+	healer_headers = ['team', '{:<20}'.format('name'), 'ontime', 'late','top up', 'alpha', 'av spd','otp', 'quick','prdict','h/spk','#heals']
 	healer_content = []
 
 
