@@ -29,7 +29,7 @@ class Player:
 		self.set1 = False
 		self.set2 = False
 		self.at = ''
-		self.pos = False
+		self.pos = []
 
 		self.writelog = False
 
@@ -130,6 +130,18 @@ class Player:
 		players[aid].spiketiming.append(timing)
 		players[aid].ontarget += 1
 
+	def getdist(self,x,y,t):
+		try:
+			p1,p2 = x[-1],y[-1]
+		except:
+			return 0
+		for pos in x: # where attacker was x time ago
+			if pos[3]>t-0.0 and pos[3]<p1[3]:
+				p1 = pos
+		for pos in y: # where attacker was x time ago
+			if pos[3]>t-0.0 and pos[3]<p2[3]:
+				p2 = pos
+		return math.sqrt((p1[0]-p2[0])**2+(p1[1]-p2[1])**2+(p1[2]-p2[2])**2)
 
 	def endtarget(self,players,spikes):
 		players[self.targetattackers[0]].first += 1
@@ -365,19 +377,20 @@ class Player:
 			if action in powerdelay:
 				t = t - powerdelay[action]
 
+			dist = self.getdist(self.pos,players[aid].pos,t)
 			if self.istarget: # if already target
-				self.recentattacks.append([t,aid,action]) # add the atk
+				self.recentattacks.append([t,aid,action,dist]) # add the atk
 				if action in primaryattacks:
-					self.recentprimaryattacks.append([t,aid,action])
+					self.recentprimaryattacks.append([t,aid,action,dist])
 				for atk in self.recentattacks:
 					if atk[1] not in self.targetattackers: # add the atkr if needed
 							self.targetattackers.append(atk[1])
 				
 
 			if not self.istarget:
-				self.recentattacks.append([t,aid,action]) # add the atk
+				self.recentattacks.append([t,aid,action,dist]) # add the atk
 				if action in primaryattacks:
-					self.recentprimaryattacks.append([t,aid,action])
+					self.recentprimaryattacks.append([t,aid,action,dist])
 				
 				for atk in self.recentattacks:
 					if not self.isrecent(t,atk[0]):
@@ -407,11 +420,11 @@ class Player:
 
 
 	def healcount(self, t, targetplayer,action):
-		# TODO:
-		# account for phases
+		
 		if not targetplayer.isphased(t):
+			dist = self.getdist(targetplayer.pos,self.pos,t)
 			targetplayer.totalhealsreceived += 1
-			targetplayer.targetheals.append([t,self.id,action])
+			targetplayer.targetheals.append([t,self.id,action,dist])
 
 			if action in absorbs:
 				if not targetplayer.istarget:
