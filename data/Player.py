@@ -136,11 +136,11 @@ class Player:
 		except:
 			return 0
 		for pos in x: # where attacker was x time ago
-			if pos[3]>t-0.0 and pos[3]<p1[3]:
+			if pos[3]>t-1 and pos[3]<p1[3]:
 				p1 = pos
-		for pos in y: # where attacker was x time ago
-			if pos[3]>t-0.0 and pos[3]<p2[3]:
-				p2 = pos
+		# for pos in y: # where attacker was x time ago
+		# 	if pos[3]>t-0.0 and pos[3]<p2[3]:
+		# 		p2 = pos
 		return math.sqrt((p1[0]-p2[0])**2+(p1[1]-p2[1])**2+(p1[2]-p2[2])**2)
 
 	def endtarget(self,players,spikes):

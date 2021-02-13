@@ -551,30 +551,35 @@ def main():
 
 		for s in spikes:
 
-			csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost'],s.stats['greens available']])
+			csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost'],s.stats['greens available'],s.stats['greens used']])
 
 			# spike log data
+			first_hit = 999
 			for act in s.attacks:
 				act_time = round(act[0] - s.start,2)
-				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid,round(act[3],0)])
+				hit_time = ''
 				if act[2] in hittiming:
 					hit_time = round(act_time + hittiming[act[2]][0] + act[3]/hittiming[act[2]][1],2)
-					csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,hit_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid,hit_time])
+					first_hit = min(hit_time,first_hit)
+					# csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,hit_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid,hit_time])
+				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid,round(act[3],0),hit_time])
 			for act in s.heals:
 				healer = players[act[1]].name
 				if act[2] == 'green':
 					healer = '+'
 				act_time = round(act[0] - s.start,2)
-				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],healer,players[act[1]].team,'','',suid,round(act[3],0)])
+				hit_time = ''
 				if act[2] in hittiming:
 					hit_time = round(act_time + hittiming[act[2]][0] + act[3]/hittiming[act[2]][1],2)
-					csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,hit_time,'',s.death,act[2],healer,players[act[1]].team,'','',suid,hit_time])
+					# csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,hit_time,'',s.death,act[2],healer,players[act[1]].team,'','',suid,hit_time])
+				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],healer,players[act[1]].team,'','',suid,round(act[3],0),hit_time])
 			for act in s.evades:
 				act_time = round(act[0] - s.start,2)
-				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],'-',players[act[1]].team,'','',suid])
+				hit_time = ''
 				if act[2] in hittiming:
 					hit_time = round(act_time + hittiming[act[2]][0] + act[3]/hittiming[act[2]][1],2)
-					csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,hit_time,'',s.death,act[2],'-',players[act[1]].team,'','',suid,hit_time])
+					# csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,hit_time,'',s.death,act[2],'-',players[act[1]].team,'','',suid,hit_time])
+				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],'-',players[act[1]].team,'','',suid,'',hit_time])
 			if s.debufftime:
 				debufftime = round(s.debufftime - s.start,2)
 				if debufftime <= 0:
@@ -586,7 +591,7 @@ def main():
 				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,kbtime,'',s.death,'knocked','!','','','',suid])
 			if s.spikedeath:
 				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,round(s.spikedeath,1),'',s.death,'death','x','','','',suid])
-				csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,round(s.spikedeath,1),'',s.death,'death','x','','','',suid])
+				# csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,round(s.spikedeath,1),'',s.death,'death','x','','','',suid])
 			
 			# graphing spike hp
 			if len(s.hp)>1:
