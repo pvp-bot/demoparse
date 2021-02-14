@@ -12,3 +12,5 @@ data/__init__.py
 data/secrets.py
 
 *.json
+
+allnames.txt
