@@ -347,21 +347,30 @@ powerdelay = {
 hittiming = { # :[delay,speed]
 	'blaze':[16/30,90],
 	'blazing bolt':[22/30,450],
+	'fire blast':[16/30,90],
 	'bib':[17/30,84],
 	'bfr':[69/30,90],
+	'freeze ray':[17/30,90],
 	'strangler':[16/30,1000000],
+	'p-ray/charged':[29/30,60],
+	'lancer':[23/30,1000000],
+	'disintegrate':[29/30,1000000],
 	
 	'envenom':[25/30,66],
 	'enervating field':[45/30,1000000],
+	'corrosive enzyme':[19/30,90],
 
 	'dominate':[20/30,1000000],
 	'ssj':[21/30,1000000],
 	'char':[23/30,51],
+	'shocking bolt':[28/30,1000000],
 
 	'heal other':[22/30,1000000],
 	'absorb pain':[37/30,1000000],
+	'soothe':[22/30,1000000],
+	'share pain':[37/30,1000000],
 
-	'green':[0,1000000],
+	'green':[15/30,1000000],
 	'hibernate':[1/30,1000000],
 	'phase shift':[16/30,1000000],
 	'jaunt':[2/30,1000000],
