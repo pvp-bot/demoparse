@@ -345,6 +345,7 @@ powerdelay = {
 }
 
 hittiming = { # :[delay,speed]
+	# blast
 	'blaze':[16/30,90],
 	'blazing bolt':[22/30,450],
 	'fire blast':[16/30,90],
@@ -356,20 +357,29 @@ hittiming = { # :[delay,speed]
 	'lancer':[23/30,1000000],
 	'disintegrate':[29/30,1000000],
 	
+
+	# debuffs
 	'envenom':[25/30,66],
 	'enervating field':[45/30,1000000],
 	'corrosive enzyme':[19/30,90],
 
+	# epics
 	'dominate':[20/30,1000000],
 	'ssj':[21/30,1000000],
 	'char':[23/30,51],
 	'shocking bolt':[28/30,1000000],
 
+	# heals
 	'heal other':[22/30,1000000],
 	'absorb pain':[37/30,1000000],
 	'soothe':[22/30,1000000],
 	'share pain':[37/30,1000000],
+	'rejuvenating circuit':[23/30,1000000],
+	'insulating circuit':[22/30,1000000],
+	'aid other':[40/30,1000000],
+	'alkaloid':[34/30,66],
 
+	# pools/misc
 	'green':[15/30,1000000],
 	'hibernate':[1/30,1000000],
 	'phase shift':[16/30,1000000],
