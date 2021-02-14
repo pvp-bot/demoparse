@@ -376,6 +376,12 @@ hittiming = { # :[delay,speed]
 	'jaunt':[2/30,1000000],
 }
 
+hitexclude = [
+	'envenom',
+	'corrosive enzyme',
+	'enervating field',
+]
+
 repeatpowers = [ # powers that do multiples of an FX on use
 	'enervating field',
 ]
