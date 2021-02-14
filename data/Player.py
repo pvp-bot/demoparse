@@ -68,6 +68,8 @@ class Player:
 		self.totalearlyphases = 0
 		self.lastphase = -60
 		self.atkstakenonspike = 0
+		self.jauntreaction = []
+		self.phasereaction = []
 
 		self.targethp = []
 		self.misseddead = 0 # targets missed while dead
@@ -232,18 +234,13 @@ class Player:
 		spikes[-1].hp = self.targethp[:]
 		
 		# spike summary
-		spikes[-1].stats['atks before evade'] = ''
+		# spikes[-1].stats['atks before evade'] = ''
 		if len(self.targetevades) > 0:
-			atkb4evade = 0
-			for atk in self.recentattacks:
-				if self.targetevades[0][0] > atk[0]:
-					atkb4evade += 1
-			if (atkb4evade <= earlyevadecount or self.targetevades[0][0] < self.targetstart + earlyevadetime):
-				if (self.targetevades[0][2] == 'phase' or self.targetevades[0][2] == 'hibernate'):
-					self.totalearlyphases  += 1
-				elif (self.targetevades[0][2] == 'jaunt' ): #or self.targetevades[0][2] == 'translocation'
-					self.totalearlyjaunts  += 1
-			spikes[-1].stats['atks before evade'] = atkb4evade
+			if (self.targetevades[0][2] == 'phase shift' or self.targetevades[0][2] == 'hibernate'):
+				self.phasereaction.append(self.targetevades[0][0]-spikes[-1].start)
+			elif (self.targetevades[0][2] == 'jaunt' ): #or self.targetevades[0][2] == 'translocation'
+				self.jauntreaction.append(self.targetevades[0][0]-spikes[-1].start)
+			# spikes[-1].stats['atks before evade'] = atkb4evade
 		
 		spikes[-1].stats['attackers'] = len(self.targetattackers)
 		spikes[-1].stats['attacks'] = len(self.recentattacks)
@@ -378,19 +375,24 @@ class Player:
 				t = t - powerdelay[action]
 
 			dist = self.getdist(self.pos,players[aid].pos,t)
+			hit_time = ''
+			if action in hittiming:
+				hit_time = t + hittiming[action][0] + dist/hittiming[action][1]
+
 			if self.istarget: # if already target
-				self.recentattacks.append([t,aid,action,dist]) # add the atk
+				self.recentattacks.append([t,aid,action,round(dist,0),hit_time]) # add the atk
 				if action in primaryattacks:
-					self.recentprimaryattacks.append([t,aid,action,dist])
+					self.recentprimaryattacks.append([t,aid,action,round(dist,0),hit_time])
 				for atk in self.recentattacks:
 					if atk[1] not in self.targetattackers: # add the atkr if needed
 							self.targetattackers.append(atk[1])
 				
 
 			if not self.istarget:
-				self.recentattacks.append([t,aid,action,dist]) # add the atk
+
+				self.recentattacks.append([t,aid,action,round(dist,0),hit_time]) # add the atk
 				if action in primaryattacks:
-					self.recentprimaryattacks.append([t,aid,action,dist])
+					self.recentprimaryattacks.append([t,aid,action,round(dist,0),hit_time])
 				
 				for atk in self.recentattacks:
 					if not self.isrecent(t,atk[0]):
@@ -424,7 +426,12 @@ class Player:
 		if not targetplayer.isphased(t):
 			dist = self.getdist(targetplayer.pos,self.pos,t)
 			targetplayer.totalhealsreceived += 1
-			targetplayer.targetheals.append([t,self.id,action,dist])
+
+			hit_time = ''
+			if action in hittiming:
+				hit_time = t + hittiming[action][0] + dist/hittiming[action][1]
+
+			targetplayer.targetheals.append([t,self.id,action,round(dist,0),hit_time])
 
 			if action in absorbs:
 				if not targetplayer.istarget:

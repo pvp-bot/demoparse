@@ -317,6 +317,7 @@ def main():
 					# aggregate greens availability
 					for p in players.values():
 						csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,math.floor(t2/t_bundle_step)*t_bundle_step,'','','','','','','',lineuid,p.greens])
+						csvw.writerow([demoname,match_map,'hp_log',p.name,p.team,math.floor(t2/t_bundle_step)*t_bundle_step,'','','','','','','',lineuid,-p.totaldmgtaken])
 					t_bundle = 0
 				t = t2
 
@@ -381,7 +382,8 @@ def main():
 								players[pid].lastresdebuff = t
 						if players[pid].action == 'green':
 							if players[pid].istarget:
-								players[pid].targetheals.append([t,pid,players[pid].action,0])
+								players[pid].targetheals.append([t,pid,players[pid].action,'',''])
+								# players[pid].targetheals.append([t,pid,players[pid].action,'',t+hittiming['green'][0]])
 							players[pid].greens -= 1
 
 
@@ -523,6 +525,7 @@ def main():
 			csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,0,'','','','','','','','',20])
 			csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,matchtime,'','','','','','','',lineuid,p.greens])
 			csvw.writerow([demoname,match_map,'greens_log','','',0,'','','','','','','','',0])
+			csvw.writerow([demoname,match_map,'hp_log','','',0,'','','','','','','','',0])
 			for stat, value in p.stats.items():
 				csvw.writerow([demoname,match_map,'stats'     ,p.name,p.team,'','','',stat,'','','',value])
 			for ac, count in p.atkchains.items():
@@ -557,42 +560,42 @@ def main():
 			first_hit = 999
 			for act in s.attacks:
 				act_time = round(act[0] - s.start,2)
-				hit_time = ''
-				if act[2] in hittiming:
-					hit_time = round(act_time + hittiming[act[2]][0] + act[3]/hittiming[act[2]][1],2)
-					first_hit = min(hit_time,first_hit)
-					# csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,hit_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid,hit_time])
-				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid,round(act[3],0),hit_time])
+				hit_time = act[4]
+				if isinstance(act[4],float):
+					hit_time = round(act[4] - s.start,2)
+				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid,act[3],hit_time])
+			
 			for act in s.heals:
 				healer = players[act[1]].name
 				if act[2] == 'green':
 					healer = '+'
 				act_time = round(act[0] - s.start,2)
-				hit_time = ''
-				if act[2] in hittiming:
-					hit_time = round(act_time + hittiming[act[2]][0] + act[3]/hittiming[act[2]][1],2)
-					# csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,hit_time,'',s.death,act[2],healer,players[act[1]].team,'','',suid,hit_time])
-				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],healer,players[act[1]].team,'','',suid,round(act[3],0),hit_time])
+				hit_time = act[4]
+				if isinstance(act[4],float):
+					hit_time = round(act[4] - s.start,2)
+				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],healer,players[act[1]].team,'','',suid,act[3],hit_time])
+
 			for act in s.evades:
 				act_time = round(act[0] - s.start,2)
 				hit_time = ''
 				if act[2] in hittiming:
 					hit_time = round(act_time + hittiming[act[2]][0] + act[3]/hittiming[act[2]][1],2)
-					# csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,hit_time,'',s.death,act[2],'-',players[act[1]].team,'','',suid,hit_time])
 				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],'-',players[act[1]].team,'','',suid,'',hit_time])
+
 			if s.debufftime:
 				debufftime = round(s.debufftime - s.start,2)
 				if debufftime <= 0:
 					csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,debufftime,'',s.death,'-res painted','--','','','',suid])
 				else:
 					csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,debufftime,'',s.death,'-res hit','--','','','',suid])
+
 			if s.kbtime:
 				kbtime = round(s.kbtime - s.start,2)
 				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,kbtime,'',s.death,'knocked','!','','','',suid])
+
 			if s.spikedeath:
 				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,round(s.spikedeath,1),'',s.death,'death','x','','','',suid])
-				# csvw.writerow([demoname,match_map,'spike_log_hit',s.target,s.team,round(s.spikedeath,1),'',s.death,'death','x','','','',suid])
-			
+				
 			# graphing spike hp
 			if len(s.hp)>1:
 				for hp in s.hp:
@@ -687,8 +690,16 @@ def main():
 
 			spiketiming = sum(map(abs,p.spiketiming)) / max(len(p.spiketiming), 1)
 			spiketimingvar = sum((x-spiketiming)**2 for x in p.spiketiming) / max(len(p.spiketiming),1)
+
 			healtiming = sum(p.healtiming) / max(len(p.healtiming), 1)
 			healtimingvar = sum((x-healtiming)**2 for x in p.healtiming) / max(len(p.healtiming),1)
+
+			jauntreaction = ''
+			phasereaction = ''
+			if len(p.jauntreaction) > 0:
+				jauntreaction = sum(p.jauntreaction) / max(len(p.jauntreaction), 1)
+			if len(p.phasereaction) > 0:
+				phasereaction = sum(p.phasereaction) / max(len(p.phasereaction), 1)
 
 			offence_content.append([
 				" [" + p.team + "]",
@@ -740,7 +751,7 @@ def main():
 			# header_log = ['demo','map',   'linetype',    'playr','team',t, hp d  a  tgt tt tgtd,'value','uid','stat1','stat2','stat3','stat4','stat5',stat6,stat7,stat8,...]
 			csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/(targeted[p.team]-p.targeted) if p.healontarget > 0 else '',p.attackstotal,p.healstotal,p.utilcount]) # 8
 			csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/max(targets[p.team],1),spiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.lateatks,spiketimingvar]) # 14
-			csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken,20-p.greens,p.dmgtakensurv]) # 8
+			csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken,20-p.greens,p.dmgtakensurv,jauntreaction,phasereaction]) # 8
 			
 			total_attacks[p.team]  += p.attacks
 			total_ontarget[p.team] += p.ontarget
