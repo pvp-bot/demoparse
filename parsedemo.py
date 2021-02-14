@@ -310,14 +310,21 @@ def main():
 				if t2 > t:
 					gatherplayercount = {'BLU':0,'RED':0} # reset gather count on time inc
 
-				# aggregate data by time type
+				# aggregate data by time step, linear datastudio workaround
 				if t > 0:
 					t_bundle += t2-t
 				if t_bundle > t_bundle_step and t2<matchtime:
 					# aggregate greens availability
+					score_temp = [0,0] # calc running score at bundle step
 					for p in players.values():
 						csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,math.floor(t2/t_bundle_step)*t_bundle_step,'','','','','','','',lineuid,p.greens])
 						csvw.writerow([demoname,match_map,'hp_log',p.name,p.team,math.floor(t2/t_bundle_step)*t_bundle_step,'','','','','','','',lineuid,-p.totaldmgtaken])
+						if p.team == 'RED':
+							score_temp[0] += p.deathtotal
+						if p.team == 'BLU':
+							score_temp[1] += p.deathtotal
+					csvw.writerow([demoname,match_map,'score_log','','BLU',math.floor(t2/t_bundle_step)*t_bundle_step,'',score_temp[0],'','','','','',lineuid,''])
+					csvw.writerow([demoname,match_map,'score_log','','RED',math.floor(t2/t_bundle_step)*t_bundle_step,'',score_temp[1],'','','','','',lineuid,''])
 					t_bundle = 0
 				t = t2
 
@@ -522,10 +529,18 @@ def main():
 		for p in players.values(): # append stats
 			csvw.writerow([demoname,match_map,'log',p.name,p.team,0,'',0,'','','',0,])
 			csvw.writerow([demoname,match_map,'log',p.name,p.team,matchtime,'',0,'','','',0])
+
 			csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,0,'','','','','','','','',20])
 			csvw.writerow([demoname,match_map,'greens_log',p.name,p.team,matchtime,'','','','','','','',lineuid,p.greens])
 			csvw.writerow([demoname,match_map,'greens_log','','',0,'','','','','','','','',0])
+
+			csvw.writerow([demoname,match_map,'hp_log',p.name,p.team,0,'','','','','','','',lineuid,0])
+			csvw.writerow([demoname,match_map,'hp_log',p.name,p.team,matchtime,'','','','','','','',lineuid,-p.totaldmgtaken])
 			csvw.writerow([demoname,match_map,'hp_log','','',0,'','','','','','','','',0])
+
+			csvw.writerow([demoname,match_map,'score_log','','BLU',0,'',0,'','','','','','',''])
+			csvw.writerow([demoname,match_map,'score_log','','RED',0,'',0,'','','','','','',''])
+
 			for stat, value in p.stats.items():
 				csvw.writerow([demoname,match_map,'stats'     ,p.name,p.team,'','','',stat,'','','',value])
 			for ac, count in p.atkchains.items():
@@ -554,7 +569,6 @@ def main():
 
 		for s in spikes:
 
-			csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost'],s.stats['greens available'],s.stats['greens used']])
 
 			# spike log data
 			first_hit = 999
@@ -563,6 +577,8 @@ def main():
 				hit_time = act[4]
 				if isinstance(act[4],float):
 					hit_time = round(act[4] - s.start,2)
+					if act[2] not in hitexclude and hit_time < first_hit:
+						first_hit = hit_time
 				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,act_time,'',s.death,act[2],players[act[1]].name,players[act[1]].team,'','',suid,act[3],hit_time])
 			
 			for act in s.heals:
@@ -594,7 +610,7 @@ def main():
 				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,kbtime,'',s.death,'knocked','!','','','',suid])
 
 			if s.spikedeath:
-				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,round(s.spikedeath,1),'',s.death,'death','x','','','',suid])
+				csvw.writerow([demoname,match_map,'spike_log',s.target,s.team,round(s.spikedeath,2),'',s.death,'death','x','','','',suid,'',round(s.spikedeath,2)])
 				
 			# graphing spike hp
 			if len(s.hp)>1:
@@ -606,8 +622,13 @@ def main():
 			for stat,value in s.stats.items():
 				csvw.writerow([demoname,match_map,'spike_stats',s.target,s.team,'','',s.death,stat,'','','',value,suid])
 			
-			suid += 1 # spike uid
 
+			hit_window = ''
+			if s.death:
+				hit_window = s.spikedeath - first_hit
+
+			csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost'],s.stats['greens available'],s.stats['greens used'], hit_window])
+			suid += 1 # spike uid
 
 
 	# console output
@@ -756,6 +777,10 @@ def main():
 			total_attacks[p.team]  += p.attacks
 			total_ontarget[p.team] += p.ontarget
 			total_timing[p.team].extend(p.spiketiming)
+
+
+		csvw.writerow([demoname,match_map,'score_log','','BLU',matchtime,'',deaths['RED'],'','','','','','',''])
+		csvw.writerow([demoname,match_map,'score_log','','RED',matchtime,'',deaths['BLU'],'','','','','','',''])
 
 		# fix missing deaths in the score line
 		deaths['RED'] += override.score[1]
