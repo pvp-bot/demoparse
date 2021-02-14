@@ -10,8 +10,9 @@ class Player:
 		self.id = pid
 		self.team = ''
 		self.death = ''
-		self.hp = ''
 		self.hp = 0
+		self.hplist = []
+
 		self.lasthp = 0
 		self.deathtotal = 0
 		self.lastdeath = -14000
@@ -231,6 +232,7 @@ class Player:
 			self.targethp.append([self.lastdeath/1000,0])
 			spikes[-1].spikedeath = self.lastdeath/1000 - self.targetstart
 			self.lastspikedeath = self.lastdeath
+		
 		spikes[-1].hp = self.targethp[:]
 		
 		# spike summary
@@ -238,7 +240,7 @@ class Player:
 		if len(self.targetevades) > 0:
 			if (self.targetevades[0][2] == 'phase shift' or self.targetevades[0][2] == 'hibernate'):
 				self.phasereaction.append(self.targetevades[0][0]-spikes[-1].start)
-			elif (self.targetevades[0][2] == 'jaunt' ): #or self.targetevades[0][2] == 'translocation'
+			elif (self.targetevades[0][2] == 'jaunt' and self.targetevades[0][0] > spikes[-1].start): #or self.targetevades[0][2] == 'translocation'
 				self.jauntreaction.append(self.targetevades[0][0]-spikes[-1].start)
 			# spikes[-1].stats['atks before evade'] = atkb4evade
 		
@@ -311,7 +313,14 @@ class Player:
 					players[hid].predicts += 1
 				self.absorbed = []
 
-			self.targethp.append([t,self.lasthp])
+			hpstart = self.hplist[0][1]
+			self.hplist = [hplist for hplist in self.hplist if (hplist[0] > self.targetstart)]
+			
+			self.hplist.insert(0,[self.targetstart,hpstart])
+
+			
+			self.targethp = self.hplist[:]
+
 			# determine preevades
 			if len(self.targetevades) > 0:
 				lastevade = self.targetevades[-1]

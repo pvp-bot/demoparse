@@ -337,6 +337,10 @@ def main():
 				if pid in players:
 
 					if action == "HP":
+
+						players[pid].hplist.append([t,float(line[3])]) # hp @ time
+						players[pid].hplist = [hplist for hplist in players[pid].hplist if (hplist[0] > t-targetwindow)]
+
 						hp  = float(line[3])
 						players[pid].hp = hp
 
@@ -475,7 +479,7 @@ def main():
 						
 					elif action == "POS":
 						players[pid].pos.append([float(line[3]),float(line[4]),float(line[5]),t]) # x, z, y, time
-						players[pid].pos = [pos for pos in players[pid].pos if (pos[3]>t-2)]
+						players[pid].pos = [pos for pos in players[pid].pos if (pos[3]>t-targetwindow)]
 
 					elif action == "MOV":
 						mov = line[3]
