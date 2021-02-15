@@ -522,7 +522,7 @@ def main():
 			p.endtarget(players,spikes)
 
 		for heal in p.targetheals:
-			players[heal[1]].topups += 1
+			players[heal[1]].healtopup += 1
 		for atk in p.recentattacks:
 			rogues.append([atk[0],atk[1],atk[2],p.id])
 
@@ -665,7 +665,7 @@ def main():
 
 	offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'tgt\'d', 'surv', 'on tgt', 'otp', 'timing', 'var','first', 'atk/sp','#atks']
 	offence_content = []
-	healer_headers = ['team', '{:<20}'.format('name'), 'ontime', 'late','top up', 'alpha', 'av spd','otp', 'quick','prdict','h/spk','#heals']
+	healer_headers = ['team', '{:<20}'.format('name'), 'on tgt', 'quick','timely', 's/l/e', 'otp','top up','prdict','av spd','avg tm','#heals']
 	healer_content = []
 
 
@@ -674,7 +674,7 @@ def main():
 	for p in players.values():
 		deaths[p.team] += p.deathtotal 
 		targeted[p.team] += p.targeted
-		if p.ontargetheals+p.topups > p.attacks/1.5 and p.ontargetheals > 4 and p.healontime > 0:
+		if p.ontargetheals+p.healtopup > p.attacks/1.5 and p.ontargetheals > 4 and p.healontime > 0:
 			p.support = True
 
 		# setup player powersets in order
@@ -716,8 +716,9 @@ def main():
 			spiketiming = sum(map(abs,p.spiketiming)) / max(len(p.spiketiming), 1)
 			spiketimingvar = sum((x-spiketiming)**2 for x in p.spiketiming) / max(len(p.spiketiming),1)
 
+			healspeed = sum(p.healspeed) / max(len(p.healspeed), 1)
 			healtiming = sum(p.healtiming) / max(len(p.healtiming), 1)
-			healtimingvar = sum((x-healtiming)**2 for x in p.healtiming) / max(len(p.healtiming),1)
+			healspeedvar = sum((x-healspeed)**2 for x in p.healspeed) / max(len(p.healspeed),1)
 
 			jauntreaction = ''
 			phasereaction = ''
@@ -746,20 +747,24 @@ def main():
 				healer_content.append([
 					" [" + p.team + "]",
 					'{:<20}'.format(p.name),
+					p.healontarget,
+					p.healquick,
 					p.healontime,
-					p.heallate,
-					p.topups,
-					p.healalpha,
-					str(healtiming)[:4],
+					# p.healslow,
+					p.healslow+p.healearly+p.heallate,
 					"{:.0%}".format(p.healontarget/(targeted[p.team]-p.targeted),1),
-					"{:.0%}".format(p.healontime/(targeted[p.team]-p.targeted),1),
+					# "{:.0%}".format(p.healontime/(targeted[p.team]-p.targeted),1),
+					# p.healearly,
+					# p.heallate,
+					p.healtopup,
 					p.predicts,
-					str(hpspike)[:4],
+					str(healspeed)[:4],
+					str(healtiming)[:4],
 					p.healstotal
 
 				])
 			if p.support:
-				csvw.writerow([demoname,match_map,'support_stats',p.name,p.team,'','','',p.set1,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.healontime,p.heallate,p.healfollowup,p.topups,p.healalpha,hpspike,healtiming,p.predicts,p.guesses,p.phaseheals,p.healmisseddead,targeted[p.team]]) # 14
+				csvw.writerow([demoname,match_map,'support_stats',p.name,p.team,'','','',p.set1,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.healontime,p.heallate,p.healfollowup,p.healtopup,p.healalpha,hpspike,healspeed,p.predicts,p.guesses,p.phaseheals,p.healmisseddead,targeted[p.team]]) # 14
 				# if p.support:
 				for extra, count in p.supportextras.items():
 					csvw.writerow([demoname,match_map,'support_extras',p.name,p.team,'','','',p.set1,extra,targetteam,'',  '',''      ,count])

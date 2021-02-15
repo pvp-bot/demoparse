@@ -87,27 +87,37 @@ class Player:
 
 		# healing peeps
 		self.ontargetheals = 0
+		self.healspeed = []
 		self.healtiming = []
-		self.topups = 0
 		self.aps = 0 # absorb pain
 		self.predicts = 0 # predicted the spike target and gave an absorb
 		self.guesses = 0
 
 		self.healalpha = 0
 		self.healontime = 0
-		self.healfollowup = 0
+		self.healquick = 0
+		self.healtimely = 0
+		self.healslow = 0
+		self.healearly = 0
 		self.heallate = 0
-		self.healontarget = 0
+		self.healfollowup = 0
+		self.healtopup = 0
+		self.healfatfinger = 0
+		self.phaseheals = 0
+		
+
 		self.targetheals = []
 		self.targetevades = []
 		self.greens = 20 # assumes all slots greens
 		self.greensavailable = 20 # assumes all slots greens
+		
 		self.support = False
-		self.phaseheals = 0
 		self.supportextras = {}
+		
+		self.healstotal = 0
+		self.healontarget = 0
 		self.healmisseddead = 0
 		self.healpowers = {'absorb pain':0,'heal other':0,'insulating circuit':0,'rejuvenating circuit':0,'share pain':0,'soothe':0,'aid other':0,'glowing touch':0,'cauterize':0,'alkaloid':0}
-		self.healstotal = 0
 
 		self.stats = {}
 		self.atkchains = {}
@@ -181,43 +191,10 @@ class Player:
 
 		healsreceived = 0
 		
-		# calc spike heals at end of spike
-		for h in self.targetheals:
-			if h[2] != 'green' and h[2] != 'spirit ward': # to not count greens as heals
-				healsreceived += 1
-				if self.isrecentheal(self.targetstart,h[0]):
-					self.totalhealsreceivedontarget += 1
-					if h[1] not in self.healedby:
-						if len(self.healedby) == 0 or h[0] == self.targetheals[0][0]:
-							players[h[1]].healalpha += 1
-						self.healedby.append(h[1])
-
-						players[h[1]].healtiming.append(h[0]-self.targetstart)
-						
-						atkcount = 0
-						for atk in self.recentattacks:
-							if atk[0]<h[0]:
-								atkcount += 1
-						if atkcount <= targethealatks or h[0] < self.targetstart + targethealwindow:
-							players[h[1]].healontime += 1
-						else:
-							players[h[1]].heallate += 1
-
-						players[h[1]].healontarget += 1 # times on a heal target
-					else:
-						players[h[1]].healfollowup += 1
-
-					players[h[1]].ontargetheals += 1 # heals thrown on target
-
-				else:
-					players[h[1]].topups += 1
-
-		self.targetheals = [x for x in self.targetheals if self.isrecentheal(self.targetstart,x[0])] # remove recent attacks outside window
 
 		# spike data
 		spikes[-1].attacks = self.recentattacks[:]
 		spikes[-1].attackers = self.targetattackers[:]
-		spikes[-1].heals = self.targetheals[:]
 		spikes[-1].evades = self.targetevades[:]
 		spikes[-1].spiketime = self.targetstart - self.recentattacks[-1][0]
 		if self.lastresdebuff:
@@ -232,10 +209,64 @@ class Player:
 			self.targethp.append([self.lastdeath/1000,0])
 			spikes[-1].spikedeath = self.lastdeath/1000 - self.targetstart
 			self.lastspikedeath = self.lastdeath
-		
+
 		spikes[-1].hp = self.targethp[:]
 		
-		# spike summary
+		# calc spike heals at end of spike
+		for h in self.targetheals:
+			if h[2] != 'green' and h[2] != 'spirit ward': # to not count greens as heals
+				healsreceived += 1
+				if self.isrecentheal(self.targetstart,h[0]):
+					self.totalhealsreceivedontarget += 1
+
+					if h[1] not in self.healedby: # if first heal by X on target
+						if len(self.healedby) == 0 or h[0] == self.targetheals[0][0]:
+							players[h[1]].healalpha += 1 # if first heal (or tied first)
+						self.healedby.append(h[1]) # add to spike healer list
+
+						players[h[1]].healspeed.append(h[0]-self.targetstart) # heal speed relative to spike start
+
+						# heal timing vs damage taken
+						dmg_time = self.targetstart
+						if self.targethp[0][1] > self.maxhp - 50 and len(self.targethp)>1 and self.targethp[1][0] > self.targetstart + 1: # if target starts spike within 100 of max HP and not already taking damage
+							for hp in self.targethp:
+								if hp[1] < self.targethp[0][1]: # if damage has been taken
+									dmg_time = self.targethp[0][0] # time first damage occurs, for heal categorizing
+									players[h[1]].healtiming.append(abs(h[4]-hp[0])) # absolute time between first damage and heal hit
+									break
+				
+						atkcount = 0
+						for atk in self.recentattacks:
+							if atk[0]<h[0]: # num of attacks cast before heal thrown
+								atkcount += 1
+
+
+
+						if self.death == 1 and h[4] > self.lastdeath/1000 + 2/30: # if death and heal hits after death time (plus 2 tick leeway)
+							players[h[1]].heallate += 1
+						elif self.targethp[0][1] >= self.maxhp - 10 and h[4] < dmg_time - 2/30: # if target starts at max hp and the first heal hits before damage (2 tick leeway)
+							players[h[1]].healearly += 1
+						elif h[0] < self.targetstart + targethealwindow or h[4] < dmg_time + targethealwindowdmg: # if heal cast within 2s of spike start or hits within 1s of 
+							players[h[1]].healquick += 1
+						elif atkcount <= targethealatks or h[0] < self.targetstart + targethealwindow*2 or h[4] < dmg_time + targethealwindowdmg*2: # cast before 4 attacks, hits before 2s after dmg, or within 4s of start
+							players[h[1]].healontime += 1
+						else:
+							players[h[1]].healslow += 1
+
+						players[h[1]].healontarget += 1 # times on a heal target
+					
+					else:
+						players[h[1]].healfollowup += 1
+
+					players[h[1]].ontargetheals += 1 # heals thrown on target
+
+				else:
+					players[h[1]].healtopup += 1
+
+		self.targetheals = [x for x in self.targetheals if self.isrecentheal(self.targetstart,x[0])] # remove recent attacks outside window
+		spikes[-1].heals = self.targetheals[:]
+
+				# spike summary
 		# spikes[-1].stats['atks before evade'] = ''
 		if len(self.targetevades) > 0:
 			if (self.targetevades[0][2] == 'phase shift' or self.targetevades[0][2] == 'hibernate'):
@@ -313,12 +344,13 @@ class Player:
 					players[hid].predicts += 1
 				self.absorbed = []
 
-			hpstart = self.hplist[0][1]
-			self.hplist = [hplist for hplist in self.hplist if (hplist[0] > self.targetstart)]
-			
-			self.hplist.insert(0,[self.targetstart,hpstart])
-
-			
+			# add recent hp data to spike data
+			hpstart = self.hplist[0][1] # start of spike has most recent hp
+			for hp in self.hplist:
+				if hp[0] < self.targetstart: # check if more recent hp data, but before spike start
+					hpstart = hp[1]
+			self.hplist = [hplist for hplist in self.hplist if (hplist[0] > self.targetstart)] # remove old hp data
+			self.hplist.insert(0,[self.targetstart,hpstart]) # append pre-spike hp to start of list
 			self.targethp = self.hplist[:]
 
 			# determine preevades
