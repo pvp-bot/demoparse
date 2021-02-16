@@ -228,10 +228,10 @@ class Player:
 
 						# heal timing vs damage taken
 						dmg_time = self.targetstart
-						if self.targethp[0][1] > self.maxhp - 50 and len(self.targethp)>1 and self.targethp[1][0] > self.targetstart + 1: # if target starts spike within 100 of max HP and not already taking damage
+						if self.targethp[0][1] > self.maxhp - 40 and len(self.targethp)>1 and self.targethp[1][0] > self.targetstart + 1: # if target starts spike within 100 of max HP and not already taking damage
 							for hp in self.targethp:
-								if hp[1] < self.targethp[0][1]: # if damage has been taken
-									dmg_time = self.targethp[0][0] # time first damage occurs, for heal categorizing
+								if hp[1] < self.targethp[0][1] and h[2] not in healhitexclude: # if damage has been taken
+									dmg_time = hp[0] # time first damage occurs, for heal categorizing
 									players[h[1]].healtiming.append(abs(h[4]-hp[0])) # absolute time between first damage and heal hit
 									break
 				
@@ -244,7 +244,7 @@ class Player:
 
 						if self.death == 1 and h[4] > self.lastdeath/1000 + 2/30: # if death and heal hits after death time (plus 2 tick leeway)
 							players[h[1]].heallate += 1
-						elif self.targethp[0][1] >= self.maxhp - 10 and h[4] < dmg_time - 2/30: # if target starts at max hp and the first heal hits before damage (2 tick leeway)
+						elif self.targethp[0][1] >= self.maxhp - 10 and h[4] < dmg_time - 2/30 and h[2] not in healhitexclude: # if target starts at max hp and the first heal hits before damage (2 tick leeway)
 							players[h[1]].healearly += 1
 						elif h[0] < self.targetstart + targethealwindow or h[4] < dmg_time + targethealwindowdmg: # if heal cast within 2s of spike start or hits within 1s of 
 							players[h[1]].healquick += 1
