@@ -2,8 +2,8 @@
 targetwindow = 2   # time window for min attacks to count a spike
 earlyevadecount = 3
 earlyevadetime = 2
-targethealwindow = 2	 # depends on the type of offense (blaze lead requires lower than beam)
-targethealwindowdmg = 1	 # depends on the type of offense (blaze lead requires lower than beam)
+targethealwindow = 1.7	 # depends on the type of offense (blaze lead requires lower than beam)
+targethealwindowdmg = 0.7	 # depends on the type of offense (blaze lead requires lower than beam)
 targethealatks = 3	 # depends on the type of offense (blaze lead requires lower than beam)
 targetmaxtime = 4 # MIN spike time to look for attacks
 targetcooldown = 4 # end time of spike to check new attacks
