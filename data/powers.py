@@ -356,6 +356,9 @@ hittiming = { # :[delay,speed]
 	'p-ray/charged':[29/30,60],
 	'lancer':[23/30,1000000],
 	'disintegrate':[29/30,1000000],
+	'psi lance':[40/30,105],
+	'will dom':[50/30,51],
+	'tk blast':[15/30,120],
 	
 
 	# debuffs
@@ -391,6 +394,11 @@ hitexclude = [
 	'corrosive enzyme',
 	'enervating field',
 ]
+healhitexclude = [
+	'insulating circuit',
+	'alkaloid',
+]
+
 
 repeatpowers = [ # powers that do multiples of an FX on use
 	'enervating field',

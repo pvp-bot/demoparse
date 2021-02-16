@@ -663,9 +663,9 @@ def main():
 
 		print('')
 
-	offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'tgt\'d', 'surv', 'on tgt', 'otp', 'timing', 'var','first', 'atk/sp','#atks']
+	offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'tgt\'d', 'surv', 'on tgt', 'otp', 'timing', 'var','first', 'atk/sp','dmg','#atks']
 	offence_content = []
-	healer_headers = ['team', '{:<20}'.format('name'), 'on tgt', 'quick','timely', 's/l/e', 'otp','top up','prdict','av spd','avg tm','#heals']
+	healer_headers = ['team', '{:<20}'.format('name'), 'on tgt', 'quick','early', 'late', 'otp','av spd','sp var','avg tm','top up','prdict','#heals']
 	healer_content = []
 
 
@@ -739,7 +739,9 @@ def main():
 				str(spiketimingvar)[:4],
 				p.first,
 				str(p.attacks / max(p.ontarget, 1))[:4],
-				p.attackstotal
+				str(str(round(-p.totaldmgtaken/1000,1))+'k'),
+				p.attackstotal,
+
 			])
 
 			if p.ontargetheals > 0:
@@ -749,22 +751,26 @@ def main():
 					'{:<20}'.format(p.name),
 					p.healontarget,
 					p.healquick,
-					p.healontime,
+					# p.healontime,
 					# p.healslow,
-					p.healslow+p.healearly+p.heallate,
+					# p.healslow+p.healearly+p.heallate,
+					p.healearly,
+					p.heallate,
 					"{:.0%}".format(p.healontarget/(targeted[p.team]-p.targeted),1),
 					# "{:.0%}".format(p.healontime/(targeted[p.team]-p.targeted),1),
 					# p.healearly,
 					# p.heallate,
+					str(healspeed)[:4],
+					str(healspeedvar)[:4],
+					str(healtiming)[:4],
 					p.healtopup,
 					p.predicts,
-					str(healspeed)[:4],
-					str(healtiming)[:4],
-					p.healstotal
+					p.healstotal,
 
 				])
 			if p.support:
-				csvw.writerow([demoname,match_map,'support_stats',p.name,p.team,'','','',p.set1,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.healontime,p.heallate,p.healfollowup,p.healtopup,p.healalpha,hpspike,healspeed,p.predicts,p.guesses,p.phaseheals,p.healmisseddead,targeted[p.team]]) # 14
+				#																																           1			  2			  3			   4          5          6           7              8           9           	  10          11        12         13         14		   15
+				csvw.writerow([demoname,match_map,'support_stats',p.name,p.team,'',p.healstotal,p.deathtotal,p.set1,'',targetteam,p.targeted,  '',''      ,p.healontarget,p.healquick,p.healontime,p.healslow,p.heallate,p.healearly,p.healfollowup,p.healtopup,p.healfatfinger,p.healalpha,healspeed,healtiming,p.predicts,p.phaseheals,targeted[p.team]])
 				# if p.support:
 				for extra, count in p.supportextras.items():
 					csvw.writerow([demoname,match_map,'support_extras',p.name,p.team,'','','',p.set1,extra,targetteam,'',  '',''      ,count])
@@ -774,8 +780,7 @@ def main():
 				csvw.writerow(healpowers)
 				csvw.writerow([demoname,match_map,'support_breakdown',p.name,p.team,'','','',p.set1,'on time',targetteam,'',  '',''      ,p.healontime])
 				csvw.writerow([demoname,match_map,'support_breakdown',p.name,p.team,'','','',p.set1,'late',targetteam,'',  '',''      ,p.heallate])
-				csvw.writerow([demoname,match_map,'support_breakdown',p.name,p.team,'','','',p.set1,'missed (dead)',targetteam,'',  '',''      ,p.healmisseddead])
-				csvw.writerow([demoname,match_map,'support_breakdown',p.name,p.team,'','','',p.set1,'missed',targetteam,'',  '',''      ,targeted[p.team]-(p.healontime+p.heallate+p.healmisseddead)])
+				csvw.writerow([demoname,match_map,'support_breakdown',p.name,p.team,'','','',p.set1,'missed',targetteam,'',  '',''      ,targeted[p.team]-(p.healontarget)])
 
 			
 			# header_log = ['demo','map',   'linetype',    'playr','team',t, hp d  a  tgt tt tgtd,'value','uid','stat1','stat2','stat3','stat4','stat5',stat6,stat7,stat8,...]
