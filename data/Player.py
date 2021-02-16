@@ -65,12 +65,14 @@ class Player:
 		self.totalhealsreceived = 0
 		self.totalhealsreceivedontarget = 0
 
+		# def stats
 		self.totalearlyjaunts = 0
 		self.totalearlyphases = 0
 		self.lastphase = -60
 		self.atkstakenonspike = 0
 		self.jauntreaction = []
 		self.phasereaction = []
+		self.deathtime = []
 
 		self.targethp = []
 		self.misseddead = 0 # targets missed while dead
@@ -210,6 +212,7 @@ class Player:
 			self.targethp.append([self.lastdeath/1000,0])
 			spikes[-1].spikedeath = self.lastdeath/1000 - self.targetstart
 			self.lastspikedeath = self.lastdeath
+			self.deathtime.append(spikes[-1].spikedeath)
 
 		spikes[-1].hp = self.targethp[:]
 		
@@ -245,6 +248,8 @@ class Player:
 
 						if self.death == 1 and h[4] > self.lastdeath/1000 + 2/30: # if death and heal hits after death time (plus 2 tick leeway)
 							players[h[1]].heallate += 1
+							if h[0] > self.targetstart + 2.5: # if heal is SLOW on top of being LATE
+								players[h[1]].healontarget -= 0.5 # half credit
 						elif self.targethp[0][1] >= self.maxhp - 10 and h[4] < dmg_time - 2/30 and h[2] not in healhitexclude: # if target starts at max hp and the first heal hits before damage (2 tick leeway)
 							players[h[1]].healearly += 1
 						elif h[0] < self.targetstart + targethealwindow or h[4] < dmg_time + targethealwindowdmg: # if heal cast within 2s of spike start or hits within 1s of 
