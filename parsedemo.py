@@ -674,7 +674,7 @@ def main():
 	for p in players.values():
 		deaths[p.team] += p.deathtotal 
 		targeted[p.team] += p.targeted
-		if p.ontargetheals+p.healtopup > p.attacks/1.5 and p.ontargetheals > 4 and p.healontime > 0:
+		if p.ontargetheals+p.healtopup > p.attacks/1.5 and p.ontargetheals > 4:
 			p.support = True
 
 		# setup player powersets in order
@@ -733,7 +733,7 @@ def main():
 				p.deathtotal,
 				p.targeted,
 				"{:.0%}".format(1-p.deathtotal/max(p.targeted,1)),
-				p.ontarget,
+				int(p.ontarget),
 				"{:.0%}".format(p.ontarget/max(targets[p.team],1)),
 				str(spiketiming)[:4],
 				str(spiketimingvar)[:4],
@@ -749,7 +749,7 @@ def main():
 				healer_content.append([
 					" [" + p.team + "]",
 					'{:<20}'.format(p.name),
-					p.healontarget,
+					int(p.healontarget),
 					p.healquick,
 					# p.healontime,
 					# p.healslow,
