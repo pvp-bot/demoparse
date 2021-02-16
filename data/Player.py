@@ -173,6 +173,7 @@ class Player:
 						players[aid].firstatktiming = atk[0]
 						if atk[0] > self.targetstart + targetwindow:
 							players[aid].lateatks += 1
+							players[aid].ontarget -= 0.5 # half credit for late first attacks
 					elif atkchain.count(' - ') == 2:
 						players[aid].followuptiming.append(atk[0]-players[aid].firstatktiming)
 
@@ -230,7 +231,7 @@ class Player:
 						dmg_time = self.targetstart
 						if self.targethp[0][1] > self.maxhp - 40 and len(self.targethp)>1 and self.targethp[1][0] > self.targetstart + 1: # if target starts spike within 100 of max HP and not already taking damage
 							for hp in self.targethp:
-								if hp[1] < self.targethp[0][1] and h[2] not in healhitexclude: # if damage has been taken
+								if hp[1] < self.targethp[0][1] - 80 and h[2] not in healhitexclude: # if non negl damage (~80hp) has been taken
 									dmg_time = hp[0] # time first damage occurs, for heal categorizing
 									players[h[1]].healtiming.append(abs(h[4]-hp[0])) # absolute time between first damage and heal hit
 									break
@@ -252,6 +253,7 @@ class Player:
 							players[h[1]].healontime += 1
 						else:
 							players[h[1]].healslow += 1
+							players[h[1]].healontarget -= 0.5 # half credit for slow first heals
 
 						players[h[1]].healontarget += 1 # times on a heal target
 					
