@@ -206,6 +206,7 @@ class Player:
 		spikes[-1].attackers = self.targetattackers[:]
 		spikes[-1].evades = self.targetevades[:]
 		spikes[-1].spiketime = self.targetstart - self.recentattacks[-1][0]
+		
 		if self.lastresdebuff:
 			spikes[-1].debufftime = self.lastresdebuff
 		elif self.painted and self.painted > self.targetstart - paintedtimer:
@@ -294,11 +295,15 @@ class Player:
 		spikes[-1].stats['heals received'] = healsreceived
 		spikes[-1].stats['greens available'] = self.greensavailable # at the start of the spike
 		spikes[-1].stats['greens used'] = self.greensavailable - self.greens
+
+		spikestartcalc = self.recentattacks[0][0] # first attack for calculating duration
+		if self.recentattacks[0][2] == 'enervating field' and len(self.recentattacks) > 1:
+			spikestartcalc = min(self.recentattacks[1][0],self.recentattacks[0][0]+1.5) # if first attack is EF then use the earlier of EF hit and attack #2
 		if self.death != 1:
 			self.dmgtakensurv += -self.dmgtaken
-			spikes[-1].stats['spike duration'] = self.recentattacks[-1][0] - self.recentattacks[0][0]
+			spikes[-1].stats['spike duration'] = self.recentattacks[-1][0] - spikestartcalc
 		else:
-			spikes[-1].stats['spike duration'] = self.lastspikedeath/1000 - self.recentattacks[0][0]
+			spikes[-1].stats['spike duration'] = self.lastspikedeath/1000 - spikestartcalc
 
 		# spikes[-1].stats['total hp recovered'] = self.healreceived
 		spikes[-1].stats['total hp lost'] = -self.dmgtaken
@@ -341,8 +346,10 @@ class Player:
 
 			self.greensavailable = self.greens
 
-			if len(self.recentprimaryattacks) > 0:
+			if len(self.recentprimaryattacks) > 0 and self.recentprimaryattacks[0][2] != 'enervating field':
 				self.targetstart = self.recentprimaryattacks[0][0]
+			elif len(self.recentprimaryattacks) > 1:
+				self.targetstart = self.recentprimaryattacks[1][0]
 			else:
 				self.targetstart = self.recentattacks[0][0]
 
