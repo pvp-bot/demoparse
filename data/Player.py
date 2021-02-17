@@ -126,6 +126,8 @@ class Player:
 		self.firstatktiming = False
 		self.followuptiming = []
 		self.lateatks = 0
+		self.firstdist = []
+		self.firsthealdist = []
 		self.utilcount = 0
 
 		self.lastrepeat = -30 # last time player used a repeat power (EF) - to prevent padding atk stats
@@ -140,9 +142,11 @@ class Player:
 		self.targetinstance = 0
 		self.writelog = False
 
-	def _update_ontarget(self, t, aid, players):
+	def _update_ontarget(self, t, aid, players,dist):
 		timing = (t - self.targetstart)
 		players[aid].spiketiming.append(timing)
+		if dist > 0:
+			players[aid].firstdist.append(dist)
 		players[aid].ontarget += 1
 
 	def getdist(self,x,y,t):
@@ -164,6 +168,7 @@ class Player:
 			players[atk[1]].attacks += 1
 		for aid in self.targetattackers:
 			timing = matchtime # large number to catch error in output
+			firstdist = 0 # large number to catch error in output
 			atkchain = ''
 			for atk in self.recentattacks:
 				if atk[1] == aid:
@@ -173,6 +178,7 @@ class Player:
 					# followup attack timing stats
 					if atkchain.count(' - ') == 1:
 						players[aid].firstatktiming = atk[0]
+						firstdist = atk[3]
 						if atk[0] > self.targetstart + targetwindow:
 							players[aid].lateatks += 1
 							players[aid].ontarget -= 0.5 # half credit for late first attacks
@@ -187,7 +193,7 @@ class Player:
 			else:
 				players[aid].atkchains[atkchain] = 1
 
-			self._update_ontarget(timing, aid, players)
+			self._update_ontarget(timing, aid, players,firstdist)
 
 		# new spike
 		spikes.append(Target(self.name,self.team,self.targetstart))

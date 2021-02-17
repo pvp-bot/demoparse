@@ -704,6 +704,7 @@ def main():
 	total_ontarget = {'BLU':0,'RED':0}
 	total_attacks  = {'BLU':0,'RED':0}
 	total_timing   = {'BLU':[],'RED':[]}
+	total_dmg      = {'BLU':0,'RED':0}
 
 	with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
 		csvw = csv.writer(csvfile, delimiter=',')
@@ -714,6 +715,7 @@ def main():
 				targetteam = 'RED'
 
 			spiketiming = sum(map(abs,p.spiketiming)) / max(len(p.spiketiming), 1)
+			spikedist = sum(map(abs,p.firstdist)) / max(len(p.firstdist), 1)
 			spiketimingvar = sum((x-spiketiming)**2 for x in p.spiketiming) / max(len(p.spiketiming),1)
 
 			healspeed = sum(p.healspeed) / max(len(p.healspeed), 1)
@@ -788,12 +790,13 @@ def main():
 			
 			# header_log = ['demo','map',   'linetype',    'playr','team',t, hp d  a  tgt tt tgtd,'value','uid','stat1','stat2','stat3','stat4','stat5',stat6,stat7,stat8,...]
 			csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/(targeted[p.team]-p.targeted) if p.healontarget > 0 else '',p.attackstotal,p.healstotal,p.utilcount]) # 8
-			csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/max(targets[p.team],1),spiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.lateatks,spiketimingvar]) # 14
+			csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/max(targets[p.team],1),spiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.lateatks,spiketimingvar,spikedist]) # 15
 			csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken,20-p.greens,p.dmgtakensurv,jauntreaction,phasereaction,deathtime]) # 13
 			
 			total_attacks[p.team]  += p.attacks
 			total_ontarget[p.team] += p.ontarget
 			total_timing[p.team].extend(p.spiketiming)
+			total_dmg[p.team] -= p.totaldmgtaken
 
 
 		csvw.writerow([demoname,match_map,'score_log','','BLU',matchtime,'',deaths['RED'],'','','','','','',''])
@@ -812,8 +815,10 @@ def main():
 	print_table(offence_headers, offence_content)
 	print_table(healer_headers, healer_content)
 
+
 	print("SCORE: " + str(deaths['RED']) + "-" + str(deaths['BLU']))
 	print("TARGETS CALLED: " + str(targets['BLU']) + "-" + str(targets['RED']))
+	print("TOTAL DMG: " + str(round(total_dmg['BLU']/1000,1)) + "K-" + str(round(total_dmg['RED']/1000,1)) + "K")
 	if len(emotes) > 0:
 		print('CHECK EMOTES: ')
 		print(emotes)
