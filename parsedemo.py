@@ -756,15 +756,9 @@ def main():
 					'{:<20}'.format(p.name),
 					int(p.healontarget),
 					p.healquick,
-					# p.healontime,
-					# p.healslow,
-					# p.healslow+p.healearly+p.heallate,
 					p.healearly,
 					p.heallate,
 					"{:.0%}".format(p.healontarget/(targeted[p.team]-p.targeted),1),
-					# "{:.0%}".format(p.healontime/(targeted[p.team]-p.targeted),1),
-					# p.healearly,
-					# p.heallate,
 					str(healspeed)[:4],
 					str(healspeedvar)[:4],
 					str(healtiming)[:4],
@@ -773,25 +767,26 @@ def main():
 					p.healstotal,
 
 				])
-			if p.support:
-				#																																           1			  2			  3			   4          5          6           7              8           9           	  10          11        12         13         14		   15
+			if p.support: # write data for support players																															           1			  2			  3			   4          5          6           7              8           9           	  10          11        12         13         14		   15
 				csvw.writerow([demoname,match_map,'support_stats',p.name,p.team,'',p.healstotal,p.deathtotal,p.set1,'',targetteam,p.targeted,  '',''      ,p.healontarget,p.healquick,p.healontime,p.healslow,p.heallate,p.healearly,p.healfollowup,p.healtopup,p.healfatfinger,p.healalpha,healspeed,healtiming,p.predicts,p.phaseheals,targeted[p.team]])
-				# if p.support:
 				for extra, count in p.supportextras.items():
 					csvw.writerow([demoname,match_map,'support_extras',p.name,p.team,'','','',p.set1,extra,targetteam,'',  '',''      ,count])
+				
 				healpowers = [demoname,match_map,'support_powers',p.name,p.team,'','','',p.set1,'',targetteam,'',  '','']
 				for power, count in p.healpowers.items():
 					healpowers.append(count)
 				csvw.writerow(healpowers)
-				csvw.writerow([demoname,match_map,'support_breakdown',p.name,p.team,'','','',p.set1,'on time',targetteam,'',  '',''      ,p.healontime])
-				csvw.writerow([demoname,match_map,'support_breakdown',p.name,p.team,'','','',p.set1,'late',targetteam,'',  '',''      ,p.heallate])
-				csvw.writerow([demoname,match_map,'support_breakdown',p.name,p.team,'','','',p.set1,'missed',targetteam,'',  '',''      ,targeted[p.team]-(p.healontarget)])
+
+				healbin = [demoname,match_map,'support_breakdown',p.name,p.team,'','','',p.set1,'',targetteam,'',  '','']
+				for hbin, count in p.healbin.items():
+					healbin.append(count)
+				csvw.writerow(healbin)
 
 			
 			# header_log = ['demo','map',   'linetype',    'playr','team',t, hp d  a  tgt tt tgtd,'value','uid','stat1','stat2','stat3','stat4','stat5',stat6,stat7,stat8,...]
 			csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/(targeted[p.team]-p.targeted) if p.healontarget > 0 else '',p.attackstotal,p.healstotal,p.utilcount]) # 8
 			csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/max(targets[p.team],1),spiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.lateatks,spiketimingvar,spikedist]) # 15
-			csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken,20-p.greens,p.dmgtakensurv,jauntreaction,phasereaction,deathtime]) # 13
+			csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken,20-p.greens,p.dmgtakensurv,jauntreaction,phasereaction,deathtime,len(p.deathtime)]) # 14
 			
 			total_attacks[p.team]  += p.attacks
 			total_ontarget[p.team] += p.ontarget

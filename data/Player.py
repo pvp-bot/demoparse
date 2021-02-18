@@ -91,6 +91,7 @@ class Player:
 		self.ontargetheals = 0
 		self.healspeed = []
 		self.healtiming = []
+		self.healbin = {40:0,100:0,200:0,400:0,800:0,1200:0,1500:0,1700:0,2000:0,9999:0} # binned heal count by missing HP
 		self.aps = 0 # absorb pain
 		self.predicts = 0 # predicted the spike target and gave an absorb
 		self.guesses = 0
@@ -245,16 +246,27 @@ class Player:
 									dmg_time = hp[0] # time first damage occurs, for heal categorizing
 									players[h[1]].healtiming.append(abs(h[4]-hp[0])) # absolute time between first damage and heal hit
 									break
+
+						
+						missinghp = False
+						for i in range(1,len(self.targethp)): # check recent hp
+							if self.targethp[i][0] > h[4] - 1/30 and not missinghp: # if hp time is after heal hit time (with 1 tick leeway)
+								missinghp = self.maxhp - self.targethp[i-1][1] # then get the last most recent hp
+						if missinghp:
+							for hbin in self.healbin: # find the matching heal bin
+								if missinghp <= hbin:
+									players[h[1]].healbin[hbin] += 1
+									break
+
 				
 						atkcount = 0
 						for atk in self.recentattacks:
 							if atk[0]<h[0]: # num of attacks cast before heal thrown
 								atkcount += 1
 
-
-
 						if self.death == 1 and h[4] > self.lastdeath/1000 + 2/30: # if death and heal hits after death time (plus 2 tick leeway)
 							players[h[1]].heallate += 1
+							players[h[1]].healbin[9999] += 1
 							if h[0] > self.targetstart + 2.5: # if heal is SLOW on top of being LATE
 								players[h[1]].healontarget -= 0.5 # half credit
 						elif self.targethp[0][1] >= self.maxhp - 10 and h[4] < dmg_time - 2/30 and h[2] not in healhitexclude: # if target starts at max hp and the first heal hits before damage (2 tick leeway)
