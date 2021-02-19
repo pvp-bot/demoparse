@@ -126,6 +126,7 @@ class Player:
 		self.atkchains = {}
 		self.firstatktiming = False
 		self.followuptiming = []
+		self.atkbin = {0:0,0.34:0,0.68:0,1.0:0,1.5:0,2.0:0,9999:0} # binned heal count by missing HP
 		self.lateatks = 0
 		self.firstdist = []
 		self.firsthealdist = []
@@ -177,12 +178,18 @@ class Player:
 					atkchain += atk[2]+' - ' # change atk chain to string
 					
 					# followup attack timing stats
-					if atkchain.count(' - ') == 1:
+					if atkchain.count(' - ') == 1: # if first attack by player
 						players[aid].firstatktiming = atk[0]
 						firstdist = atk[3]
-						if atk[0] > self.targetstart + targetwindow:
+						if atk[0] > self.targetstart + targetwindow: # if first attack is late
 							players[aid].lateatks += 1
 							players[aid].ontarget -= 0.5 # half credit for late first attacks
+
+						for abin in self.atkbin: # find the matching atk bin
+							if atk[0]-self.targetstart < abin:
+									players[aid].atkbin[abin] += 1 # count timing for that bin
+									break # only count 1
+
 					elif atkchain.count(' - ') == 2:
 						players[aid].followuptiming.append(atk[0]-players[aid].firstatktiming)
 

@@ -788,6 +788,12 @@ def main():
 			csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/max(targets[p.team],1),spiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.lateatks,spiketimingvar,spikedist]) # 15
 			csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken,20-p.greens,p.dmgtakensurv,jauntreaction,phasereaction,deathtime,len(p.deathtime)]) # 14
 			
+			atktiming = [demoname,match_map,'offence_timing',p.name,p.team,'','','',p.set1,'',targetteam,'',  '','']
+			for power, count in p.atkbin.items():
+				atktiming.append(count)
+			if p.ontarget > 3: # filter out emps
+				csvw.writerow(atktiming)
+
 			total_attacks[p.team]  += p.attacks
 			total_ontarget[p.team] += p.ontarget
 			total_timing[p.team].extend(p.spiketiming)
