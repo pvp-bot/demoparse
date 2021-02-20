@@ -91,7 +91,7 @@ class Player:
 		self.ontargetheals = 0
 		self.healspeed = []
 		self.healtiming = []
-		self.healbin = {40:0,100:0,200:0,400:0,800:0,1200:0,1500:0,1700:0,2000:0,9999:0} # binned heal count by missing HP
+		self.healbin = {10:0,100:0,200:0,400:0,800:0,1200:0,1500:0,1700:0,3200:0,9999:0,99999:0} # binned heal count by missing HP
 		self.aps = 0 # absorb pain
 		self.predicts = 0 # predicted the spike target and gave an absorb
 		self.guesses = 0
@@ -247,7 +247,7 @@ class Player:
 
 						# heal timing vs damage taken
 						dmg_time = self.targetstart
-						if self.targethp[0][1] > self.maxhp - 40 and len(self.targethp)>1 and self.targethp[1][0] > self.targetstart + 1: # if target starts spike within 100 of max HP and not already taking damage
+						if self.targethp[0][1] > self.maxhp - 40 and len(self.targethp)>1 and self.targethp[1][0] > self.targetstart + 1: # if target starts spike within 100 of max HP and not already taking damage, plus no damage between 0 and 1s
 							for hp in self.targethp:
 								if hp[1] < self.targethp[0][1] - 80 and h[2] not in healhitexclude: # if non negl damage (~80hp) has been taken
 									dmg_time = hp[0] # time first damage occurs, for heal categorizing
@@ -271,12 +271,18 @@ class Player:
 							if atk[0]<h[0]: # num of attacks cast before heal thrown
 								atkcount += 1
 
-						if self.death == 1 and h[4] > self.lastdeath/1000 + 2/30: # if death and heal hits after death time (plus 2 tick leeway)
+						if self.death == 1 and h[4] > self.lastdeath/1000 + 1/30: # if death and heal hits after death time (plus 1 tick leeway)
 							players[h[1]].heallate += 1
-							players[h[1]].healbin[9999] += 1
+
+							if (h[0] - self.targetstart) < 1.5: # if late, but cast fast
+								players[h[1]].healbin[99999] += 1 # late (fast)
+							else:
+								players[h[1]].healbin[9999] += 1 # late (normal)
+
 							if h[0] > self.targetstart + 2.5: # if heal is SLOW on top of being LATE
-								players[h[1]].healontarget -= 0.5 # half credit
-						elif self.targethp[0][1] >= self.maxhp - 10 and h[4] < dmg_time - 2/30 and h[2] not in healhitexclude: # if target starts at max hp and the first heal hits before damage (2 tick leeway)
+								players[h[1]].healontarget -= 0.5 # half 
+
+						elif self.targethp[0][1] >= self.maxhp - 10 and h[4] < dmg_time - 1/30 and h[2] not in healhitexclude: # if target starts at max hp and the first heal hits before damage (2 tick leeway)
 							players[h[1]].healearly += 1
 						elif h[0] < self.targetstart + targethealwindow or h[4] < dmg_time + targethealwindowdmg: # if heal cast within 2s of spike start or hits within 1s of 
 							players[h[1]].healquick += 1
@@ -320,7 +326,7 @@ class Player:
 			spikestartcalc = min(self.recentattacks[1][0],self.recentattacks[0][0]+1.5) # if first attack is EF then use the earlier of EF hit and attack #2
 		if self.death != 1:
 			self.dmgtakensurv += -self.dmgtaken
-			spikes[-1].stats['spike duration'] = self.recentattacks[-1][0] - spikestartcalc
+			spikes[-1].stats['spike duration'] = abs(self.recentattacks[-1][0] - spikestartcalc)
 		else:
 			spikes[-1].stats['spike duration'] = self.lastspikedeath/1000 - spikestartcalc
 

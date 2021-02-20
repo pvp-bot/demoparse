@@ -817,9 +817,10 @@ def main():
 	print_table(healer_headers, healer_content)
 
 
-	print("SCORE: " + str(deaths['RED']) + "-" + str(deaths['BLU']))
-	print("TARGETS CALLED: " + str(targets['BLU']) + "-" + str(targets['RED']))
-	print("TOTAL DMG: " + str(round(total_dmg['BLU']/1000,1)) + "K-" + str(round(total_dmg['RED']/1000,1)) + "K")
+	print("SCORE:      " + str(deaths['RED']) + "-" + str(deaths['BLU']))
+	print("TARGETS:    " + str(targets['BLU']) + "-" + str(targets['RED']))
+	print("TOTAL DMG:  " + str(round(total_dmg['BLU']/1000,1)) + "K-" + str(round(total_dmg['RED']/1000,1)) + "K")
+	print("TOTAL ATKS: " + str(total_attacks['BLU']) + "-" + str(total_attacks['RED']))
 	if len(emotes) > 0:
 		print('CHECK EMOTES: ')
 		print(emotes)
