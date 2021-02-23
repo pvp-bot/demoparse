@@ -90,7 +90,8 @@ class Player:
 		# healing peeps
 		self.ontargetheals = 0
 		self.healspeed = []
-		self.healtiming = []
+		self.healtiming100 = []
+		self.healtiming400 = []
 		self.healbin = {10:0,100:0,200:0,400:0,800:0,1200:0,1500:0,1700:0,3200:0,9999:0,99999:0} # binned heal count by missing HP
 		self.aps = 0 # absorb pain
 		self.predicts = 0 # predicted the spike target and gave an absorb
@@ -245,14 +246,17 @@ class Player:
 
 						players[h[1]].healspeed.append(h[0]-self.targetstart) # heal speed relative to spike start
 
-						# heal timing vs damage taken
-						dmg_time = self.targetstart
+						# heal timing vs damage taken at different missing HPs
+						dmg100,dmg400 = False,False
+						
 						if self.targethp[0][1] > self.maxhp - 40 and len(self.targethp)>1 and self.targethp[1][0] > self.targetstart + 1: # if target starts spike within 100 of max HP and not already taking damage, plus no damage between 0 and 1s
 							for hp in self.targethp:
-								if hp[1] < self.targethp[0][1] - 80 and h[2] not in healhitexclude: # if non negl damage (~80hp) has been taken
-									dmg_time = hp[0] # time first damage occurs, for heal categorizing
-									players[h[1]].healtiming.append(abs(h[4]-hp[0])) # absolute time between first damage and heal hit
-									break
+								if not dmg100 and hp[1] < self.targethp[0][1] - 100 and h[2] not in healhitexclude: # if non negl damage (~80hp) has been taken
+									dmg100 = hp[0] # time first damage occurs, for heal categorizing
+									players[h[1]].healtiming100.append(abs(h[4]-hp[0])) # absolute time between first damage and heal hit
+								if not dmg400 and hp[1] < self.targethp[0][1] - 400 and h[2] not in healhitexclude: # if non negl damage (~80hp) has been taken
+									dmg400 = hp[0] # time first damage occurs, for heal categorizing
+									players[h[1]].healtiming400.append(abs(h[4]-hp[0])) # absolute time between first damage and heal hit
 
 						
 						missinghp = False
@@ -282,11 +286,11 @@ class Player:
 							if h[0] > self.targetstart + 2.5: # if heal is SLOW on top of being LATE
 								players[h[1]].healontarget -= 0.5 # half 
 
-						elif self.targethp[0][1] >= self.maxhp - 10 and h[4] < dmg_time - 1/30 and h[2] not in healhitexclude: # if target starts at max hp and the first heal hits before damage (2 tick leeway)
+						elif self.targethp[0][1] >= self.maxhp - 10 and h[4] < dmg100 - 1/30 and h[2] not in healhitexclude: # if target starts at max hp and the first heal hits before damage (2 tick leeway)
 							players[h[1]].healearly += 1
-						elif h[0] < self.targetstart + targethealwindow or h[4] < dmg_time + targethealwindowdmg: # if heal cast within 2s of spike start or hits within 1s of 
+						elif h[0] < self.targetstart + targethealwindow or h[4] < dmg100 + targethealwindowdmg: # if heal cast within 2s of spike start or hits within 1s of 
 							players[h[1]].healquick += 1
-						elif atkcount <= targethealatks or h[0] < self.targetstart + targethealwindow*2 or h[4] < dmg_time + targethealwindowdmg*2: # cast before 4 attacks, hits before 2s after dmg, or within 4s of start
+						elif atkcount <= targethealatks or h[0] < self.targetstart + targethealwindow*2 or h[4] < dmg100 + targethealwindowdmg*2: # cast before 4 attacks, hits before 2s after dmg, or within 4s of start
 							players[h[1]].healontime += 1
 						else:
 							players[h[1]].healslow += 1
