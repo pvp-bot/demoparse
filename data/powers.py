@@ -20,6 +20,8 @@ fx = { # fx from actor to target (includes buffs)
 	'WILLDOMINATION.FX':'will dom',
 	'TELEKINETICBLAST.FX':'tk blast',
 	'PSIONICLANCEBLASTQUICK.FX':'psi lance',
+	'SUBDUEPSIONICBLAST.FX':'subdue',
+	'PSIONICBLAST_SLOWCAST.FX':'mental blast',
 
 	# BEAMRIFLE_DISINTEGRATE
 	'BEAMRIFLE_DISINTEGRATE.FX':'disintegrate',
@@ -322,6 +324,7 @@ primaryattacks = [
 	'lancer',
 	'char',
 	'p-ray/charged',
+	'will dom',
 ]
 
 
@@ -381,6 +384,7 @@ hittiming = { # :[delay,speed]
 	'insulating circuit':[22/30,1000000],
 	'aid other':[40/30,1000000],
 	'alkaloid':[34/30,66],
+	'glowing touch':[25/30,1000000],
 
 	# pools/misc
 	'green':[15/30,1000000],
@@ -562,6 +566,11 @@ filterextras = [
 npc = [
 	'NPC',
 	'EntTypeFile',
+]
+
+ignorecostume = [ # npc costumes used by players throwing off player detection
+	'FRK_45',
+	'Kheldian_Peacebringer_Light_Form',
 ]
 
 # filter out non-player entities - issues if player name = one of these

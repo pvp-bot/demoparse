@@ -65,7 +65,7 @@ def main():
 					match_map = match_map.split('_')[1].lower()
 			if action == "Player":
 				playerline = count
-			if action == "NPC" and line[3] != 'FRK_45':
+			if action == "NPC" and line[3] not in ignorecostume:
 				player_ids = [i for i in player_ids if i != pid]
 				player_list = [i for i in player_list if i.id != pid]
 			if action == "NEW":
@@ -88,7 +88,7 @@ def main():
 					override.teamswap = True # 0 0 OVERRIDE TEAMSWAP
 				elif line[3] == "POWERSETS": 
 					override.powersets[line[4]] = [line[5],line[6]] 
-			if action in npc and pid in player_ids and line[3] != 'FRK_45': #
+			if action in npc and pid in player_ids and line[3] not in ignorecostume:
 				del player_ids[-1]
 				del player_list[-1]
 			try:
@@ -665,7 +665,7 @@ def main():
 
 	offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'tgt\'d', 'surv', 'on tgt', 'otp', 'timing', 'var','first', 'atk/sp','dmg','#atks']
 	offence_content = []
-	healer_headers = ['team', '{:<20}'.format('name'), 'on tgt', 'quick','early', 'late', 'otp','av spd','sp var','avg tm','top up','prdict','#heals']
+	healer_headers = ['team', '{:<20}'.format('name'), 'on tgt', 'quick','early', 'late', 'otp','av spd','tm400','tm100','top up','prdict','#heals']
 	healer_content = []
 
 
@@ -719,7 +719,8 @@ def main():
 			spiketimingvar = sum((x-spiketiming)**2 for x in p.spiketiming) / max(len(p.spiketiming),1)
 
 			healspeed = sum(p.healspeed) / max(len(p.healspeed), 1)
-			healtiming = sum(p.healtiming) / max(len(p.healtiming), 1)
+			healtiming100 = sum(p.healtiming100) / max(len(p.healtiming100), 1)
+			healtiming400 = sum(p.healtiming400) / max(len(p.healtiming400), 1)
 			healspeedvar = sum((x-healspeed)**2 for x in p.healspeed) / max(len(p.healspeed),1)
 
 			jauntreaction = ''
@@ -760,15 +761,16 @@ def main():
 					p.heallate,
 					"{:.0%}".format(p.healontarget/(targeted[p.team]-p.targeted),1),
 					str(healspeed)[:4],
-					str(healspeedvar)[:4],
-					str(healtiming)[:4],
+					# str(healspeedvar)[:4],
+					str(healtiming400)[:4],
+					str(healtiming100)[:4],
 					p.healtopup,
 					p.predicts,
 					p.healstotal,
 
 				])
 			if p.support: # write data for support players																															           1			  2			  3			   4          5          6           7              8           9           	  10          11        12         13         14		   15
-				csvw.writerow([demoname,match_map,'support_stats',p.name,p.team,'',p.healstotal,p.deathtotal,p.set1,'',targetteam,p.targeted,  '',''      ,p.healontarget,p.healquick,p.healontime,p.healslow,p.heallate,p.healearly,p.healfollowup,p.healtopup,p.healfatfinger,p.healalpha,healspeed,healtiming,p.predicts,p.phaseheals,targeted[p.team]])
+				csvw.writerow([demoname,match_map,'support_stats',p.name,p.team,'',p.healstotal,p.deathtotal,p.set1,'',targetteam,p.targeted,  '',''      ,p.healontarget,p.healquick,p.healontime,p.healslow,p.heallate,p.healearly,p.healfollowup,p.healtopup,p.healfatfinger,p.healalpha,healspeed,healtiming400,p.predicts,p.phaseheals,targeted[p.team]])
 				for extra, count in p.supportextras.items():
 					csvw.writerow([demoname,match_map,'support_extras',p.name,p.team,'','','',p.set1,extra,targetteam,'',  '',''      ,count])
 				
@@ -817,14 +819,14 @@ def main():
 	print_table(healer_headers, healer_content)
 
 
-	print("SCORE:      " + str(deaths['RED']) + "-" + str(deaths['BLU']))
-	print("TARGETS:    " + str(targets['BLU']) + "-" + str(targets['RED']))
-	print("TOTAL DMG:  " + str(round(total_dmg['BLU']/1000,1)) + "K-" + str(round(total_dmg['RED']/1000,1)) + "K")
-	print("TOTAL ATKS: " + str(total_attacks['BLU']) + "-" + str(total_attacks['RED']))
+	print("SCORE:       " + str(deaths['RED']) + "-" + str(deaths['BLU']))
+	print("TGTS CALLED: " + str(targets['BLU']) + "-" + str(targets['RED']))
+	print("DMG TAKEN:   " + str(round(total_dmg['BLU']/1000,1)) + "K-" + str(round(total_dmg['RED']/1000,1)) + "K")
+	print("ATKS THROWN: " + str(total_attacks['BLU']) + "-" + str(total_attacks['RED']))
 	if len(emotes) > 0:
 		print('CHECK EMOTES: ')
 		print(emotes)
-
+	print('\n')
 	return True
 
 if __name__ == "__main__":
