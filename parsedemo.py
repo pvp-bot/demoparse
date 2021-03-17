@@ -751,7 +751,7 @@ def main():
 			])
 
 			if p.ontargetheals > 0:
-				hpspike =p.ontargetheals/(p.healontime+p.heallate)
+				hpspike = p.ontargetheals/max(p.healontime+p.heallate,1)
 				healer_content.append([
 					" [" + p.team + "]",
 					'{:<20}'.format(p.name),
@@ -819,7 +819,7 @@ def main():
 	print_table(healer_headers, healer_content)
 
 
-	print("SCORE:       " + str(deaths['RED']) + "-" + str(deaths['BLU']))
+	print("SCORE:       " + str(deaths['RED']) + "-" + str(deaths['BLU']) + "\n")
 	print("TGTS CALLED: " + str(targets['BLU']) + "-" + str(targets['RED']))
 	print("DMG TAKEN:   " + str(round(total_dmg['BLU']/1000,1)) + "K-" + str(round(total_dmg['RED']/1000,1)) + "K")
 	print("ATKS THROWN: " + str(total_attacks['BLU']) + "-" + str(total_attacks['RED']))
