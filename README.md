@@ -1,6 +1,6 @@
 coh demo parser for team arena matches
 
-[example](https://datastudio.google.com/reporting/5be3366b-732b-44ee-8aef-ca2f4e8810d6)
+[example](https://datastudio.google.com/reporting/117d15ed-6206-4db4-b29c-498fbaa07d7b)
 
 message me (xhiggy) on discord if you have questions on how stuff works or is calculated. if you find errors let me know or feel free to submit a pull request.
 
@@ -21,9 +21,11 @@ Quick how-to use for people. These instructions will assume a small amount of fa
 ### program setup
 
 If you haven't already, clone the repo somewhere (or use your favourite git client)
+
 `git clone https://github.com/pvp-bot/demoparse.git`
 
 If cloned it previously, pull to get the latest updates (from the repo folder)  
+
 `git pull`
 
 Python (v3+) requirements: numpy, google-cloud-bigquery
