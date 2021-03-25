@@ -122,6 +122,7 @@ fx = { # fx from actor to target (includes buffs)
 	'THERMALRADIATION/BUFFDAMAGE.FX':'forge',
 	'THERMALRADIATION/PBAOE.FX':'warmth',
 	'THERMALRADIATION/HEAL/FIREHEALSELFWITHHANDS.FX':'cauterize',
+	'THERMALRADIATION/FIREHEALSELFWITHHANDS.FX':'cauterize',
 	'THERMALRADIATION/MELTARMORCAST.FX':'melt armor',
 	# no direct heat exhaustion fx?
 
@@ -384,6 +385,7 @@ hittiming = { # :[delay,speed]
 	'insulating circuit':[22/30,1000000],
 	'aid other':[40/30,1000000],
 	'alkaloid':[34/30,66],
+	'cauterize':[22/30,1000000],
 	'glowing touch':[25/30,1000000],
 
 	# pools/misc
