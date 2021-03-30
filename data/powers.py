@@ -573,6 +573,7 @@ npc = [
 ignorecostume = [ # npc costumes used by players throwing off player detection
 	'FRK_45',
 	'Kheldian_Peacebringer_Light_Form',
+	'V_Coralax_Player_Boss',
 ]
 
 # filter out non-player entities - issues if player name = one of these
