@@ -243,6 +243,10 @@ fx = { # fx from actor to target (includes buffs)
 	'TOTALFOCUSFAST_ATTACK.FX':'total focus',
 
 	'/FORCEBOLT.FX':'force bolt',
+	'TIMECRAWL_ATTACK.FX':'time crawl',
+	'TEMPORALMENDING_ATTACK.FX':'temporal mending',
+
+
 	'BOOSTRANGE_ATTACK.FX':'boost range', 
 	'AIM.FX':'aim',
 	'FOLLOWUPHIT4.FX':'build up', #'fiery embrace',
@@ -346,6 +350,7 @@ powerdelay = {
 	'strangler':0.67,
 	'ssj':0.83,
 	'enervating field':1.50,
+	'dehydrate':0.53,
 }
 
 hittiming = { # :[delay,speed]
@@ -363,6 +368,8 @@ hittiming = { # :[delay,speed]
 	'psi lance':[40/30,105],
 	'will dom':[50/30,51],
 	'tk blast':[15/30,120],
+	'dehydrate':[16/30,1000000],
+	'water jet':[11/30,1000000],
 	
 
 	# debuffs
@@ -413,6 +420,8 @@ repeatpowers = [ # powers that do multiples of an FX on use
 utility = [	# for filtering out not atk offense powers
 	'shock',
 	'entangling arrow',
+	'time crawl',
+	'temporal mending',
 	'weaken',
 	'siphon speed',
 	'transference',
@@ -551,6 +560,16 @@ absorbs = [
 	'spirit ward'
 ]
 
+cmpowers = [
+	'clear mind',
+	'enforced morale',
+	'thaw',
+	'clarity',
+	'antidote',
+	'id',
+]
+
+
 filterextras = [
 	'crey pistol',
 	'raptor pack',
@@ -638,6 +657,8 @@ powersets = {
 	'will dom':'psi',
 	'psi lance':'psi',
 	'soul drain':'dark blast',
+	'water jet':'water',
+	'tidal forces':'water',
 	
 	'heal other':'emp',
 	'absorb pain':'emp',
@@ -668,6 +689,9 @@ powersets = {
 
 	'accelerate metabolism':'rad',
 	'ef toggle on':'rad',
+
+	'time crawl':'time',
+	'temporal mending':'time',
 
 	'entangling arrow':'trick',
 	'heat loss':'cold',
@@ -736,6 +760,7 @@ primaryoffence = [ #order of importance?
 	'ice',
 	'beam',
 	'psi',
+	'water',
 	'energy blast',
 	'rad blast',
 	'water',

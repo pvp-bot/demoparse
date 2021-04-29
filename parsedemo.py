@@ -813,7 +813,9 @@ def main():
 		csvw.writerow([demoname,match_map,'summary','','','','','','targets called','', '','',  '',''      	,targets['BLU'],targets['RED']])
 		csvw.writerow([demoname,match_map,'summary','','','','','','avg on target','', '','',  '',''      	,round(total_ontarget['BLU']/max(targets['BLU'],1),1),round(total_ontarget['RED']/max(targets['RED'],1),1)])
 		csvw.writerow([demoname,match_map,'summary','','','','','','atk per target','', '','',  '',''      	,round(total_attacks['BLU']/max(targets['BLU'],1),1),round(total_attacks['RED']/max(targets['RED'],1),1)])
-		csvw.writerow([demoname,match_map,'summary','','','','','','avg atk timing','', '','',  '',''      	,round(sum(total_timing['BLU'])/max(len(total_timing['BLU']),1),2),round(sum(total_timing['RED'])/max(len(total_timing['RED']),1),2)])
+		# csvw.writerow([demoname,match_map,'summary','','','','','','avg atk timing','', '','',  '',''      	,round(sum(total_timing['BLU'])/max(len(total_timing['BLU']),1),2),round(sum(total_timing['RED'])/max(len(total_timing['RED']),1),2)])
+		csvw.writerow([demoname,match_map,'summary','','','','','','dmg taken (K)','', '','',  '',''      		,round(total_dmg['BLU']/1000,0),round(total_dmg['RED']/1000,0)])
+		csvw.writerow([demoname,match_map,'summary','','','','','','atks thrown','', '','',  '',''      	,total_attacks['BLU'],total_attacks['RED']])
 
 	print_table(offence_headers, offence_content)
 	print_table(healer_headers, healer_content)
