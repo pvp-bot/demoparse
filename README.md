@@ -1,6 +1,6 @@
 coh demo parser for team arena matches
 
-[example](https://datastudio.google.com/reporting/117d15ed-6206-4db4-b29c-498fbaa07d7b)
+[example](https://datastudio.google.com/reporting/d4002384-c661-4c03-9031-fba00e0c6abb)
 
 message me (xhiggy) on discord if you have questions on how stuff works or is calculated. if you find errors let me know or feel free to submit a pull request.
 
