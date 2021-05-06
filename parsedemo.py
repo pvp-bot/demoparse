@@ -28,7 +28,7 @@ def main():
 	starttime = 0 # in seconds
 
 	header = ['demo','map','linetype']
-	header_log = ['player','team','time (s)','hp','death','action','target','target_team','targeted','value','uid','stat1','stat2','stat3','stat4','stat5','stat6','stat7','stat8','stat9','stat10','stat11','stat12','stat13','stat14','stat15']
+	header_log = ['player','team','time (s)','hp','death','action','target','target_team','targeted','value','uid','stat1','stat2','stat3','stat4','stat5','stat6','stat7','stat8','stat9','stat10','stat11','stat12','stat13','stat14','stat15','stat16']
 	header.extend(header_log)
 
 	emotes = []
@@ -665,7 +665,7 @@ def main():
 
 	offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'tgt\'d', 'surv', 'on tgt', 'otp', 'timing', 'var','first', 'atk/sp','dmg','#atks']
 	offence_content = []
-	healer_headers = ['team', '{:<20}'.format('name'), 'on tgt', 'quick','early', 'late', 'otp','av spd','tm400','tm100','top up','prdict','#heals']
+	healer_headers = ['team', '{:<20}'.format('name'), 'on tgt', 'quick','early', 'late', 'otp','av spd','tm400','tm100','top up','cms','#heals']
 	healer_content = []
 
 
@@ -752,6 +752,10 @@ def main():
 
 			if p.ontargetheals > 0:
 				hpspike = p.ontargetheals/max(p.healontime+p.heallate,1)
+				for extra, count in p.supportextras.items():
+					if extra in cmpowers:
+						 p.cmcount += count
+				
 				healer_content.append([
 					" [" + p.team + "]",
 					'{:<20}'.format(p.name),
@@ -765,12 +769,11 @@ def main():
 					str(healtiming400)[:4],
 					str(healtiming100)[:4],
 					p.healtopup,
-					p.predicts,
+					p.cmcount,
 					p.healstotal,
 
 				])
-			if p.support: # write data for support players																															           1			  2			  3			   4          5          6           7              8           9           	  10          11        12         13         14		   15
-				csvw.writerow([demoname,match_map,'support_stats',p.name,p.team,'',p.healstotal,p.deathtotal,p.set1,'',targetteam,p.targeted,  '',''      ,p.healontarget,p.healquick,p.healontime,p.healslow,p.heallate,p.healearly,p.healfollowup,p.healtopup,p.healfatfinger,p.healalpha,healspeed,healtiming400,p.predicts,p.phaseheals,targeted[p.team]])
+			if p.support: # write data for support players
 				for extra, count in p.supportextras.items():
 					csvw.writerow([demoname,match_map,'support_extras',p.name,p.team,'','','',p.set1,extra,targetteam,'',  '',''      ,count])
 				
@@ -782,6 +785,9 @@ def main():
 				healbin = [demoname,match_map,'support_breakdown',p.name,p.team,'','','',p.set1,'',targetteam,'',  '','']
 				for hbin, count in p.healbin.items():
 					healbin.append(count)
+				#            																															    1			  2			  3			   4          5          6           7              8           9           	  10          11        12         13         14		   15                 16
+				csvw.writerow([demoname,match_map,'support_stats',p.name,p.team,'',p.healstotal,p.deathtotal,p.set1,'',targetteam,p.targeted,  '',''      ,p.healontarget,p.healquick,p.healontime,p.healslow,p.heallate,p.healearly,p.healfollowup,p.healtopup,p.healfatfinger,p.healalpha,healspeed,healtiming400,p.predicts,p.phaseheals,targeted[p.team],p.cmcount])
+				
 				csvw.writerow(healbin)
 
 			

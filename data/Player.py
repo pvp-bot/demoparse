@@ -117,6 +117,7 @@ class Player:
 		
 		self.support = False
 		self.supportextras = {}
+		self.cmcount = 0
 		
 		self.healstotal = 0
 		self.healontarget = 0

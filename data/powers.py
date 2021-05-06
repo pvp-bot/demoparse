@@ -151,6 +151,7 @@ fx = { # fx from actor to target (includes buffs)
 	'/COMMAND2.FX':'dominate',
 	'SCHOOLOFSHARKS_HIT.FX':'ssj', # not sure about this one
 	'V_MAKO_SPIRITSHARK_CIRCLE_HIT':'ssj',
+	'SHOCKINGBOLT_ATTACK.FX':'shocking bolt',
 	# 'SPIRTSHARKJAWS_CONDITIONAL.FX': 'ssj',
 	'/HIBERNATE.FX':'hibernate',
 	'/HIBERNATE_CONTINUING.FX':'hibernate',
