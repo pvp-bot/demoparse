@@ -660,6 +660,16 @@ powersets = {
 	'soul drain':'dark blast',
 	'water jet':'water',
 	'tidal forces':'water',
+	'thunderous blast':'elec blast',
+	'shout':'sonic blast',
+	'screech':'sonic blast',
+	'lightning bolt':'elec blast',
+	'executioner shot':'dual pistol',
+	'suppressive fire':'dual pistol',
+	'water jet':'water',
+	'tidal forces':'water',
+	'power push':'energy blast',
+	'power burst':'energy blast',
 	
 	'heal other':'emp',
 	'absorb pain':'emp',
@@ -676,47 +686,38 @@ powersets = {
 	'corrosive enzyme':'nature',
 	'overgrowth':'nature',
 	'wild growth':'nature',
+	'force bolt':'bubble',
 	
 	'thorns':'plant',
 	'toxins':'plant',
 	'wild fortress':'plant',
 	'upshot/focus':'tac',
 	'reaction time':'martial',
+	'boost range':'energy manip',
+	'chronos':'temporal',
+	'echo chamber':'sonic manip',
 
 	'cosmic burst':'rad blast',
 
 	'ir':'kin',
 	'siphon speed':'kin',
-
 	'accelerate metabolism':'rad',
 	'ef toggle on':'rad',
-
 	'time crawl':'time',
 	'temporal mending':'time',
-
 	'entangling arrow':'trick',
 	'heat loss':'cold',
+
 	'phantom army':'ill',
 	'phantasm':'ill',
 	'dimension shift':'grav',
 	'singularity':'grav',
 	'lift':'grav',
 	'fossilize':'earth',
-	'chilblain':'ice control',
+	'chilblain':'ice ctrl',
 	'shiver':'ice ctrl',
 	'smoke':'fire ctrl',
 	'haunt':'dark ctrl',
-
-	'thunderous blast':'elec blast',
-	'shout':'sonic blast',
-	'screech':'sonic blast',
-	'lightning bolt':'elec blast',
-	'executioner shot':'dual pistol',
-	'suppressive fire':'dual pistol',
-	'water jet':'water',
-	'tidal forces':'water',
-	'power push':'energy blast',
-	'power burst':'energy blast',
 
 	'thugs upgrade':'thugs',
 	'thugs slug':'thugs',
@@ -725,7 +726,6 @@ powersets = {
 
 
 	'luminous blast':'peacebringer',
-	'focus':'claws',
 	'incandescent strike':'peacebringer',
 	'shadow blast':'warshade',
 	'ebon eye':'warshade',
@@ -735,12 +735,7 @@ powersets = {
 	'crushing uppercut':'street justice',
 	'total focus':'energy melee', # maybe an issue with the power pool total focus
 	'impale':'spines',
-
-	# assorted
-	'force bolt':'bubble',
-	'boost range':'energy manip',
-	'chronos':'temporal',
-	'echo chamber':'sonic manip',
+	'focus':'claws',
 
 	# armor
 	'ablative carapace':'bio',
@@ -750,12 +745,13 @@ powersets = {
 	'moment of glory':'regen',
 }
 
-primarysupport = [ #order of importance?
+primarysupport = [
 	'emp',
 	'pain',
 	'elec aff',
+	'therm',
 ]
-primaryoffence = [ #order of importance?
+primaryoffence = [ 
 	'poison',
 	'fire',
 	'ice',
@@ -763,6 +759,9 @@ primaryoffence = [ #order of importance?
 	'psi',
 	'water',
 	'energy blast',
+	'dual pistol',
+	'sonic blast',
+	'elec blast',
 	'rad blast',
 	'water',
 	'thugs',
@@ -773,4 +772,68 @@ primaryoffence = [ #order of importance?
 	'energy melee',
 	'street justice',
 	'spines',
+]
+
+
+
+at_blastsets = [
+	'ice',
+	'fire',
+	'beam',
+	'water',
+	'dark',
+	'rad blast',
+	'energy blast',
+	'psi',
+	'dual pistol',
+	'sonic blast',
+	'elec blast',
+]
+
+at_mezsets = [
+	'ice ctrl',
+	'fire ctrl',
+	'dark ctrl',
+	'grav',
+	'ill',
+	'mind',
+	'earth',
+]
+
+at_mm = [
+	'thugs',
+	'merc',
+	'necro',
+]
+
+at_blastsecondaries = [
+	'tac',
+	'plant',
+	'martial',
+	'energy manip',
+	'sonic manip',
+	'temporal',
+]
+
+at_meleesets = [
+	'claws',
+	'psi melee',
+	'energy melee',
+	'street justice',
+	'spines',
+]
+
+at_defsets = [
+	'kin',
+	'rad',
+	'time',
+	'trick',
+	'cold',
+	'elec aff',
+	'emp',
+	'therm',
+	'pain',
+	'psn',
+	'nature',
+	'bubble',
 ]

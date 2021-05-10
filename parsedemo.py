@@ -22,6 +22,7 @@ def main(arg1,quiet):
 
 	spikes      = []
 	rogues      = []
+	firstblood	= 0
 
 	demoname = arg1.split('/')[-1].split('.')[0]
 	match_map = ""
@@ -259,6 +260,11 @@ def main(arg1,quiet):
 				for p in players.values():
 					csv_log = [demoname,match_map,'log',p.name,p.team,t,p.hp,p.death,p.action,p.target,p.targetteam,p.targetinstance,count,lineuid]
 					
+					# check first blood
+					if firstblood == 0 and p.death == 1:
+						firstblood = t2
+						p.firstblood = t2
+
 					# dealing with stupid entangles (same fx as strangler hit)
 					if p.action == 'strangler' and p.target != '': # hold half second to confirm no entangle
 						p.csvhold = [t+0.25,csv_log[:]]
@@ -699,6 +705,31 @@ def main(arg1,quiet):
 
 
 		p.at = p.set1+'/'+p.set2
+
+		# guess at by powersets
+		if p.set1 in primarysupport:
+			p.archetype = 'support'
+			if p.set2 in at_mezsets:
+				p.archetype = 'controller'
+			elif p.set2 in at_blastsets:
+				p.archetype = 'corr/def'
+		elif p.set1 in at_blastsets:
+			if p.set2 == '-' or p.set2 in at_blastsecondaries:
+				p.archetype = 'blaster'
+			elif p.set2 in at_mezsets:
+				p.archetype = 'dominator'
+			elif p.set2 in at_defsets:
+				p.archetype = 'corr/def'
+		elif p.set2 in at_defsets and p.set1 not in at_blastsets:
+			p.archetype = 'corr/def'
+		elif p.set1 in at_meleesets:
+			p.archetype = 'melee'
+		elif p.set1 in at_mm:
+			p.archetype = 'mastermind'
+		elif p.set1 in at_mezsets or p.set2 in at_mezsets:
+			p.archtype = 'controller'
+		elif p.set1 == 'peacebringer' or p.set1 == 'warshade':
+			p.archetype = p.set1
 
 
 	targets = {'BLU':targeted['RED'],'RED':targeted['BLU']}

@@ -30,6 +30,7 @@ class Player:
 		self.set1 = False
 		self.set2 = False
 		self.at = ''
+		self.archetype = ''
 		self.pos = []
 
 		self.writelog = False
@@ -64,6 +65,7 @@ class Player:
 		self.totalhprecovered = 0
 		self.totalhealsreceived = 0
 		self.totalhealsreceivedontarget = 0
+		self.firstblood = 0 # first death in a match
 
 		# def stats
 		self.totalearlyjaunts = 0
