@@ -12,7 +12,7 @@ from data.Player import Player
 from data.Target import Target
 import data.override as override
 
-def main():
+def main(arg1,quiet):
 	ms = 0          # demo time in ms
 	t = 0           # demo time in seconds
 
@@ -23,7 +23,7 @@ def main():
 	spikes      = []
 	rogues      = []
 
-	demoname = sys.argv[1].split('/')[-1].split('.')[0]
+	demoname = arg1.split('/')[-1].split('.')[0]
 	match_map = ""
 	starttime = 0 # in seconds
 
@@ -37,10 +37,10 @@ def main():
 	gatherplayercount = {'BLU':0,'RED':0}
 	gathertimes = {'BLU':[],'RED':[]}
 
-	with open(sys.argv[1],'r') as fp:
+	with open(arg1,'r') as fp:
 
 		# blank out csv if existing
-		with open(sys.argv[1]+'.csv','w',newline='') as csvfile:
+		with open(arg1+'.csv','w',newline='') as csvfile:
 			csvw = csv.writer(csvfile, delimiter=',')
 			csvw.writerow(header)
 
@@ -249,7 +249,7 @@ def main():
 		# ################################################ #
 		# ################################################ #
 
-		with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
+		with open(arg1+'.csv','a',newline='') as csvfile:
 			csvw = csv.writer(csvfile, delimiter=',')
 
 			while line and t <= matchtime: # ignore data after match end with small buffer time
@@ -528,7 +528,7 @@ def main():
 
 	# PRINT STATS TO CSV
 
-	with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
+	with open(arg1+'.csv','a',newline='') as csvfile:
 		csvw = csv.writer(csvfile, delimiter=',')
 		for p in players.values(): # append stats
 			csvw.writerow([demoname,match_map,'log',p.name,p.team,0,'',0,'','','',0,])
@@ -637,9 +637,10 @@ def main():
 
 	# console output
 
-	print("demo time " + str(round((t+starttime/1000)/60,2)) + " minutes")
-	print("date: " + time.ctime(os.path.getmtime(sys.argv[1])))
-	print("map: " + match_map + "\n")
+	if not quiet:
+		print("demo time " + str(round((t+starttime/1000)/60,2)) + " minutes")
+		print("date: " + time.ctime(os.path.getmtime(arg1)))
+		print("map: " + match_map + "\n")
 
 	score1 = 0
 	clean1 = 0
@@ -706,7 +707,7 @@ def main():
 	total_timing   = {'BLU':[],'RED':[]}
 	total_dmg      = {'BLU':0,'RED':0}
 
-	with open(sys.argv[1]+'.csv','a',newline='') as csvfile:
+	with open(arg1+'.csv','a',newline='') as csvfile:
 		csvw = csv.writer(csvfile, delimiter=',')
 
 		for p in sorted(players.values(), key=lambda i: i.team):
@@ -823,19 +824,21 @@ def main():
 		csvw.writerow([demoname,match_map,'summary','','','','','','dmg taken (K)','', '','',  '',''      		,round(total_dmg['BLU']/1000,0),round(total_dmg['RED']/1000,0)])
 		csvw.writerow([demoname,match_map,'summary','','','','','','atks thrown','', '','',  '',''      	,total_attacks['BLU'],total_attacks['RED']])
 
-	print_table(offence_headers, offence_content)
-	print_table(healer_headers, healer_content)
+	if not quiet:
+		print_table(offence_headers, offence_content)
+		print_table(healer_headers, healer_content)
 
+		print("SCORE:       " + str(deaths['RED']) + "-" + str(deaths['BLU']) + "\n")
+		print("TGTS CALLED: " + str(targets['BLU']) + "-" + str(targets['RED']))
+		print("DMG TAKEN:   " + str(round(total_dmg['BLU']/1000,1)) + "K-" + str(round(total_dmg['RED']/1000,1)) + "K")
+		print("ATKS THROWN: " + str(total_attacks['BLU']) + "-" + str(total_attacks['RED']))
+		if len(emotes) > 0:
+			print('CHECK EMOTES: ')
+			print(emotes)
+		print('\n')
 
-	print("SCORE:       " + str(deaths['RED']) + "-" + str(deaths['BLU']) + "\n")
-	print("TGTS CALLED: " + str(targets['BLU']) + "-" + str(targets['RED']))
-	print("DMG TAKEN:   " + str(round(total_dmg['BLU']/1000,1)) + "K-" + str(round(total_dmg['RED']/1000,1)) + "K")
-	print("ATKS THROWN: " + str(total_attacks['BLU']) + "-" + str(total_attacks['RED']))
-	if len(emotes) > 0:
-		print('CHECK EMOTES: ')
-		print(emotes)
-	print('\n')
-	return True
+	return [deaths,players,match_map]
 
 if __name__ == "__main__":
-    main()
+	quiet = False
+	main(sys.argv[1],quiet)
