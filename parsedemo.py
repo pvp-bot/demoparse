@@ -707,7 +707,7 @@ def main(arg1,quiet):
 		p.at = p.set1+'/'+p.set2
 
 		# guess at by powersets
-		if p.set1 in primarysupport:
+		if p.support:
 			p.archetype = 'support'
 			if p.set2 in at_mezsets:
 				p.archetype = 'controller'
@@ -720,7 +720,7 @@ def main(arg1,quiet):
 				p.archetype = 'dominator'
 			elif p.set2 in at_defsets:
 				p.archetype = 'corr/def'
-		elif p.set2 in at_defsets and p.set1 not in at_blastsets:
+		elif p.set1 in at_defsets:
 			p.archetype = 'corr/def'
 		elif p.set1 in at_meleesets:
 			p.archetype = 'melee'
@@ -746,14 +746,14 @@ def main(arg1,quiet):
 			if p.team == 'BLU':
 				targetteam = 'RED'
 
-			spiketiming = sum(map(abs,p.spiketiming)) / max(len(p.spiketiming), 1)
-			spikedist = sum(map(abs,p.firstdist)) / max(len(p.firstdist), 1)
-			spiketimingvar = sum((x-spiketiming)**2 for x in p.spiketiming) / max(len(p.spiketiming),1)
+			p.avgspiketiming = sum(map(abs,p.spiketiming)) / max(len(p.spiketiming), 1)
+			p.avgspikedist = sum(map(abs,p.firstdist)) / max(len(p.firstdist), 1)
+			p.avgspiketimingvar = sum((x-p.avgspiketiming)**2 for x in p.spiketiming) / max(len(p.spiketiming),1)
 
-			healspeed = sum(p.healspeed) / max(len(p.healspeed), 1)
-			healtiming100 = sum(p.healtiming100) / max(len(p.healtiming100), 1)
-			healtiming400 = sum(p.healtiming400) / max(len(p.healtiming400), 1)
-			healspeedvar = sum((x-healspeed)**2 for x in p.healspeed) / max(len(p.healspeed),1)
+			p.avghealspeed = sum(p.healspeed) / max(len(p.healspeed), 1)
+			p.avghealtiming100 = sum(p.healtiming100) / max(len(p.healtiming100), 1)
+			p.avghealtiming400 = sum(p.healtiming400) / max(len(p.healtiming400), 1)
+			p.avghealspeedvar = sum((x-p.avghealspeed)**2 for x in p.healspeed) / max(len(p.healspeed),1)
 
 			jauntreaction = ''
 			phasereaction = ''
@@ -773,8 +773,8 @@ def main(arg1,quiet):
 				"{:.0%}".format(1-p.deathtotal/max(p.targeted,1)),
 				int(p.ontarget),
 				"{:.0%}".format(p.ontarget/max(targets[p.team],1)),
-				str(spiketiming)[:4],
-				str(spiketimingvar)[:4],
+				str(p.avgspiketiming)[:4],
+				str(p.avgspiketimingvar)[:4],
 				p.first,
 				str(p.attacks / max(p.ontarget, 1))[:4],
 				str(str(round(-p.totaldmgtaken/1000,1))+'k'),
@@ -796,10 +796,10 @@ def main(arg1,quiet):
 					p.healearly,
 					p.heallate,
 					"{:.0%}".format(p.healontarget/(targeted[p.team]-p.targeted),1),
-					str(healspeed)[:4],
+					str(p.avghealspeed)[:4],
 					# str(healspeedvar)[:4],
-					str(healtiming400)[:4],
-					str(healtiming100)[:4],
+					str(p.avghealtiming400)[:4],
+					str(p.avghealtiming100)[:4],
 					p.healtopup,
 					p.cmcount,
 					p.healstotal,
@@ -818,14 +818,14 @@ def main(arg1,quiet):
 				for hbin, count in p.healbin.items():
 					healbin.append(count)
 				#            																															    1			  2			  3			   4          5          6           7              8           9           	  10          11        12         13         14		   15                 16
-				csvw.writerow([demoname,match_map,'support_stats',p.name,p.team,'',p.healstotal,p.deathtotal,p.set1,'',targetteam,p.targeted,  '',''      ,p.healontarget,p.healquick,p.healontime,p.healslow,p.heallate,p.healearly,p.healfollowup,p.healtopup,p.healfatfinger,p.healalpha,healspeed,healtiming400,p.predicts,p.phaseheals,targeted[p.team],p.cmcount])
+				csvw.writerow([demoname,match_map,'support_stats',p.name,p.team,'',p.healstotal,p.deathtotal,p.set1,'',targetteam,p.targeted,  '',''      ,p.healontarget,p.healquick,p.healontime,p.healslow,p.heallate,p.healearly,p.healfollowup,p.healtopup,p.healfatfinger,p.healalpha,p.avghealspeed,p.avghealtiming400,p.predicts,p.phaseheals,targeted[p.team],p.cmcount])
 				
 				csvw.writerow(healbin)
 
 			
 			# header_log = ['demo','map',   'linetype',    'playr','team',t, hp d  a  tgt tt tgtd,'value','uid','stat1','stat2','stat3','stat4','stat5',stat6,stat7,stat8,...]
 			csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/(targeted[p.team]-p.targeted) if p.healontarget > 0 else '',p.attackstotal,p.healstotal,p.utilcount]) # 8
-			csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/max(targets[p.team],1),spiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.lateatks,spiketimingvar,spikedist]) # 15
+			csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/max(targets[p.team],1),p.avgspiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.lateatks,p.avgspiketimingvar,p.avgspikedist]) # 15
 			csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken,20-p.greens,p.dmgtakensurv,jauntreaction,phasereaction,deathtime,len(p.deathtime)]) # 14
 			
 			atktiming = [demoname,match_map,'offence_timing',p.name,p.team,'','','',p.set1,'',targetteam,'',  '','']
@@ -868,7 +868,7 @@ def main(arg1,quiet):
 			print(emotes)
 		print('\n')
 
-	return [deaths,players,match_map]
+	return [players,match_map,deaths,targets,targeted]
 
 if __name__ == "__main__":
 	quiet = False

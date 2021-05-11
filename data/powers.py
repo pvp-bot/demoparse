@@ -833,7 +833,7 @@ at_defsets = [
 	'emp',
 	'therm',
 	'pain',
-	'psn',
+	'poison',
 	'nature',
 	'bubble',
 ]

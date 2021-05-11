@@ -67,6 +67,15 @@ class Player:
 		self.totalhealsreceivedontarget = 0
 		self.firstblood = 0 # first death in a match
 
+		self.avgspiketiming = 0
+		self.avgspikedist = 0
+		self.avgspiketimingvar = 0
+
+		self.avghealspeed = 0
+		self.avghealspeedvar = 0
+		self.avghealtiming100 = 0
+		self.avghealtiming400 = 0
+
 		# def stats
 		self.totalearlyjaunts = 0
 		self.totalearlyphases = 0
