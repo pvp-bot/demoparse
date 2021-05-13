@@ -1,4 +1,4 @@
-playernames = {
+playerdict = {
 	"9lives"			:['Fernfire', 'Beetlebeam', 'Creepr', 'Firenut', 'Birthday Suit', 'Forestfyre'],
 	"ace hunter"		:['Such Black Light', 'Balloon Knot', 'Radio Panic'],
 	"acid"				:['Crusty Sock', 'NobGoblin', 'Twisted Assistant', 'Phlegm', 'DingleBerrylicious'],

@@ -3,7 +3,7 @@ import sys
 import csv
 import parsedemo
 import allnames
-import data.playernames
+from data.playernames import playerdict
 
 path = sys.argv[1]
 series = [s for s in os.listdir(path) if not s.endswith(".csv")]
@@ -57,7 +57,7 @@ with open(path+'/playerdata.csv','w',newline='') as csvfile:
 
 				playername = ""
 				# player, toonlist
-				for k,v in playernames.playernames.items(): # attempt to get player name from toon name
+				for k,v in playerdict.items(): # attempt to get player name from toon name
 					if p.name.lower() in (toon.lower() for toon in v):
 						playername = k
 						break
