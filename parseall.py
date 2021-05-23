@@ -2,7 +2,6 @@ import os
 import sys
 import csv
 import parsedemo
-import allnames
 from data.playernames import playerdict
 
 path = sys.argv[1]
@@ -11,7 +10,12 @@ series.sort()
 
 scount = 1
 
-matchheader = ['date','team1','team2','match#','map','score blu','score red','targets blu','targets red','player','character','team','score (team)','score (enemy)','deaths','targeted']
+matchheader = [ 'date',			'team1',		'team2',	'seriesid',		'matchid',	'match#',	'map',		'score_blu',	'score_red','targets_blu',	'targets_red',	
+				'player',		'character',	'pteam',	'win',			'loss',		'draw',		'deaths',	'targets',		'set1',		'set2',			'at',			'support',	
+				'ontarget',		'otp',			'atks',		'atks target',	'first',	'avg timing',			'timing var',	'avg dist',	
+				'dmg',			'spike dmg',	'first blood time',			'greens used',	
+				'heal on target',	'heal otp',	'heals',	'heals spike',	'heal alpha',	'heal speed',	'heal speed var',]
+
 playerheader = []
 
 header = matchheader + playerheader
