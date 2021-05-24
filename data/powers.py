@@ -84,7 +84,7 @@ fx = { # fx from actor to target (includes buffs)
 	'ILLUSDECOY.FX':'phantom army',
 	'ILLUSTERROR.FX':'spectral terror',
 	'/ILLUSDECIEVE.FX':'confuse',
-	'ILLUSIONCONTROL/ILLUSBLIND.FX':'blind', # attack and target? need to match up w/ MOV MOUTH
+	'ILLUSBLIND.FX':'blind', # attack and target? need to match up w/ MOV MOUTH
 
 	# grav
 	'/GCDISTORTION.FX':'gravity distortion',
@@ -161,6 +161,7 @@ fx = { # fx from actor to target (includes buffs)
 	'GHOSTWIDOW/DARKSOULBLAST.FX':'dark blast',
 	'MU_HANDLIGHTNINGFX/REDMU_CAGEBOLTS.FX':'electric shackles',
 	'CALTROPSTHROW.FX':'caltrops',
+	'POISONOUSRAY_ATTACK.FX':'poisonous ray',
 
 	# pools
 	'JAUNT_ATTACK.FX':'jaunt',
@@ -313,7 +314,7 @@ pmov = { # prepend with 'A_' for flying version
 	'DRAW_SABER':'crey pistol', # aka Nullifier now
 	'DRAW_WEAPONBACK':'crey pistol', # defunct now with new Nullifier
 	'WALL':'ssj',
-	'MOUTH':'blind',
+	# 'MOUTH':'blind',
 	#'PLAYER_HITDEATH' # death anim
 }
 
@@ -383,6 +384,11 @@ hittiming = { # :[delay,speed]
 	'ssj':[21/30,1000000],
 	'char':[23/30,51],
 	'shocking bolt':[28/30,1000000],
+	'poisonous ray':[41/30,66],
+
+	'fossilize':[16/30,1000000],
+	'blind':[20/30,1000000],
+
 
 	# heals
 	'heal other':[22/30,1000000],

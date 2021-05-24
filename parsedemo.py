@@ -469,6 +469,9 @@ def main(arg1,quiet):
 										players[pid].healcount(t, players[tid],players[pid].action)
 
 
+							elif players[pid].action == 'blind':# to skip blind effects spawned by nonplayers
+								players[pid].action = ''
+
 						elif line[3] == 'POS':
 							if players[pid].action == 'jaunt': # catch cases where you jaunt off 1 attack
 								players[pid].lastjaunt = t
