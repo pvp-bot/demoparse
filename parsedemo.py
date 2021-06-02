@@ -412,7 +412,7 @@ def main(arg1,quiet):
 						if not players[pid].reverse:
 							if not players[pid].set1:
 								othercheck = next((substring for substring in otherfx.keys() if substring in line[5]), None)
-								if othercheck:
+								if othercheck: # powerset by effects/anims other than cast powers
 									othercheck = otherfx[othercheck] 
 								if players[pid].action in powersets:
 									players[pid].set1 = powersets[players[pid].action]						
@@ -439,8 +439,18 @@ def main(arg1,quiet):
 
 							if players[pid].reverse and tid in players:
 								players[tid].writelog = True
+
+								# powerset determ if reverse
+								if not players[tid].set1:
+									if players[pid].action in powersets:
+										players[tid].set1 = powersets[players[pid].action]		
+								elif not players[tid].set2:
+									if players[pid].action in powersets:
+										players[tid].set1 = powersets[players[pid].action]		
 							else:
 								players[pid].writelog = True
+
+
 
 							if tid != pid and tid in player_ids: # if target is a player
 								players[pid].target = players[tid].name
@@ -673,10 +683,10 @@ def main(arg1,quiet):
 
 		print('')
 
-	offence_headers = ['team', '{:<20}'.format('name'), 'deaths', 'tgt\'d', 'surv', 'on tgt', 'otp', 'timing', 'var','first', 'atk/sp','dmg','#atks']
+	offence_headers = ['team', '{:<20}'.format('name'), '{:<8}'.format('powerset'), 'deaths', 'tgt\'d', 'on tgt', 'otp', 'timing', 'var','first','dmg tk', '#rogue','#atks']
 	offence_content = []
-	healer_headers = ['team', '{:<20}'.format('name'), 'on tgt', 'quick','early', 'late', 'otp','av spd','tm400','tm100','top up','cms','#heals']
-	healer_content = []
+	healer_headers  = ['team', '{:<20}'.format('name'), '{:<8}'.format('on tgt'),'#heals', 'otp', 'quick','early', 'late','alpha','av spd','tm400','top up','#cms']
+	healer_content  = []
 
 
 	deaths = {'BLU':0,'RED':0}
@@ -771,16 +781,17 @@ def main(arg1,quiet):
 			offence_content.append([
 				" [" + p.team + "]",
 				'{:<20}'.format(p.name),
+				'{:<8}'.format(p.set1[:3]+"/"+p.set2[:3]),
 				p.deathtotal,
 				p.targeted,
-				"{:.0%}".format(1-p.deathtotal/max(p.targeted,1)),
+				# "{:.0%}".format(1-p.deathtotal/max(p.targeted,1)), # surv
 				int(p.ontarget),
 				"{:.0%}".format(p.ontarget/max(targets[p.team],1)),
 				str(p.avgspiketiming)[:4],
 				str(p.avgspiketimingvar)[:4],
 				p.first,
-				str(p.attacks / max(p.ontarget, 1))[:4],
 				str(str(round(-p.totaldmgtaken/1000,1))+'k'),
+				p.attackstotal-p.attacks,
 				p.attackstotal,
 
 			])
@@ -794,18 +805,20 @@ def main(arg1,quiet):
 				healer_content.append([
 					" [" + p.team + "]",
 					'{:<20}'.format(p.name),
-					int(p.healontarget),
+					# str(int(p.healontarget))[:8],
+					'{:<8}'.format(str(int(p.healontarget))),
+					p.healstotal,
+					"{:.0%}".format(p.healontarget/(targeted[p.team]-p.targeted),1),
 					p.healquick,
 					p.healearly,
 					p.heallate,
-					"{:.0%}".format(p.healontarget/(targeted[p.team]-p.targeted),1),
+					p.healalpha,
 					str(p.avghealspeed)[:4],
 					# str(healspeedvar)[:4],
 					str(p.avghealtiming400)[:4],
-					str(p.avghealtiming100)[:4],
+					# str(p.avghealtiming100)[:4],
 					p.healtopup,
 					p.cmcount,
-					p.healstotal,
 
 				])
 			if p.support: # write data for support players
