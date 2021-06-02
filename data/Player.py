@@ -80,6 +80,7 @@ class Player:
 		self.totalearlyjaunts = 0
 		self.totalearlyphases = 0
 		self.lastphase = -60
+		self.phaseid = 0 # fxID for phase powers, 0 when not active
 		self.atkstakenonspike = 0
 		self.jauntreaction = []
 		self.phasereaction = []

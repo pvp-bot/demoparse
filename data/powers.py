@@ -108,6 +108,7 @@ fx = { # fx from actor to target (includes buffs)
 	'SHOCKTHERAPY/WITCHESLIGHTNINGBOLTMEGA.FX':'shock',
 	'ELECTRICITYCONTROL/WITCHESLIGHTNINGBOLTMEGA':'shocking bolt',
 	'/GALVANICSENTINELSUMMON.FX':'galvanic sentinel',
+	'FARADAYCAGESUMMON.FX':'faraday cage',
 	# 'ENERGYSINKCASTATTACK.FX':'shock', # galvanic shock
 
 	#nature
@@ -438,7 +439,7 @@ utility = [	# for filtering out not atk offense powers
 	'confuse',
 	'smoke',
 	'shiver',
-	'thunderous blast',
+	# 'thunderous blast',
 	'heat loss',
 	'singularity',
 	'phantasm',
@@ -479,6 +480,7 @@ utilitycount = [	# for filtering out not atk offense powers
 	'shock',
 	'energizing circuit',
 	'empowering circuit',
+	'faraday cage',
 	'amp up',
 
 	'photon seekers',
@@ -489,7 +491,7 @@ utilitycount = [	# for filtering out not atk offense powers
 	'shiver',
 
 	'confuse',
-	'thunderous blast',
+	# 'thunderous blast',
 	'heat loss',
 
 	'web nade',
@@ -573,6 +575,7 @@ cmpowers = [
 	'thaw',
 	'clarity',
 	'antidote',
+	'faraday cage',
 	'id',
 ]
 
@@ -674,6 +677,7 @@ powersets = {
 	'suppressive fire':'dual pistol',
 	'water jet':'water',
 	'tidal forces':'water',
+	'dehydrate':'water',
 	'power push':'energy blast',
 	'power burst':'energy blast',
 	
