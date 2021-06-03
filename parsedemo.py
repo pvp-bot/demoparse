@@ -659,9 +659,9 @@ def main(arg1,quiet):
 
 	if not quiet:
 		colorama.init()
-		print("\033[1m" + "date: " + "\033[0m" + time.ctime(os.path.getmtime(arg1)))
-		print("\033[1m" + "time: " + "\033[0m" + str(round((t+starttime/1000)/60,1)) + " min")
-		print("\033[1m" + "map:  " + "\033[0m" + match_map + "\n")
+		print("\n"+"\033[1m" + " date: " + "\033[0m" + time.ctime(os.path.getmtime(arg1)))
+		print("\033[1m" + " time: " + "\033[0m" + str(round((t+starttime/1000)/60,1)) + " min")
+		print("\033[1m" + " map:  " + "\033[0m" + match_map + "\n")
 
 	score1 = 0
 	clean1 = 0
@@ -684,11 +684,11 @@ def main(arg1,quiet):
 				first_red = False
 			print((' ' + '\033[2m' + '|' + '\033[0m' + ' ').join([str(i).center(6) for i in row]))
 
-		print('')
+		print('\n')
 
-	offence_headers = ['-', '{:<20}'.format('character'), '{:<7}'.format('pwrsets'), 'deaths', 'tgt\'d', 'on tgt', 'otp', 'timing', 'var','first','dmg tk', '#rogue','#atks']
+	offence_headers = [' ', '{:<20}'.format('character'), '{:<8}'.format('pwrsets'), 'deaths', 'tgt\'d', 'on tgt', 'otp', 'timing', 'var','first','dmg tk', '#rogue','#atks']
 	offence_content = []
-	healer_headers  = ['-', '{:<20}'.format('healer'), '{:<7}'.format('on tgt'),'#heals', 'otp', 'quick','early', 'late','alpha','av spd','tm400','top up','#cms']
+	healer_headers  = [' ', '{:<20}'.format('healer'), '{:<8}'.format('on tgt'),'#heals', 'otp', 'quick','early', 'late','alpha','av spd','tm400','top up','#cms']
 	healer_content  = []
 
 
@@ -791,9 +791,9 @@ def main(arg1,quiet):
 
 
 			offence_content.append([
-				" " + teamcolor + p.team + resetcolor + "  ",
+				"  " + teamcolor + p.team + resetcolor + " ",
 				'{:<20}'.format(p.name),
-				supportcolor + '{:<7}'.format(p.set1[:3]+"/"+p.set2[:3]) + resetcolor,
+				supportcolor + '{:<8}'.format(p.set1[:3]+"/"+p.set2[:3]) + resetcolor,
 				p.deathtotal,
 				p.targeted,
 				# "{:.0%}".format(1-p.deathtotal/max(p.targeted,1)), # surv
@@ -815,10 +815,10 @@ def main(arg1,quiet):
 						 p.cmcount += count
 				
 				healer_content.append([
-					" " + teamcolor + p.team + resetcolor + "  ",
+					"  " + teamcolor + p.team + resetcolor + " ",
 					'{:<20}'.format(p.name),
 					# str(int(p.healontarget))[:8],
-					'{:<7}'.format(str(int(p.healontarget))),
+					'{:<8}'.format(str(int(p.healontarget))),
 					p.healstotal,
 					"{:.0%}".format(p.healontarget/(targeted[p.team]-p.targeted),1),
 					p.healquick,
@@ -887,13 +887,13 @@ def main(arg1,quiet):
 		print_table(offence_headers, offence_content)
 		print_table(healer_headers, healer_content)
 
-		print("\033[1m" + "score:" + "\033[0m" + "       " + str(deaths['RED']) + "-" + str(deaths['BLU']) + "\n")
-		print("\033[1m" + "tgts called:" + "\033[0m" + " " + str(targets['BLU']) + "-" + str(targets['RED']))
-		print("\033[1m" + "dmg taken:" + "\033[0m" + "   " + str(round(total_dmg['BLU']/1000,1)) + "K-" + str(round(total_dmg['RED']/1000,1)) + "K")
-		print("\033[1m" + "atks thrown:" + "\033[0m" + " " + str(total_attacks['BLU']) + "-" + str(total_attacks['RED']))
-		if len(emotes) > 0:
-			print('CHECK EMOTES: ')
-			print(emotes)
+		print("\033[1m" + " score:" + "\033[0m" + "       " + str(deaths['RED']) + "-" + str(deaths['BLU']) + "\n")
+		print("\033[1m" + " tgts called:" + "\033[0m" + " " + str(targets['BLU']) + "-" + str(targets['RED']))
+		print("\033[1m" + " dmg taken:" + "\033[0m" + "   " + str(round(total_dmg['BLU']/1000,1)) + "K-" + str(round(total_dmg['RED']/1000,1)) + "K")
+		print("\033[1m" + " atks thrown:" + "\033[0m" + " " + str(total_attacks['BLU']) + "-" + str(total_attacks['RED'])+'\n')
+		# if len(emotes) > 0:
+		# 	print('CHECK EMOTES: ')
+			# print(emotes)
 
 	return [players,match_map,deaths,targets,targeted]
 
