@@ -28,7 +28,7 @@ If cloned it previously, pull to get the latest updates (from the repo folder)
 
 `git pull`
 
-Python (v3+) requirements: numpy, google-cloud-bigquery
+Python (v3+) requirements: numpy, google-cloud-bigquery, colorama
 
 To record a demo file in-game use the `/demorecord nameofdemohere` in the buff phase of a match after you've loaded onto the map. Use the `/demostop` command after the match ends (the demo will also stop when you load out of the map). Demos are saved under the `client_demos` folder in your City of Heroes folder. Default configuration is for 10 minute match time. If you use the same name when recording a demo it will overwrite the existing demo. Note: the demo takes a few seconds to populate with data after you stop it, so don't try to parse it or move the file immediately.
 
