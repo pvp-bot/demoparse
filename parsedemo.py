@@ -5,6 +5,7 @@ import math
 import numpy as np
 import os.path
 import time
+import colorama
 
 from data.powers import *
 from data.config import *
@@ -657,9 +658,10 @@ def main(arg1,quiet):
 	# console output
 
 	if not quiet:
-		print("demo time " + str(round((t+starttime/1000)/60,2)) + " minutes")
-		print("date: " + time.ctime(os.path.getmtime(arg1)))
-		print("map: " + match_map + "\n")
+		colorama.init()
+		print("\033[1m" + "date: " + "\033[0m" + time.ctime(os.path.getmtime(arg1)))
+		print("\033[1m" + "time: " + "\033[0m" + str(round((t+starttime/1000)/60,1)) + " min")
+		print("\033[1m" + "map:  " + "\033[0m" + match_map + "\n")
 
 	score1 = 0
 	clean1 = 0
@@ -668,24 +670,25 @@ def main(arg1,quiet):
 	targets1 = 0
 	targets2 = 0
 
-
 	def print_table(headers, content):
 		first_red = True
 		header_str = ' | '.join([i.center(6) for i in headers])
-		print(header_str)
-		print('|'.join([('-' * len(i)) for i in header_str.split('|')]))
+		header_str_color = '\033[2m' + header_str + '\033[0m'
+		print(header_str_color)
+		print('\033[2m' + '|'.join([('-' * len(i)) for i in header_str.split('|')]) + '\033[0m')
+		
 
 		for row in content:
-			if first_red and '[RED]' in row[0]:
-				print('|'.join([('-' * len(i)) for i in header_str.split('|')]))
+			if first_red and '\033[31m' in row[0]:
+				print('\033[2m' + '|'.join([('-' * len(i)) for i in header_str.split('|')]) + '\033[0m')
 				first_red = False
-			print(' | '.join([str(i).center(6) for i in row]))
+			print((' ' + '\033[2m' + '|' + '\033[0m' + ' ').join([str(i).center(6) for i in row]))
 
 		print('')
 
-	offence_headers = ['team', '{:<20}'.format('name'), '{:<8}'.format('powerset'), 'deaths', 'tgt\'d', 'on tgt', 'otp', 'timing', 'var','first','dmg tk', '#rogue','#atks']
+	offence_headers = ['-', '{:<20}'.format('character'), '{:<7}'.format('pwrsets'), 'deaths', 'tgt\'d', 'on tgt', 'otp', 'timing', 'var','first','dmg tk', '#rogue','#atks']
 	offence_content = []
-	healer_headers  = ['team', '{:<20}'.format('name'), '{:<8}'.format('on tgt'),'#heals', 'otp', 'quick','early', 'late','alpha','av spd','tm400','top up','#cms']
+	healer_headers  = ['-', '{:<20}'.format('healer'), '{:<7}'.format('on tgt'),'#heals', 'otp', 'quick','early', 'late','alpha','av spd','tm400','top up','#cms']
 	healer_content  = []
 
 
@@ -778,10 +781,19 @@ def main(arg1,quiet):
 			if len(p.deathtime) > 0:
 				deathtime = sum(p.deathtime) / max(len(p.deathtime), 1)
 
+			resetcolor = '\033[0m'
+			teamcolor = '\033[34m'
+			if p.team == "RED":
+				teamcolor = '\033[31m'
+			supportcolor = resetcolor
+			if p.support:
+				supportcolor = '\033[32m' 
+
+
 			offence_content.append([
-				" [" + p.team + "]",
+				" " + teamcolor + p.team + resetcolor + "  ",
 				'{:<20}'.format(p.name),
-				'{:<8}'.format(p.set1[:3]+"/"+p.set2[:3]),
+				supportcolor + '{:<7}'.format(p.set1[:3]+"/"+p.set2[:3]) + resetcolor,
 				p.deathtotal,
 				p.targeted,
 				# "{:.0%}".format(1-p.deathtotal/max(p.targeted,1)), # surv
@@ -803,10 +815,10 @@ def main(arg1,quiet):
 						 p.cmcount += count
 				
 				healer_content.append([
-					" [" + p.team + "]",
+					" " + teamcolor + p.team + resetcolor + "  ",
 					'{:<20}'.format(p.name),
 					# str(int(p.healontarget))[:8],
-					'{:<8}'.format(str(int(p.healontarget))),
+					'{:<7}'.format(str(int(p.healontarget))),
 					p.healstotal,
 					"{:.0%}".format(p.healontarget/(targeted[p.team]-p.targeted),1),
 					p.healquick,
@@ -875,14 +887,13 @@ def main(arg1,quiet):
 		print_table(offence_headers, offence_content)
 		print_table(healer_headers, healer_content)
 
-		print("SCORE:       " + str(deaths['RED']) + "-" + str(deaths['BLU']) + "\n")
-		print("TGTS CALLED: " + str(targets['BLU']) + "-" + str(targets['RED']))
-		print("DMG TAKEN:   " + str(round(total_dmg['BLU']/1000,1)) + "K-" + str(round(total_dmg['RED']/1000,1)) + "K")
-		print("ATKS THROWN: " + str(total_attacks['BLU']) + "-" + str(total_attacks['RED']))
+		print("\033[1m" + "score:" + "\033[0m" + "       " + str(deaths['RED']) + "-" + str(deaths['BLU']) + "\n")
+		print("\033[1m" + "tgts called:" + "\033[0m" + " " + str(targets['BLU']) + "-" + str(targets['RED']))
+		print("\033[1m" + "dmg taken:" + "\033[0m" + "   " + str(round(total_dmg['BLU']/1000,1)) + "K-" + str(round(total_dmg['RED']/1000,1)) + "K")
+		print("\033[1m" + "atks thrown:" + "\033[0m" + " " + str(total_attacks['BLU']) + "-" + str(total_attacks['RED']))
 		if len(emotes) > 0:
 			print('CHECK EMOTES: ')
 			print(emotes)
-		print('\n')
 
 	return [players,match_map,deaths,targets,targeted]
 
