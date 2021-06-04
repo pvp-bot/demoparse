@@ -835,9 +835,8 @@ def main(arg1,quiet):
 				healer_content.append([
 					"  " + teamcolor + p.team + resetcolor + " ",
 					'{:<20}'.format(p.name),
-					# str(int(p.healontarget))[:8],
 					'\033[32m'+'{:<8}'.format(str(supset))+resetcolor,
-					p.healontarget,
+					str(int(p.healontarget)),
 					p.healstotal,
 					"{:.0%}".format(p.healontarget/(targeted[p.team]-p.targeted),1),
 					p.healquick,
