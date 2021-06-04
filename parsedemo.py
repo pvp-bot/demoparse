@@ -686,9 +686,9 @@ def main(arg1,quiet):
 
 		print('\n')
 
-	offence_headers = [' ', '{:<20}'.format('character'), '{:<8}'.format('pwrsets'), 'deaths', 'tgt\'d', 'on tgt', 'otp', 'timing', 'var','first','k part','dmg tk', '#rogue','#atks']
+	offence_headers = [' ', '{:<20}'.format('character'), '{:<8}'.format('pwrsets'), 'deaths', 'tgt\'d', 'on tgt', 'otp', 'timing', 'var','first','dmg tk', '#rogue','#atks']
 	offence_content = []
-	healer_headers  = [' ', '{:<20}'.format('healer'), '{:<8}'.format('pwrset'),'on tgt','#heals', 'otp', 'quick','early', 'late','alpha','av spd','tm400','top up','#cms']
+	healer_headers  = [' ', '{:<20}'.format('healer'), '{:<8}'.format('pwrset'),'on tgt','#heals', 'otp', 'early', 'late','alpha','av spd','tm400','top up','#cms']
 	healer_content  = []
 
 
@@ -787,9 +787,20 @@ def main(arg1,quiet):
 			teamcolor = '\033[34m'
 			if p.team == "RED":
 				teamcolor = '\033[31m'
-			supportcolor = resetcolor
+			psetcolor = resetcolor
 			if p.support:
-				supportcolor = '\033[32m' 
+				psetcolor = '\033[32m' 
+			elif p.archetype == 'blaster':
+				psetcolor = '\033[31m' 
+			elif p.archetype == 'corr/def':
+				psetcolor = '\033[34m' 
+			elif p.archetype == 'dominator':
+				psetcolor = '\033[35m' 
+			elif p.archetype == 'dominator':
+				psetcolor = '\033[35m' 
+
+			# elif p.set1 == 'poison' or p.set2 == 'rad':
+			# 	psetcolor = '\033[33m' 
 
 			print_otp = "{:.0%}".format(p.ontarget/max(targets[p.team],1))
 			print_timing = str(p.avgspiketiming)[:4]
@@ -806,7 +817,7 @@ def main(arg1,quiet):
 			offence_content.append([
 				"  " + teamcolor + p.team + resetcolor + " ",
 				'{:<20}'.format(p.name),
-				supportcolor + '{:<8}'.format(p.set1[:3]+"/"+p.set2[:3]) + resetcolor,
+				psetcolor + '{:<8}'.format(p.set1[:3]+"/"+p.set2[:3]) + resetcolor,
 				p.deathtotal,
 				p.targeted,
 				# "{:.0%}".format(1-p.deathtotal/max(p.targeted,1)), # surv
@@ -815,7 +826,7 @@ def main(arg1,quiet):
 				print_timing,
 				print_var,
 				print_first,
-				print_kpart,
+				# print_kpart, # kill particip
 				str(str(round(-p.totaldmgtaken/1000,1))+'k'),
 				p.attackstotal-p.attacks,
 				p.attackstotal,
@@ -829,17 +840,20 @@ def main(arg1,quiet):
 						 p.cmcount += count
 				
 				supset = p.set1[:5]
-				if not p.support:
+				psetcolor = '\033[0m'
+				if not p.support and p.set1 != 'poison':
 					supset = p.set2[:5]
+				if p.support:
+					psetcolor = resetcolor = '\033[32m'
 
 				healer_content.append([
 					"  " + teamcolor + p.team + resetcolor + " ",
 					'{:<20}'.format(p.name),
-					'\033[32m'+'{:<8}'.format(str(supset))+resetcolor,
+					psetcolor+'{:<8}'.format(str(supset))+resetcolor,
 					str(int(p.healontarget)),
 					p.healstotal,
 					"{:.0%}".format(p.healontarget/(targeted[p.team]-p.targeted),1),
-					p.healquick,
+					# p.healquick,
 					p.healearly,
 					p.heallate,
 					p.healalpha,
