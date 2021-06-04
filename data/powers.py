@@ -91,7 +91,7 @@ fx = { # fx from actor to target (includes buffs)
 	'/GCCRUSH_SINGULARITY.FX':'crush',
 	'GCLIFT.FX':'lift',
 	'/GCDIMENSIONSHIFT.FX':'dimension shift', # toggle on
-	'GRAVITYCONTROL/SUBTRACTIVE/GCDISTORTIONFIELD.FX':'singularity', # could be distortion field also? but banned so doesn't matter
+	'/GCDISTORTIONFIELD.FX':'singularity', # could be distortion field also, but edge case enough to ignore
 
 	# plant
 	'THORNS/BUILDUP_ATTACK.FX':'toxins',
