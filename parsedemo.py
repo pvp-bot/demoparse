@@ -871,7 +871,7 @@ def main(arg1,quiet):
 			
 			# header_log = ['demo','map',   'linetype',    'playr','team',t, hp d  a  tgt tt tgtd,'value','uid','stat1','stat2','stat3','stat4','stat5',stat6,stat7,stat8,...]
 			csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/(targeted[p.team]-p.targeted) if p.healontarget > 0 else '',p.attackstotal,p.healstotal,p.utilcount]) # 8
-			csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/max(targets[p.team],1),p.avgspiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.lateatks,p.avgspiketimingvar,p.avgspikedist]) # 15
+			csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/max(targets[p.team],1),p.avgspiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.killparticipation/max(score[p.team],1),p.avgspiketimingvar,p.avgspikedist]) # 15
 			csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken,20-p.greens,p.dmgtakensurv,jauntreaction,phasereaction,deathtime,len(p.deathtime)]) # 14
 			
 			atktiming = [demoname,match_map,'offence_timing',p.name,p.team,'','','',p.set1,'',targetteam,'',  '','']
@@ -905,10 +905,11 @@ def main(arg1,quiet):
 		print_table(offence_headers, offence_content)
 		print_table(healer_headers, healer_content)
 
-		print("\033[1m" + " score:" + "\033[0m" + "       " + str(deaths['RED']) + "-" + str(deaths['BLU']) + "\n")
-		print("\033[1m" + " tgts called:" + "\033[0m" + " " + str(targets['BLU']) + "-" + str(targets['RED']))
-		print("\033[1m" + " dmg taken:" + "\033[0m" + "   " + str(round(total_dmg['BLU']/1000,1)) + "K-" + str(round(total_dmg['RED']/1000,1)) + "K")
-		print("\033[1m" + " atks thrown:" + "\033[0m" + " " + str(total_attacks['BLU']) + "-" + str(total_attacks['RED'])+'\n')
+		print("\033[1m" + " score:         " + str(deaths['RED']) + "-" + str(deaths['BLU']) + "\n" + "\033[0m")
+		print(" tgts called:   " + "\033[0m" + str(targets['BLU']) + "-" + str(targets['RED']))
+		print(" dmg taken:     " + "\033[0m" + str(round(total_dmg['BLU']/1000,1)) + "K-" + str(round(total_dmg['RED']/1000,1)) + "K")
+		print(" atks thrown:   " + "\033[0m"  + str(total_attacks['BLU']) + "-" + str(total_attacks['RED'])+'\n')
+		print("\033[2m" + " see the web report for a full demo breakdown\n" + "\033[0m")
 		# if len(emotes) > 0:
 		# 	print('CHECK EMOTES: ')
 			# print(emotes)
