@@ -98,6 +98,7 @@ class Player:
 		self.attackstotal = 0
 		self.first = 0
 		self.healedby = []
+		self.killparticipation = 0
 
 		# healing peeps
 		self.ontargetheals = 0
@@ -164,6 +165,10 @@ class Player:
 		if dist > 0:
 			players[aid].firstdist.append(dist)
 		players[aid].ontarget += 1
+		if self.death: # if spike is successful
+			players[aid].killparticipation += 1 # count
+
+
 
 	def getdist(self,x,y,t):
 		try:
@@ -184,7 +189,7 @@ class Player:
 			players[atk[1]].attacks += 1
 		for aid in self.targetattackers:
 			timing = matchtime # large number to catch error in output
-			firstdist = 0 # large number to catch error in output
+			firstdist = 0 # 
 			atkchain = ''
 			for atk in self.recentattacks:
 				if atk[1] == aid:
@@ -322,7 +327,7 @@ class Player:
 		self.targetheals = [x for x in self.targetheals if self.isrecentheal(self.targetstart,x[0])] # remove recent attacks outside window
 		spikes[-1].heals = self.targetheals[:]
 
-				# spike summary
+		# spike summary
 		# spikes[-1].stats['atks before evade'] = ''
 		if len(self.targetevades) > 0:
 			if (self.targetevades[0][2] == 'phase shift' or self.targetevades[0][2] == 'hibernate'):

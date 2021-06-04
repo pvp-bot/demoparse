@@ -686,9 +686,9 @@ def main(arg1,quiet):
 
 		print('\n')
 
-	offence_headers = [' ', '{:<20}'.format('character'), '{:<8}'.format('pwrsets'), 'deaths', 'tgt\'d', 'on tgt', 'otp', 'timing', 'var','first','dmg tk', '#rogue','#atks']
+	offence_headers = [' ', '{:<20}'.format('character'), '{:<8}'.format('pwrsets'), 'deaths', 'tgt\'d', 'on tgt', 'otp', 'timing', 'var','first','k part','dmg tk', '#rogue','#atks']
 	offence_content = []
-	healer_headers  = [' ', '{:<20}'.format('healer'), '{:<8}'.format('on tgt'),'#heals', 'otp', 'quick','early', 'late','alpha','av spd','tm400','top up','#cms']
+	healer_headers  = [' ', '{:<20}'.format('healer'), '{:<8}'.format('pwrset'),'on tgt','#heals', 'otp', 'quick','early', 'late','alpha','av spd','tm400','top up','#cms']
 	healer_content  = []
 
 
@@ -749,6 +749,7 @@ def main(arg1,quiet):
 
 
 	targets = {'BLU':targeted['RED'],'RED':targeted['BLU']}
+	score = {'BLU':deaths['RED'],'RED':deaths['BLU']}
 	total_ontarget = {'BLU':0,'RED':0}
 	total_attacks  = {'BLU':0,'RED':0}
 	total_timing   = {'BLU':[],'RED':[]}
@@ -781,6 +782,7 @@ def main(arg1,quiet):
 			if len(p.deathtime) > 0:
 				deathtime = sum(p.deathtime) / max(len(p.deathtime), 1)
 
+			# formatting for terminal output
 			resetcolor = '\033[0m'
 			teamcolor = '\033[34m'
 			if p.team == "RED":
@@ -789,7 +791,18 @@ def main(arg1,quiet):
 			if p.support:
 				supportcolor = '\033[32m' 
 
+			print_otp = "{:.0%}".format(p.ontarget/max(targets[p.team],1))
+			print_timing = str(p.avgspiketiming)[:4]
+			print_var = str(p.avgspiketimingvar)[:4]
+			print_first = p.first
+			print_kpart = "{:.0%}".format(p.killparticipation/max(score[p.team],1))
+			if p.ontarget == 0:
+				print_otp = '-'
+				print_timing = '-'
+				print_var = '-'
+				print_first = '-'
 
+			# print content for main table to term
 			offence_content.append([
 				"  " + teamcolor + p.team + resetcolor + " ",
 				'{:<20}'.format(p.name),
@@ -798,10 +811,11 @@ def main(arg1,quiet):
 				p.targeted,
 				# "{:.0%}".format(1-p.deathtotal/max(p.targeted,1)), # surv
 				int(p.ontarget),
-				"{:.0%}".format(p.ontarget/max(targets[p.team],1)),
-				str(p.avgspiketiming)[:4],
-				str(p.avgspiketimingvar)[:4],
-				p.first,
+				print_otp,
+				print_timing,
+				print_var,
+				print_first,
+				print_kpart,
 				str(str(round(-p.totaldmgtaken/1000,1))+'k'),
 				p.attackstotal-p.attacks,
 				p.attackstotal,
@@ -814,11 +828,16 @@ def main(arg1,quiet):
 					if extra in cmpowers:
 						 p.cmcount += count
 				
+				supset = p.set1[:5]
+				if not p.support:
+					supset = p.set2[:5]
+
 				healer_content.append([
 					"  " + teamcolor + p.team + resetcolor + " ",
 					'{:<20}'.format(p.name),
 					# str(int(p.healontarget))[:8],
-					'{:<8}'.format(str(int(p.healontarget))),
+					'\033[32m'+'{:<8}'.format(str(supset))+resetcolor,
+					p.healontarget,
 					p.healstotal,
 					"{:.0%}".format(p.healontarget/(targeted[p.team]-p.targeted),1),
 					p.healquick,
