@@ -31,7 +31,7 @@ def main(arg1,quiet):
 	starttime = 0 # in seconds
 
 	header = ['demo','map','linetype']
-	header_log = ['player','team','time (s)','hp','death','action','target','target_team','targeted','value','uid','stat1','stat2','stat3','stat4','stat5','stat6','stat7','stat8','stat9','stat10','stat11','stat12','stat13','stat14','stat15','stat16','stat17']
+	header_log = ['player','team','time (s)','hp','death','action','target','target_team','targeted','value','uid','stat1','stat2','stat3','stat4','stat5','stat6','stat7','stat8','stat9','stat10','stat11','stat12','stat13','stat14','stat15','stat16','stat17','stat18','stat19','stat20']
 	header.extend(header_log)
 
 	emotes = []
@@ -592,8 +592,10 @@ def main(arg1,quiet):
 		suid = 1 # spike uid
 		spikes.sort(key=lambda x: x.start) # sort spikes by start time
 
-		for s in spikes:
+		s2s_last = {'BLU':0,'RED':0}
+		s2s_time = {'BLU':0,'RED':0}
 
+		for s in spikes:
 
 			# spike log data
 			first_hit = 999
@@ -652,7 +654,15 @@ def main(arg1,quiet):
 			if s.death:
 				hit_window = s.spikedeath - first_hit
 
-			csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost'],s.stats['greens available'],s.stats['greens used'], hit_window])
+
+			if s2s_last[s.team] == 0:
+				s2s_last[s.team] = s.start # if first spike of game, for team
+				s2s_time[s.team] = s.start # if first spike of game, for team
+			else:
+				s2s_time[s.team] = s.start - s2s_last[s.team] # time since last spike
+				s2s_last[s.team] = s.start
+				
+			csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost'],s.stats['greens available'],s.stats['greens used'], hit_window, s2s_time[s.team]])
 			suid += 1 # spike uid
 
 
