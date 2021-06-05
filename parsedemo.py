@@ -662,7 +662,7 @@ def main(arg1,quiet):
 				s2s_time[s.team] = s.start - s2s_last[s.team] # time since last spike
 				s2s_last[s.team] = s.start
 				
-			csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost'],s.stats['greens available'],s.stats['greens used'], hit_window, s2s_time[s.team]])
+			csvw.writerow([demoname,match_map,'spike_summary',s.target,s.team,round(s.start,1),round(s.stats['spike duration'],1),s.death,'','','',len(s.attacks),len(s.attackers),suid,s.stats['total hp lost'],s.stats['greens available'],s.stats['greens used'], hit_window, s2s_time[s.team],s.stats['heals received']]) #7
 			suid += 1 # spike uid
 
 
