@@ -68,10 +68,12 @@ class Player:
 		self.firstblood = 0 # first death in a match
 
 		self.avgspiketiming = 0
+		self.medspiketiming = 0 # median
 		self.avgspikedist = 0
 		self.avgspiketimingvar = 0
 
 		self.avghealspeed = 0
+		self.medhealspeed = 0 # median
 		self.avghealspeedvar = 0
 		self.avghealtiming100 = 0
 		self.avghealtiming400 = 0
@@ -120,12 +122,14 @@ class Player:
 		self.healfollowup = 0
 		self.healtopup = 0
 		self.healfatfinger = 0
+		self.healfatfingerlist = []
 		self.phaseheals = 0
 		
 
 		self.targetheals = []
 		self.targetevades = []
 		self.greens = 20 # assumes all slots greens
+		self.greensused = 0
 		self.greensavailable = 20 # assumes all slots greens
 		
 		self.support = False
@@ -188,12 +192,15 @@ class Player:
 		for atk in self.recentattacks:
 			players[atk[1]].attacks += 1
 		for aid in self.targetattackers:
-			timing = matchtime # large number to catch error in output
+			timing = matchtime*2 # large number to catch error in output
 			firstdist = 0 # 
 			atkchain = ''
 			for atk in self.recentattacks:
 				if atk[1] == aid:
-					timing = min(timing,atk[0]) # update attacker timing for avg
+					if atk[2] in powerdelay:
+						timing = min(timing,atk[0]+powerdelay[atk[2]]) # for select powers (e.g. EF) timing is based on hit rather than cast since we're concerned with timing relative to spike start
+					else:
+						timing = min(timing,atk[0]) # update attacker timing for avg
 					atkchain += atk[2]+' - ' # change atk chain to string
 					
 					# followup attack timing stats
@@ -540,6 +547,16 @@ class Player:
 				hit_time = t + hittiming[action][0] + dist/hittiming[action][1]
 
 			targetplayer.targetheals.append([t,self.id,action,round(dist,0),hit_time])
+
+			# if cast on non-target and their hp is full at cast time and no recent attacks on player, add to self FF list to calc at HP change; exclude insulating circuit
+			if (
+				not targetplayer.istarget and len(targetplayer.hplist) and 
+				targetplayer.hplist[-1][1] >= targetplayer.maxhp - 6 > 0 and 
+				len(targetplayer.recentattacks) == 0 and action != 'insulating circuit'
+				): 
+				targetplayer.healfatfingerlist.append([hit_time,self.id])
+				self.healfatfinger += 1
+
 
 			if action in absorbs:
 				if not targetplayer.istarget:

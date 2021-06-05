@@ -6,6 +6,7 @@ import numpy as np
 import os.path
 import time
 import colorama
+from statistics import median
 
 from data.powers import *
 from data.config import *
@@ -30,7 +31,7 @@ def main(arg1,quiet):
 	starttime = 0 # in seconds
 
 	header = ['demo','map','linetype']
-	header_log = ['player','team','time (s)','hp','death','action','target','target_team','targeted','value','uid','stat1','stat2','stat3','stat4','stat5','stat6','stat7','stat8','stat9','stat10','stat11','stat12','stat13','stat14','stat15','stat16']
+	header_log = ['player','team','time (s)','hp','death','action','target','target_team','targeted','value','uid','stat1','stat2','stat3','stat4','stat5','stat6','stat7','stat8','stat9','stat10','stat11','stat12','stat13','stat14','stat15','stat16','stat17']
 	header.extend(header_log)
 
 	emotes = []
@@ -346,7 +347,7 @@ def main(arg1,quiet):
 					if action == "HP":
 
 						players[pid].hplist.append([t,float(line[3])]) # hp @ time
-						players[pid].hplist = [hplist for hplist in players[pid].hplist if (hplist[0] > t-targetwindow)]
+						players[pid].hplist = [hplist for hplist in players[pid].hplist if (hplist[0] > t-targetwindow)] # clear old hp value times
 
 						hp  = float(line[3])
 						players[pid].hp = hp
@@ -401,8 +402,8 @@ def main(arg1,quiet):
 						if players[pid].action == 'green':
 							if players[pid].istarget:
 								players[pid].targetheals.append([t,pid,players[pid].action,'',''])
-								# players[pid].targetheals.append([t,pid,players[pid].action,'',t+hittiming['green'][0]])
 							players[pid].greens -= 1
+							players[pid].greensused += 1
 
 
 						if players[pid].action in evade:
@@ -659,9 +660,9 @@ def main(arg1,quiet):
 
 	if not quiet:
 		colorama.init()
-		print("\n"+"\033[1m" + " date: " + "\033[0m" + time.ctime(os.path.getmtime(arg1)))
-		print("\033[1m" + " time: " + "\033[0m" + str(round((t+starttime/1000)/60,1)) + " min")
-		print("\033[1m" + " map:  " + "\033[0m" + match_map + "\n")
+		print("\n"+"\033[1m" + " date:   " + "\033[0m" + time.ctime(os.path.getmtime(arg1)))
+		print("\033[1m" + " time:   " + "\033[0m" + str(round((t+starttime/1000)/60,1)) + " min")
+		print("\033[1m" + " map:    " + "\033[0m" + match_map + "\n")
 
 	score1 = 0
 	clean1 = 0
@@ -686,9 +687,9 @@ def main(arg1,quiet):
 
 		print('\n')
 
-	offence_headers = [' ', '{:<20}'.format('character'), '{:<8}'.format('pwrsets'), 'deaths', 'tgt\'d', 'on tgt', 'otp', 'timing', 'var','first','dmg tk', '#rogue','#atks']
+	offence_headers = [' ', '{:<20}'.format('character'), '{:<8}'.format('pwrsets'), 'deaths', 'tgt\'d', 'on tgt', 'otp', 'timing','median', 'var','first','dmg tk', 'g used','#rogue','#atks']
 	offence_content = []
-	healer_headers  = [' ', '{:<20}'.format('healer'), '{:<8}'.format('pwrset'),'on tgt','#heals', 'otp', 'early', 'late','alpha','av spd','tm400','top up','#cms']
+	healer_headers  = [' ', '{:<20}'.format('healer'), '{:<8}'.format('pwrset'),'on tgt','#heals', 'otp', 'early', 'late','ff','alpha','av spd','median','tm400','top up','#cms']
 	healer_content  = []
 
 
@@ -763,14 +764,19 @@ def main(arg1,quiet):
 			if p.team == 'BLU':
 				targetteam = 'RED'
 
-			p.avgspiketiming = sum(map(abs,p.spiketiming)) / max(len(p.spiketiming), 1)
+			p.avgspiketiming = sum(map(abs,p.spiketiming)) / max(len(p.spiketiming), 1) # abs so as to not benefit people going "early"
+			if len(p.spiketiming) > 0:
+				p.medspiketiming = median(map(float,p.spiketiming))
 			p.avgspikedist = sum(map(abs,p.firstdist)) / max(len(p.firstdist), 1)
 			p.avgspiketimingvar = sum((x-p.avgspiketiming)**2 for x in p.spiketiming) / max(len(p.spiketiming),1)
 
 			p.avghealspeed = sum(p.healspeed) / max(len(p.healspeed), 1)
+			if len(p.healspeed) > 0:
+				p.medhealspeed = median(map(float,p.healspeed))
 			p.avghealtiming100 = sum(p.healtiming100) / max(len(p.healtiming100), 1)
 			p.avghealtiming400 = sum(p.healtiming400) / max(len(p.healtiming400), 1)
 			p.avghealspeedvar = sum((x-p.avghealspeed)**2 for x in p.healspeed) / max(len(p.healspeed),1)
+			p.healtopup -= p.healfatfinger
 
 			jauntreaction = ''
 			phasereaction = ''
@@ -804,12 +810,14 @@ def main(arg1,quiet):
 
 			print_otp = "{:.0%}".format(p.ontarget/max(targets[p.team],1))
 			print_timing = str(p.avgspiketiming)[:4]
+			print_median = str(p.medspiketiming)[:4]
 			print_var = str(p.avgspiketimingvar)[:4]
 			print_first = p.first
 			print_kpart = "{:.0%}".format(p.killparticipation/max(score[p.team],1))
 			if p.ontarget == 0:
 				print_otp = '-'
 				print_timing = '-'
+				print_median = '-'
 				print_var = '-'
 				print_first = '-'
 
@@ -824,10 +832,12 @@ def main(arg1,quiet):
 				int(p.ontarget),
 				print_otp,
 				print_timing,
+				print_median,
 				print_var,
 				print_first,
 				# print_kpart, # kill particip
 				str(str(round(-p.totaldmgtaken/1000,1))+'k'),
+				p.greensused,
 				p.attackstotal-p.attacks,
 				p.attackstotal,
 
@@ -844,7 +854,7 @@ def main(arg1,quiet):
 				if not p.support and p.set1 != 'poison':
 					supset = p.set2[:5]
 				if p.support:
-					psetcolor = resetcolor = '\033[32m'
+					psetcolor = '\033[32m'
 
 				healer_content.append([
 					"  " + teamcolor + p.team + resetcolor + " ",
@@ -856,14 +866,15 @@ def main(arg1,quiet):
 					# p.healquick,
 					p.healearly,
 					p.heallate,
+					p.healfatfinger,
 					p.healalpha,
 					str(p.avghealspeed)[:4],
+					str(p.medhealspeed)[:4],
 					# str(healspeedvar)[:4],
 					str(p.avghealtiming400)[:4],
 					# str(p.avghealtiming100)[:4],
 					p.healtopup,
 					p.cmcount,
-
 				])
 			if p.support: # write data for support players
 				for extra, count in p.supportextras.items():
@@ -877,15 +888,18 @@ def main(arg1,quiet):
 				healbin = [demoname,match_map,'support_breakdown',p.name,p.team,'','','',p.set1,'',targetteam,'',  '','']
 				for hbin, count in p.healbin.items():
 					healbin.append(count)
-				#            																															    1			  2			  3			   4          5          6           7              8           9           	  10          11        12         13         14		   15                 16
-				csvw.writerow([demoname,match_map,'support_stats',p.name,p.team,'',p.healstotal,p.deathtotal,p.set1,'',targetteam,p.targeted,  '',''      ,p.healontarget,p.healquick,p.healontime,p.healslow,p.heallate,p.healearly,p.healfollowup,p.healtopup,p.healfatfinger,p.healalpha,p.avghealspeed,p.avghealtiming400,p.predicts,p.phaseheals,targeted[p.team],p.cmcount])
+
+				csvw.writerow([demoname,match_map,'support_stats',p.name,p.team,'',p.healstotal,p.deathtotal,p.set1,'',targetteam,p.targeted,  '',''      ,
+					#1			   2		   3			4          5          6           7              8           9           	 10          11             12                 13         14		   15               16        17
+					p.healontarget,p.healquick,p.healontime,p.healslow,p.heallate,p.healearly,p.healfollowup,p.healtopup,p.healfatfinger,p.healalpha,p.avghealspeed,p.avghealtiming400,p.predicts,p.phaseheals,targeted[p.team],p.cmcount,p.medhealspeed
+				]) # 17
 				
 				csvw.writerow(healbin)
 
 			
 			# header_log = ['demo','map',   'linetype',    'playr','team',t, hp d  a  tgt tt tgtd,'value','uid','stat1','stat2','stat3','stat4','stat5',stat6,stat7,stat8,...]
 			csvw.writerow([demoname,match_map,'summary_stats',p.name,p.team,'','','',p.at,'',targetteam,'',  '',''      ,p.deathtotal,p.targeted,1-p.deathtotal/max(p.targeted,1) if p.targeted > 0 else '',p.ontarget/targets[p.team] if p.ontarget > 0 else '',p.healontarget/(targeted[p.team]-p.targeted) if p.healontarget > 0 else '',p.attackstotal,p.healstotal,p.utilcount]) # 8
-			csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/max(targets[p.team],1),p.avgspiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.killparticipation/max(score[p.team],1),p.avgspiketimingvar,p.avgspikedist]) # 15
+			csvw.writerow([demoname,match_map,'offence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,p.ontarget,p.ontarget/max(targets[p.team],1),p.avgspiketiming,p.attacks / max(p.ontarget, 1),p.first,targets[p.team]-p.ontarget, p.misseddead, p.attacks, p.attackstotal-p.attacks,round(sum(p.followuptiming)/max(len(p.followuptiming),1),2),p.killparticipation/max(score[p.team],1),p.avgspiketimingvar,p.avgspikedist,p.medspiketiming]) # 16
 			csvw.writerow([demoname,match_map,'defence_stats',p.name,p.team,'','','','','', targetteam,'',  '',''      ,p.deathtotal,p.targeted,-p.totaldmgtakenonspike,p.totalhealsreceivedontarget,p.totalhealsreceived,p.totalearlyphases,p.totalearlyjaunts,-p.totaldmgtaken,20-p.greens,p.dmgtakensurv,jauntreaction,phasereaction,deathtime,len(p.deathtime)]) # 14
 			
 			atktiming = [demoname,match_map,'offence_timing',p.name,p.team,'','','',p.set1,'',targetteam,'',  '','']
@@ -923,6 +937,7 @@ def main(arg1,quiet):
 		print(" tgts called:   " + "\033[0m" + str(targets['BLU']) + "-" + str(targets['RED']))
 		print(" dmg taken:     " + "\033[0m" + str(round(total_dmg['BLU']/1000,1)) + "K-" + str(round(total_dmg['RED']/1000,1)) + "K")
 		print(" atks thrown:   " + "\033[0m"  + str(total_attacks['BLU']) + "-" + str(total_attacks['RED'])+'\n')
+		# print(" med spk-spk:   " + "\033[0m"  + str(total_attacks['BLU']) + "-" + str(total_attacks['RED'])+'\n')
 		print("\033[2m" + " see the web report for a full demo breakdown\n" + "\033[0m")
 		# if len(emotes) > 0:
 		# 	print('CHECK EMOTES: ')
