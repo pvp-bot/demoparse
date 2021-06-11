@@ -82,6 +82,7 @@ fx = { # fx from actor to target (includes buffs)
 
 	# ill
 	'ILLUSDECOY.FX':'phantom army',
+	'ILLUSPHANTASM.FX':'phantasm',
 	'ILLUSTERROR.FX':'spectral terror',
 	'/ILLUSDECIEVE.FX':'confuse',
 	'ILLUSBLIND.FX':'blind', # attack and target? need to match up w/ MOV MOUTH
@@ -441,8 +442,8 @@ utility = [	# for filtering out not atk offense powers
 	'shiver',
 	# 'thunderous blast',
 	'heat loss',
-	'singularity',
-	'phantasm',
+	# 'singularity',
+	# 'phantasm',
 	'crey pistol',
 ]
 
@@ -696,6 +697,7 @@ powersets = {
 	'corrosive enzyme':'nature',
 	'overgrowth':'nature',
 	'wild growth':'nature',
+	'regrowth':'nature',
 	'force bolt':'bubble',
 	
 	'thorns':'plant',
