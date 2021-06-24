@@ -374,6 +374,7 @@ hittiming = { # :[delay,speed]
 	'tk blast':[15/30,120],
 	'dehydrate':[16/30,1000000],
 	'water jet':[11/30,1000000],
+	'executioner shot':[39/30,150],
 	
 
 	# debuffs
