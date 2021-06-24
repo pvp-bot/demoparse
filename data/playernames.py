@@ -45,7 +45,7 @@ playerdict = {
 	"heksenketel"		:['Brain Scythe', 'Bad Leftovers', 'Noidankattila', 'Noita', 'Ghost Stories', 'Post Modern Sleaze'],
 	"hells"				:['Washed', 'Average Friend', 'Cold Heals', 'just evade plz', 'Love Doctor', 'hells ate hots gf', 'projectsss','Uninhibited Empathy'],
 	"hinden"			:['Lesotho', 'Palau', 'Benin'],
-	"hot heals"			:['Call Him Mommy', 'Get Well Soon', 'drunken hot', 'Dr. Funkenhot', 'Naturopathy', 'Iyanla', 'ponedhub', 'Dr. Sensor', '-Kurgain', 'Raunchy', 'KB Bot', 'Meg Thee Stallion', 'Sobriety', 'drink responsibly', 'Mood Swings', 'Repercussion', 'Kurgain-', 'damsel in distress', 'Beeg Dogger', 'Kurgos', 'Hawt Heals', 'hot dawger', 'Alimony', 'poneds onlyfans', 'Kurgot', 'Plagiarism', 'Vasectomy', 'Social Media', 'dragged', 'DIRGECOIN', 'Circumstance', 'Suicidal','Bad Publicity','HotRockeet','dat plan b','Last Name Dirge'],
+	"hot heals"			:['Call Him Mommy', 'Get Well Soon', 'drunken hot', 'Dr. Funkenhot', 'Naturopathy', 'Iyanla', 'ponedhub', 'Dr. Sensor', '-Kurgain', 'Raunchy', 'KB Bot', 'Meg Thee Stallion', 'Sobriety', 'drink responsibly', 'Mood Swings', 'Repercussion', 'Kurgain-', 'damsel in distress', 'Beeg Dogger', 'Kurgos', 'Hawt Heals', 'hot dawger', 'Alimony', 'poneds onlyfans', 'Kurgot', 'Plagiarism', 'Vasectomy', 'Social Media', 'dragged', 'DIRGECOIN', 'Circumstance', 'Suicidal','Bad Publicity','HotRockeet','dat plan b','Last Name Dirge','Kursed'],
 	"hp"				:['JC Pose', 'hellp', 'HzPiggy', 'Bear Force One', 'Online', 'Overdose', 'Shampoo' , 'Blaziernoed-HP',],
 	"janie"				:['Entanglement Janie', 'Thumbelina Janie', 'Wildfire Janie', 'Janie is Toxic AF'],
 	"jicco"				:['Healing Balloon', 'Healing Balloon1', 'Helium Balloon', 'Not Emp'],
