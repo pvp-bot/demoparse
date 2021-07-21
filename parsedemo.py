@@ -376,7 +376,7 @@ def main(arg1,quiet):
 
 
 					elif action == "FX":
-						action = next((substring for substring in fx.keys() if substring in line[5]), None)
+						action = next((substring for substring in fx.keys() if substring in line[5]), None) # match action to power fx.keys
 						if action is not None:
 							if any(substring for substring in preverse if substring in line[5]):
 								players[pid].reverse = True

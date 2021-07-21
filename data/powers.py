@@ -656,6 +656,7 @@ otherfx = { # like toggles and stuff for determining powersets
 	'/REACTIONTIME.FX':'reaction time',
 	'ENERVATINGFIELDHAND.FX':'ef toggle on',
 	'WILDFORTRESS.FX':'wild fortress',
+	'DARKBLAST_AIM.FX':'dark aim',
 	# 'AGILITY.FX':'agility',
 }
 
@@ -669,6 +670,8 @@ powersets = {
 	'will dom':'psi',
 	'psi lance':'psi',
 	'soul drain':'dark blast',
+	'life drain':'dark blast',
+	'dark aim':'dark blast',
 	'water jet':'water',
 	'tidal forces':'water',
 	'thunderous blast':'elec blast',
@@ -773,6 +776,7 @@ primaryoffence = [
 	'water',
 	'energy blast',
 	'dual pistol',
+	'dark blast',
 	'sonic blast',
 	'elec blast',
 	'rad blast',
@@ -794,7 +798,7 @@ at_blastsets = [
 	'fire',
 	'beam',
 	'water',
-	'dark',
+	'dark blast',
 	'rad blast',
 	'energy blast',
 	'psi',
