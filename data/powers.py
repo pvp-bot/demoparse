@@ -128,6 +128,13 @@ fx = { # fx from actor to target (includes buffs)
 	'THERMALRADIATION/MELTARMORCAST.FX':'melt armor',
 	# no direct heat exhaustion fx?
 
+	# storm
+	"/SSGALE.FX":'gale',
+	"SSO2BOOST.FX":'o2 boost',
+	"STORMSUMMONING/CHILLINGHANDS.FX":'freezing rain',
+	# "COLDCONTROL/CHILLINGHANDS.FX":'freezing rain', # non-custom
+	"SSCLOUDCAST.FX":'lightning storm',
+
 
 	# trick arrow
 	'/ARROW_NET.FX':'entangling arrow',
@@ -404,6 +411,7 @@ hittiming = { # :[delay,speed]
 	'alkaloid':[34/30,66],
 	'cauterize':[22/30,1000000],
 	'glowing touch':[25/30,1000000],
+	'o2 boost':[25/30,1000000],
 
 	# pools/misc
 	'green':[15/30,1000000],
@@ -564,6 +572,7 @@ heals = [
 	'cauterize',
 	'spirit ward',
 	'alkaloid',
+	'o2 boost',
 ]
 
 absorbs = [
@@ -657,6 +666,7 @@ otherfx = { # like toggles and stuff for determining powersets
 	'ENERVATINGFIELDHAND.FX':'ef toggle on',
 	'WILDFORTRESS.FX':'wild fortress',
 	'DARKBLAST_AIM.FX':'dark aim',
+	'SSHURRICANE.FX':'hurricane',
 	# 'AGILITY.FX':'agility',
 }
 
@@ -703,6 +713,10 @@ powersets = {
 	'wild growth':'nature',
 	'regrowth':'nature',
 	'force bolt':'bubble',
+	'gale':'storm',
+	'o2 boost':'storm',
+	'hurricane':'storm',
+	'lighting storm':'storm',
 	
 	'thorns':'plant',
 	'toxins':'plant',
@@ -723,6 +737,7 @@ powersets = {
 	'temporal mending':'time',
 	'entangling arrow':'trick',
 	'heat loss':'cold',
+	'hurricane':'storm',
 
 	'phantom army':'ill',
 	'phantasm':'ill',
@@ -853,4 +868,5 @@ at_defsets = [
 	'poison',
 	'nature',
 	'bubble',
+	'storm',
 ]
