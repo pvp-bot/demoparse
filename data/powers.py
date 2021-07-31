@@ -34,9 +34,13 @@ fx = { # fx from actor to target (includes buffs)
 	'MOONBEAMWITHSKULL_QUICK.FX':'moonbeam',
 	'MOOMBEAM_ATTACK.FX':'moonbeam (slow)', # mooMbeam
 	'DARKNESSCONTROL/LIFEDRAIN.FX':'life drain',
-
 	'/PETRIFYINGGAZE.FX':'petrifying gaze',
-	'DARKBLAST/SOULDRAIN.FX':'soul drain',
+	'DARKBLAST/SOUL_GLOOMALT.FX':'gloom',
+	'DARKBLAST/SOUL_GLOOM.FX':'gloom',
+	'CUSTANIM_GLOOMCASTNOSKULL.FX':'gloom',
+	'DARKBLAST/SOULDRAINNOSKULL.FX':'gloom',
+	'DARKNESSCONTROL/SOULDRAIN.FX':'gloom',
+	# 'DARKBLAST/SOULDRAIN.FX':'soul drain',
 
 	# sonic
 	'MASSIVESONICBLAST.FX':'shout',
@@ -118,6 +122,7 @@ fx = { # fx from actor to target (includes buffs)
 	'OVERGROWTH.FX':'overgrowth',
 	'WILD_GROWTH.FX':'wild growth',
 	'/REGROWTH2.FX':'regrowth',
+	'/CUSTOM_REGROWTH2.FX':'regrowth',
 
 	# therm
 	'THERMALRADIATION/PROTECTHOLDS.FX':'thaw',
@@ -193,6 +198,7 @@ fx = { # fx from actor to target (includes buffs)
 
 	'/SHIVER.FX':'shiver',
 	'/CHILLBLAINSHANDS.FX':'chilblain',
+	'ICECONTROL/CHILLINGHANDS.FX':'block of ice',
 
 	'HAUNT_ATTACK.FX':'haunt',
 
@@ -223,10 +229,16 @@ fx = { # fx from actor to target (includes buffs)
 	'/ARMORMELTDOWN.FX':'meltdown',
 	'/MOMENTOFGLORY.FX':'moment of glory',
 	
+	'THUGS/THUGSUMMON.FX':'summon thugs',
 	'/THUGS_UPGRADE_TOSS_2.FX':'thugs upgrade',
 	'PARAMILITARY/PARAMILITARY_BOOSTEQUIP.FX':'merc upgrade',
-	'NECROMACY/MINIONBOOSTHIGH.FX':'necro upgrade',
+	'NECROMANCY/DARKNESSHANDS.FX':'summon zombies',
+	'NECROMACY/MINIONBOOSTLOW.FX':'necro upgrade',
+	'NECROMACY/MINIONBOOSTHIGH.FX':'necro upgrade 2',
 	'PLAYER_MERCENARIES_GUNFIRE_SHOTGUN.FX':'thugs slug',
+	'SUMMON_WOLF.FX':'summon wolves',
+	'TRAINBEASTS_ATTACK.FX':'train beasts',
+	'TAMEBEASTS_ATTACK.FX':'tame beasts',
 	
 	'/WATERJET.FX':'water jet',
 	'WATERJET_FAST.FX':'water jet',
@@ -259,6 +271,7 @@ fx = { # fx from actor to target (includes buffs)
 
 
 	'BOOSTRANGE_ATTACK.FX':'boost range', 
+	'BOOSTRANGE.FX':'boost range', 
 	'AIM.FX':'aim',
 	'FOLLOWUPHIT4.FX':'build up', #'fiery embrace',
 	'/TIDALFORCES.FX':'aim', #water
@@ -398,6 +411,7 @@ hittiming = { # :[delay,speed]
 
 	'fossilize':[16/30,1000000],
 	'blind':[20/30,1000000],
+	'block of ice':[21/30,1000000],
 
 
 	# heals
@@ -667,6 +681,7 @@ otherfx = { # like toggles and stuff for determining powersets
 	'WILDFORTRESS.FX':'wild fortress',
 	'DARKBLAST_AIM.FX':'dark aim',
 	'SSHURRICANE.FX':'hurricane',
+	'CHILLINGEMBRACE.FX':'chilling embrace',
 	# 'AGILITY.FX':'agility',
 }
 
@@ -679,7 +694,7 @@ powersets = {
 	'p-ray/charged':'beam',
 	'will dom':'psi',
 	'psi lance':'psi',
-	'soul drain':'dark blast',
+	'gloom':'dark blast',
 	'life drain':'dark blast',
 	'dark aim':'dark blast',
 	'water jet':'water',
@@ -750,10 +765,16 @@ powersets = {
 	'smoke':'fire ctrl',
 	'haunt':'dark ctrl',
 
+	'summon thugs':'thugs',
 	'thugs upgrade':'thugs',
 	'thugs slug':'thugs',
 	'merc upgrade':'merc',
+	'summon zombies':'necro',
 	'necro upgrade':'necro',
+	'necro upgrade 2':'necro',
+	'train beasts':'beast',
+	'tame beasts':'beast',
+	'summon wolves':'beast',
 
 
 	'luminous blast':'peacebringer',
@@ -774,6 +795,7 @@ powersets = {
 	'overload':'energy aura',
 	'meltdown':'rad armor',
 	'moment of glory':'regen',
+	'chilling embrace':'ice armor',
 }
 
 primarysupport = [
@@ -836,6 +858,8 @@ at_mm = [
 	'thugs',
 	'merc',
 	'necro',
+	'bots',
+	'beast',
 ]
 
 at_blastsecondaries = [
@@ -853,6 +877,14 @@ at_meleesets = [
 	'energy melee',
 	'street justice',
 	'spines',
+]
+
+at_armorsets = [
+	'energy aura',
+	'regen',
+	'ice armor',
+	'bio',
+	'rad armor',
 ]
 
 at_defsets = [

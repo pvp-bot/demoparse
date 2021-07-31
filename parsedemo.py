@@ -90,7 +90,7 @@ def main(arg1,quiet):
 				elif line[3] == "TEAMSWAP": 
 					override.teamswap = True # 0 0 OVERRIDE TEAMSWAP
 				elif line[3] == "POWERSETS": 
-					override.powersets[line[4]] = [line[5],line[6]] 
+					override.powersets[line[4]] = [line[5],line[6]]
 			if action in npc and pid in player_ids and line[3] not in ignorecostume:
 				del player_ids[-1]
 				del player_list[-1]
@@ -429,6 +429,11 @@ def main(arg1,quiet):
 								elif othercheck in powersets and  powersets[othercheck] != players[pid].set1:
 									players[pid].set2 = powersets[othercheck]
 
+							# to override life drain in necro set (life drain = dark blast)
+							if p.set1 == 'dark blast' and players[pid].action in powersets and powersets[players[pid].action] == 'necro':
+								p.set1 = 'necro'
+							elif p.set2 == 'dark blast' and players[pid].action in powersets and powersets[players[pid].action] == 'necro':
+								p.set2 = 'necro'
 
 
 
@@ -722,6 +727,10 @@ def main(arg1,quiet):
 				set3 = p.set2
 				p.set2 = p.set1
 				p.set1 = set3
+		if p.set1 == 'poison' and p.set2 in at_mm:
+			set3 = p.set2
+			p.set2 = p.set1
+			p.set1 = set3	
 		if not p.set1:
 			p.set1 = '-'
 		if not p.set2:
@@ -747,6 +756,8 @@ def main(arg1,quiet):
 				p.archetype = 'dominator'
 			elif p.set2 in at_defsets:
 				p.archetype = 'corr/def'
+			elif p.set2 in at_armorsets:
+				p.archetype = 'sentinel'
 		elif p.set1 in at_defsets:
 			p.archetype = 'corr/def'
 		elif p.set1 in at_meleesets:
