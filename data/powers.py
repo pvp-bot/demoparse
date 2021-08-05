@@ -14,7 +14,8 @@ fx = { # fx from actor to target (includes buffs)
 	'BITTERICEBOLT.FX':'bfr',
 	'BITTERFREEZEBOLT.FX':'bfr',
 	'ICEBLAST.FX':'ice blast',
-	'FREEZERAY.FX':'freeze ray',
+	'ICEBLAST/FREEZERAY.FX':'freeze ray', # same as infrigidate custom anim
+	'ICEBLAST/CUSTANIM_FREEZERAY.FX':'freeze ray',
 
 	# psi
 	'WILLDOMINATION.FX':'will dom',
@@ -42,7 +43,37 @@ fx = { # fx from actor to target (includes buffs)
 	'DARKNESSCONTROL/SOULDRAIN.FX':'gloom',
 	# 'DARKBLAST/SOULDRAIN.FX':'soul drain',
 
-	# sonic
+	# elec blast
+	'/THUNDEROUSBLAST.FX':'thunderous blast',
+	'ZAPP_QUICK.FX':'zapp',
+	'LIGHTNINGBOLT.FX':'lightning bolt',
+	'CHARGEDBOLTS.FX':'charged bolt',
+
+	# dual pistols
+	'/EXECUTIONERSSHOT_ATTACK.FX':'executioner shot',
+	'/PIERCINGROUNDS_ATTACK.FX':'piercing rounds',
+	'SUPPRESSIVEFIRE_ATTACK.FX':'suppressive fire',
+
+	# rad blast
+	'RADIATIONCONTROL/XRAYBEAM.FX':'x-ray beam',
+	'COSMICBLAST.FX':'cosmic burst',
+	'PROTONBLAST_QUICK.FX':'proton blast',
+	
+	# water blast
+	'/WATERJET.FX':'water jet',
+	'WATERJET_FAST.FX':'water jet',
+	'/DEHYDRATE.FX':'dehydrate',
+	'GEYSER.FX':'geyser',
+	'HYDROBLAST.FX':'hydro blast',
+	
+	# energy blast
+	'POWERPUSH.FX':'power push',
+	'MEGA.FX':'power burst',
+	'SNIPERBLAST_QUICK.FX':'sniper blast', 
+	'ENERGYBLAST.FX':'energy blast', 
+	# 'CUSTOMANIM_MEGA.FX':'power burst',
+
+	# sonic blast
 	'MASSIVESONICBLAST.FX':'shout',
 	'HEADSONICSCREECH.FX':'screech',
 	'SONICCONTROL/BLASTS/HEROSTANDARDBLAST2.FX':'scream',
@@ -70,19 +101,6 @@ fx = { # fx from actor to target (includes buffs)
 	'WORLDOFPAIN_ATTACK.FX':'world of pain',
 	'ENFORCEDMORALE_ATTACK.FX':'enforced morale',
 	'/CONDUITOFPAIN_HIT.FX':'conduit of pain', # not reversed
-
-	# psn
-	'/POISONLIQUIDPROJECTILE.FX':'envenom',
-	'/PALMPOISONLIQUIDPROJECTILE.FX':'weaken',
-	'ALCALOIDEHEAL.FX':'alkaloid',
-	'POISONCONEGASSES.FX':'neurotoxic breath',
-
-	# cold
-	'HEATLOSSBLAST.FX':'heat loss',
-
-	# rad
-	# this is actually the onhit animation as the activation animation EVERVATINGFIELDHANDS doesnt have target info for some reason
-	'ENERVATINGFIELDCONTINUING.FX': 'enervating field',
 
 	# ill
 	'ILLUSDECOY.FX':'phantom army',
@@ -116,7 +134,7 @@ fx = { # fx from actor to target (includes buffs)
 	'FARADAYCAGESUMMON.FX':'faraday cage',
 	# 'ENERGYSINKCASTATTACK.FX':'shock', # galvanic shock
 
-	#nature
+	# nature
 	'CORROSIVESAP.FX':'corrosive enzyme',
 	'WILDBASTION.FX':'wild bastion', # share with plant
 	'OVERGROWTH.FX':'overgrowth',
@@ -137,7 +155,7 @@ fx = { # fx from actor to target (includes buffs)
 	"/SSGALE.FX":'gale',
 	"SSO2BOOST.FX":'o2 boost',
 	"STORMSUMMONING/CHILLINGHANDS.FX":'freezing rain',
-	# "COLDCONTROL/CHILLINGHANDS.FX":'freezing rain', # non-custom
+	"COLDCONTROL/CHILLINGHANDS.FX":'freezing rain', # also sleet
 	"SSCLOUDCAST.FX":'lightning storm',
 
 
@@ -145,6 +163,30 @@ fx = { # fx from actor to target (includes buffs)
 	'/ARROW_NET.FX':'entangling arrow',
 	'/ARROW_STICKY.FX':'glue arrow',
 	'/ARROW_ACID.FX':'acid arrow',
+
+	# kin
+	'/KININERTIALREDUCTIONS.FX':'ir',
+	'/KINSIPHONSPEED.FX':'siphon speed',
+	'/KINTRANSFERENCE.FX':'transference',
+
+	# psn
+	'/POISONLIQUIDPROJECTILE.FX':'envenom',
+	'/PALMPOISONLIQUIDPROJECTILE.FX':'weaken',
+	'ALCALOIDEHEAL.FX':'alkaloid',
+	'POISONCONEGASSES.FX':'neurotoxic breath',
+
+	# cold
+	'HEATLOSSBLAST.FX':'heat loss',
+	'COLDDOMINATION/FREEZERAY.FX':'infrigidate',
+	# 'ICEBLAST/FREEZERAY.FX':'infrigidate', # same as freeze ray
+	'COLDDOMINATION/COLDHANDSBOTH.FX':'benumb/sleet',
+	# 'ICEBLAST/CHILLINGHANDS.FX':'benumb/sleet',
+	'COLDDOMINATION/COLDHANDSBOTH.FX':'sleet',
+
+	# rad
+	# this is actually the onhit animation as the activation animation EVERVATINGFIELDHANDS doesnt have target info for some reason
+	'ENERVATINGFIELDCONTINUING.FX': 'enervating field',
+	'ACCELERATEMETABOLISM.FX':'accelerate metabolism',
 
 	# warshade
 	'NICTUSQUICKBLAST.FX':'shadow blast',
@@ -202,25 +244,8 @@ fx = { # fx from actor to target (includes buffs)
 
 	'HAUNT_ATTACK.FX':'haunt',
 
-	'/THUNDEROUSBLAST.FX':'thunderous blast',
-	'ZAPP_QUICK.FX':'zapp',
-	'LIGHTNINGBOLT.FX':'lightning bolt',
-	'CHARGEDBOLTS.FX':'charged bolt',
 
-	'/KININERTIALREDUCTIONS.FX':'ir',
-	'/KINSIPHONSPEED.FX':'siphon speed',
-	'/KINTRANSFERENCE.FX':'transference',
 
-	'ENERVATINGFIELDCONTINUING.FX':'enervating field',
-	'ACCELERATEMETABOLISM.FX':'accelerate metabolism',
-
-	'/EXECUTIONERSSHOT_ATTACK.FX':'executioner shot',
-	'/PIERCINGROUNDS_ATTACK.FX':'piercing rounds',
-	'SUPPRESSIVEFIRE_ATTACK.FX':'suppressive fire',
-
-	'RADIATIONCONTROL/XRAYBEAM.FX':'x-ray beam',
-	'COSMICBLAST.FX':'cosmic burst',
-	'PROTONBLAST_QUICK.FX':'proton blast',
 
 	'BIOARMOR/ABLATIVE_CARAPACE.FX':'ablative carapace',
 	'PSIONICMELEE/PSIBUFF.FX':'concentration',
@@ -229,6 +254,7 @@ fx = { # fx from actor to target (includes buffs)
 	'/ARMORMELTDOWN.FX':'meltdown',
 	'/MOMENTOFGLORY.FX':'moment of glory',
 	
+	#mms
 	'THUGS/THUGSUMMON.FX':'summon thugs',
 	'/THUGS_UPGRADE_TOSS_2.FX':'thugs upgrade',
 	'PARAMILITARY/PARAMILITARY_BOOSTEQUIP.FX':'merc upgrade',
@@ -239,20 +265,6 @@ fx = { # fx from actor to target (includes buffs)
 	'SUMMON_WOLF.FX':'summon wolves',
 	'TRAINBEASTS_ATTACK.FX':'train beasts',
 	'TAMEBEASTS_ATTACK.FX':'tame beasts',
-	
-	'/WATERJET.FX':'water jet',
-	'WATERJET_FAST.FX':'water jet',
-	'/DEHYDRATE.FX':'dehydrate',
-	
-	'POWERPUSH.FX':'power push',
-	#'/SMOKEHIT.FX':'smoke',
-	'MEGA.FX':'power burst',
-	# 'CUSTOMANIM_MEGA.FX':'power burst', 
-	'SNIPERBLAST_QUICK.FX':'sniper blast', 
-	'ENERGYBLAST.FX':'energy blast', 
-	'CHRONOLOGICALSELECTION_ATTACK.FX':'chronos', 
-
-	'MARTIALARTS/FOCUSCHI.FX':'upshot/focus', # or tac arrow?
 	
 	# melee
 	'ASSASINSPSIBLADE.FX':'assassin\'s strike', 
@@ -270,6 +282,9 @@ fx = { # fx from actor to target (includes buffs)
 	'TEMPORALMENDING_ATTACK.FX':'temporal mending',
 
 
+	#'/SMOKEHIT.FX':'smoke',
+	'CHRONOLOGICALSELECTION_ATTACK.FX':'chronos', 
+	'MARTIALARTS/FOCUSCHI.FX':'upshot/focus', # or tac arrow?
 	'BOOSTRANGE_ATTACK.FX':'boost range', 
 	'BOOSTRANGE.FX':'boost range', 
 	'AIM.FX':'aim',
@@ -282,8 +297,8 @@ fx = { # fx from actor to target (includes buffs)
 	# 'WEAPONS/LASER_PISTOL_1.FX':'crey pistol', # using MOV count
 	# '/STOLLEN_IMOBILIZER_PISTOL.FX':'crey pistol', #  'stollen'
 	# 'GEASTHEKINDONESCONTINUING.FX':'geas', # can pop multiple FX continuing
-	'/ALIGNMENT_FRENZY.FX':'frenzy', # or other insp?
-	'/BRAWL_ATTACK.FX':'brawl',
+	'ALIGNMENT_FRENZY.FX':'frenzy', # or other insp?
+	'BRAWL_ATTACK.FX':'brawl',
 	'FORCEOFWILL/WEAKENRESOLVE.FX':'weaken resolve',
 	'SUPERSPEED/BURNOUT.FX':'burnout',
 
@@ -464,13 +479,16 @@ utility = [	# for filtering out not atk offense powers
 	'smoke',
 	'shiver',
 	# 'thunderous blast',
-	'heat loss',
+	'gale',
+	'heat loss',	
+	'benumb/sleet',
+	'infrigidate',
 	# 'singularity',
 	# 'phantasm',
 	'crey pistol',
 ]
 
-utilitycount = [	# for filtering out not atk offense powers
+utilitycount = [	# relevant powers to count util
 	'adreneline boost',
 	'fortitude',
 	'clear mind',
@@ -516,14 +534,21 @@ utilitycount = [	# for filtering out not atk offense powers
 
 	'confuse',
 	# 'thunderous blast',
+	'gale',
+	'accelerate metabolism',
+	'thunderstorm',
 	'heat loss',
+	'benumb/sleet',
+	'infrigidate',
+
 
 	'web nade',
 ]
 
 
 rez = [
-'resurrect',
+	'resurrect',
+	'conduit of pain',
 ]
 
 
