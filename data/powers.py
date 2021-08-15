@@ -203,6 +203,15 @@ fx = { # fx from actor to target (includes buffs)
 	'PEACEBRINGER/XRAYBEAM/XRAYBEAM.FX':'glinting eye',
 	'/HEAVYPEACEPUNCH.FX':'incandescent strike',
 
+	# veat
+	'BLOODWIDOW/DOMINATION.FX':'widow dominate',
+	'BLOODWIDOW/SUBDUE/SUBDUE.FX':'subdue',
+	'BANEMACEWEBGRENADEAOE.FX':'bane web',
+	'BLOODWIDOW/TELEKINETICBLAST/TELEKINETICBLAST.FX':'tk blast',
+	'BLOODWIDOW/CONFUSE.FX':'confuse',
+	'BLOODWIDOW/MINDLINK/MINDLINK.FX':'mind link',
+
+
 	# epics
 	'/COMMAND2.FX':'dominate',
 	'SCHOOLOFSHARKS_HIT.FX':'ssj', # not sure about this one
@@ -272,7 +281,7 @@ fx = { # fx from actor to target (includes buffs)
 	'PSIBLADEGREAT.FX':'greater psi blade', 
 	'STRENGTHSTREAKSKO.FX':'ko blow', # epic ko blow?
 	'BRAWLING/BUILDUP_ACTIVATION.FX':'combat readiness',
-	'RAWLING/CRUSHINGUPPERCUT_ATTACK.FX':'crushing uppercut',
+	'CRUSHINGUPPERCUT_ATTACK.FX':'crushing uppercut',
 	'SPINES/IMPALE_ATTACK.FX':'impale',
 	'SPINES/THROWSPINES_ATTACK.FX':'throw spines',
 	'TOTALFOCUSFAST_ATTACK.FX':'total focus',
@@ -806,6 +815,7 @@ powersets = {
 	'incandescent strike':'peacebringer',
 	'shadow blast':'warshade',
 	'ebon eye':'warshade',
+	'widow dominate':'veat',
 
 	#melee
 	'greater psi blade':'psi melee',
