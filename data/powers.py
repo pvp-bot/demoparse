@@ -35,7 +35,17 @@ fx = { # fx from actor to target (includes buffs)
 	'MOONBEAMWITHSKULL_QUICK.FX':'moonbeam',
 	'MOOMBEAM_ATTACK.FX':'moonbeam (slow)', # mooMbeam
 	'DARKNESSCONTROL/LIFEDRAIN.FX':'life drain',
+	'DARKBLAST/SOUL_LIFEDRAIN.FX':'life drain',
+	'DARKBLAST/LIFEDRAIN.FX':'life drain',
 	'/PETRIFYINGGAZE.FX':'petrifying gaze',
+	'DARKNESSCONTROL/DARKGRASP_ATTACK.FX':'abyssal gaze',
+
+	'DARKNESSBLAST2.FX':'dark blast',
+	'DARKBLAST/CUSTANIM_SHADOWYASSAULT.FX':'dark blast',
+	'DARKNESSBLASTWITHSKULL.FX':'dark blast',
+	'DARKNESSBLASTWITHSKULLALT.FX':'dark blast',
+	'SOUL_DARKNESSBLASTALT.FX':'dark blast',
+	'SOUL_DARKNESSBLAST.FX':'dark blast',
 	'DARKBLAST/SOUL_GLOOMALT.FX':'gloom',
 	'DARKBLAST/SOUL_GLOOM.FX':'gloom',
 	'CUSTANIM_GLOOMCASTNOSKULL.FX':'gloom',
@@ -56,6 +66,9 @@ fx = { # fx from actor to target (includes buffs)
 
 	# rad blast
 	'RADIATIONCONTROL/XRAYBEAM.FX':'x-ray beam',
+	'RADIATIONCONTROL/SUBTRACTIVE/XRAYBEAM.FX':'x-ray beam',
+	'RADIATIONBLAST/SUBTRACTIVE/CUST_XRAYBEAM.FX':'x-ray beam',
+	'RADIATIONBLAST/CUST_XRAYBEAM.FX':'x-ray beam',
 	'COSMICBLAST.FX':'cosmic burst',
 	'PROTONBLAST_QUICK.FX':'proton blast',
 	
@@ -68,7 +81,8 @@ fx = { # fx from actor to target (includes buffs)
 	
 	# energy blast
 	'POWERPUSH.FX':'power push',
-	'MEGA.FX':'power burst',
+	'/CUSTANIM_MEGA.FX':'power burst',
+	'/MEGA.FX':'power burst',
 	'SNIPERBLAST_QUICK.FX':'sniper blast', 
 	'ENERGYBLAST.FX':'energy blast', 
 	# 'CUSTOMANIM_MEGA.FX':'power burst',
@@ -106,7 +120,7 @@ fx = { # fx from actor to target (includes buffs)
 	'ILLUSDECOY.FX':'phantom army',
 	'ILLUSPHANTASM.FX':'phantasm',
 	'ILLUSTERROR.FX':'spectral terror',
-	'/ILLUSDECIEVE.FX':'confuse',
+	'/ILLUSDECIEVE.FX':'deceive', # (sp)
 	'ILLUSBLIND.FX':'blind', # attack and target? need to match up w/ MOV MOUTH
 
 	# grav
@@ -121,6 +135,13 @@ fx = { # fx from actor to target (includes buffs)
 	'PLANTCONTROLHIT.FX':'strangler', # shared with plant control
 	'ENTANGLEPLANTSEEDTHROW.FX':'entangle', # shared with plant control
 	# 'STRANGLERROOTS.FX': 'strangler', # doesn't spawn on every strangler
+
+	# mind
+	'/HEADCASTMENTALPOWERS.FX':'levitate',
+	'/CUSTANIM_MINDCONTROL.FX':'mesmerize',
+	'/MINDCONTROL.FX':'mesmerize',
+	'/HYPNOTIZE.FX':'confuse',
+
 
 	# elec
 	'REJUVENATINGCIRCUITATK.FX':'rejuvenating circuit',
@@ -157,7 +178,6 @@ fx = { # fx from actor to target (includes buffs)
 	"STORMSUMMONING/CHILLINGHANDS.FX":'freezing rain',
 	"COLDCONTROL/CHILLINGHANDS.FX":'freezing rain', # also sleet
 	"SSCLOUDCAST.FX":'lightning storm',
-
 
 	# trick arrow
 	'/ARROW_NET.FX':'entangling arrow',
@@ -208,7 +228,7 @@ fx = { # fx from actor to target (includes buffs)
 	'BLOODWIDOW/SUBDUE/SUBDUE.FX':'subdue',
 	'BANEMACEWEBGRENADEAOE.FX':'bane web',
 	'BLOODWIDOW/TELEKINETICBLAST/TELEKINETICBLAST.FX':'tk blast',
-	'BLOODWIDOW/CONFUSE.FX':'confuse',
+	'BLOODWIDOW/CONFUSE.FX':'widow confuse',
 	'BLOODWIDOW/MINDLINK/MINDLINK.FX':'mind link',
 
 
@@ -252,8 +272,8 @@ fx = { # fx from actor to target (includes buffs)
 	'ICECONTROL/CHILLINGHANDS.FX':'block of ice',
 
 	'HAUNT_ATTACK.FX':'haunt',
-
-
+	'/POSSESS_ATTACK.FX':'possess',
+	'UMBRABEAST_ATTACK.FX':'umbra beast',
 
 
 	'BIOARMOR/ABLATIVE_CARAPACE.FX':'ablative carapace',
@@ -285,6 +305,8 @@ fx = { # fx from actor to target (includes buffs)
 	'SPINES/IMPALE_ATTACK.FX':'impale',
 	'SPINES/THROWSPINES_ATTACK.FX':'throw spines',
 	'TOTALFOCUSFAST_ATTACK.FX':'total focus',
+	'/GREATERICESWORD.FX':'ice slash',
+	'ICEMELEE/ICEWEAPON.FX':'ice slash',
 
 	'/FORCEBOLT.FX':'force bolt',
 	'TIMECRAWL_ATTACK.FX':'time crawl',
@@ -406,20 +428,37 @@ hittiming = { # :[delay,speed]
 	'blaze':[16/30,90],
 	'blazing bolt':[22/30,450],
 	'fire blast':[16/30,90],
+	
 	'bib':[17/30,84],
 	'bfr':[69/30,90],
 	'freeze ray':[17/30,90],
-	'strangler':[16/30,1000000],
+	
 	'p-ray/charged':[29/30,60],
 	'lancer':[23/30,1000000],
 	'disintegrate':[29/30,1000000],
+	
 	'psi lance':[40/30,105],
 	'will dom':[50/30,51],
 	'tk blast':[15/30,120],
+	
 	'dehydrate':[16/30,1000000],
 	'water jet':[11/30,1000000],
+	
+	'dark blast':[22/30,51],
+	'gloom':[25/30,90],
+	'life drain':[25/30,1000000],
+	'petrifying gaze':[30/30,45],
+	'abyssal gaze':[30/30,1000000],
+	
+	'x-ray beam':[32/30,1000000],
+	'cosmic burst':[35/30,75],
+	'proton blast':[25/30,60],
+
 	'executioner shot':[39/30,150],
 	
+	'strangler':[16/30,1000000],
+	'echo chamber':[17/30,60],
+	'time stop':[29/30,1000000],
 
 	# debuffs
 	'envenom':[25/30,66],
@@ -714,6 +753,7 @@ otherfx = { # like toggles and stuff for determining powersets
 	'ENERVATINGFIELDHAND.FX':'ef toggle on',
 	'WILDFORTRESS.FX':'wild fortress',
 	'DARKBLAST_AIM.FX':'dark aim',
+	'DARKBLAST/SOUL_AIM_ACTIVATION.FX':'dark aim',
 	'SSHURRICANE.FX':'hurricane',
 	'CHILLINGEMBRACE.FX':'chilling embrace',
 	# 'AGILITY.FX':'agility',
@@ -790,6 +830,7 @@ powersets = {
 
 	'phantom army':'ill',
 	'phantasm':'ill',
+	'deceive':'ill',
 	'dimension shift':'grav',
 	'singularity':'grav',
 	'lift':'grav',
@@ -798,6 +839,11 @@ powersets = {
 	'shiver':'ice ctrl',
 	'smoke':'fire ctrl',
 	'haunt':'dark ctrl',
+	'possess':'dark ctrl',
+	'umbra beast':'dark ctrl',
+	'levitate':'mind',
+	'mesmerize':'mind',
+	'confuse':'mind',
 
 	'summon thugs':'thugs',
 	'thugs upgrade':'thugs',
