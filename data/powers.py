@@ -307,6 +307,7 @@ fx = { # fx from actor to target (includes buffs)
 	'TOTALFOCUSFAST_ATTACK.FX':'total focus',
 	'/GREATERICESWORD.FX':'ice slash',
 	'ICEMELEE/ICEWEAPON.FX':'ice slash',
+	'/MIDNIGHTGRASP_SUBTRACTIVE.FX ':'midnight grasp',
 
 	'/FORCEBOLT.FX':'force bolt',
 	'TIMECRAWL_ATTACK.FX':'time crawl',
@@ -754,6 +755,7 @@ otherfx = { # like toggles and stuff for determining powersets
 	'WILDFORTRESS.FX':'wild fortress',
 	'DARKBLAST_AIM.FX':'dark aim',
 	'DARKBLAST/SOUL_AIM_ACTIVATION.FX':'dark aim',
+	'DARKMELEE/SOUL_DARKBUILDUP.FX':'dark build up',
 	'SSHURRICANE.FX':'hurricane',
 	'CHILLINGEMBRACE.FX':'chilling embrace',
 	# 'AGILITY.FX':'agility',
@@ -869,6 +871,8 @@ powersets = {
 	'total focus':'energy melee', # maybe an issue with the power pool total focus
 	'impale':'spines',
 	'focus':'claws',
+	'dark build up':'dark melee',
+	'midnight grasp':'dark melee',
 
 	# armor
 	'ablative carapace':'bio',
