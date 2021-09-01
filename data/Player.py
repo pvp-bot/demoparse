@@ -198,6 +198,7 @@ class Player:
 			for atk in self.recentattacks:
 				if atk[1] == aid:
 					if atk[2] in powerdelay:
+						timing = min(timing,atk[0]) # for select powers (e.g. EF) timing is based on hit rather than cast since we're concerned with timing relative to spike start
 						timing = min(timing,atk[0]+powerdelay[atk[2]]) # for select powers (e.g. EF) timing is based on hit rather than cast since we're concerned with timing relative to spike start
 					else:
 						timing = min(timing,atk[0]) # update attacker timing for avg
@@ -391,6 +392,9 @@ class Player:
 		self.lastresdebuff = False
 		self.istarget = False
 
+	# def targetstarttime(patks,atks):
+		# todo
+
 	def inittarget(self,t,players):
 		if self.lasthp != 0:
 			self.istarget = True
@@ -399,6 +403,9 @@ class Player:
 			self.writelog = True
 
 			self.greensavailable = self.greens
+
+			# todo
+			# self.targetstart = targetstarttime(self.recentprimaryattacks,self.recentattacks)
 
 			if len(self.recentprimaryattacks) > 0 and self.recentprimaryattacks[0][2] != 'enervating field':
 				self.targetstart = self.recentprimaryattacks[0][0]
