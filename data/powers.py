@@ -92,6 +92,10 @@ fx = { # fx from actor to target (includes buffs)
 	'HEADSONICSCREECH.FX':'screech',
 	'SONICCONTROL/BLASTS/HEROSTANDARDBLAST2.FX':'scream',
 
+	# archery
+	'/ARROW_MID.FX':'ranged/aiming shot',
+	'/ARROW_FLAME.FX':'blazing arrow',
+
 	# sonic manip
 	'SONICRESONANCE/SONICCAGE.FX':'echo chamber', # could be sonic resonance cage also? cross that bridge when we get to it
 	'SONICRESONANCE/BUILDUP.FX':'sound booster',
@@ -391,11 +395,13 @@ pmov = { # prepend with 'A_' for flying version
 # primary attacks for determining spike instances (i.e. ignore jaunts off flares or snipe only or w/e)
 primaryattacks = [
 	'envenom',
-	#'corrosive enzyme',
+	# 'corrosive enzyme',
 	'enervating field',
 	'dominate',
 	'disintegrate',
 	'blaze',
+	'blazing arrow',
+	'executioner shot',
 	'bib',
 	'lancer',
 	'char',
@@ -412,7 +418,7 @@ weightedattacks = {
 }
 
 jauntoffoneattacks= [
-	'enervating field',
+	# 'enervating field',
 	'blaze',
 	'bib',
 ]
@@ -456,6 +462,7 @@ hittiming = { # :[delay,speed]
 	'proton blast':[25/30,60],
 
 	'executioner shot':[39/30,150],
+	'blazing arrow':[48/30,300],
 	
 	'strangler':[16/30,1000000],
 	'echo chamber':[17/30,60],
@@ -786,6 +793,9 @@ powersets = {
 	'dehydrate':'water',
 	'power push':'energy blast',
 	'power burst':'energy blast',
+	'cosmic burst':'rad blast',
+	'ranged/aimed shot':'archery',
+	'blazing arrow':'archery',
 	
 	'heal other':'emp',
 	'absorb pain':'emp',
@@ -818,7 +828,6 @@ powersets = {
 	'chronos':'temporal',
 	'echo chamber':'sonic manip',
 
-	'cosmic burst':'rad blast',
 
 	'ir':'kin',
 	'siphon speed':'kin',
@@ -903,6 +912,7 @@ primaryoffence = [
 	'elec blast',
 	'rad blast',
 	'water',
+	'archery',
 	'thugs',
 	'merc',
 	'necro',
@@ -927,6 +937,7 @@ at_blastsets = [
 	'dual pistol',
 	'sonic blast',
 	'elec blast',
+	'archery',
 ]
 
 at_mezsets = [
