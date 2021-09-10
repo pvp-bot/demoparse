@@ -1,11 +1,6 @@
-import csv
-import shlex
-import sys
-import math
+import csv, re, colorama
+import sys, os, math, time, os.path
 import numpy as np
-import os.path
-import time
-import colorama
 from statistics import median
 
 from data.powers import *
@@ -47,7 +42,7 @@ def main(arg1,quiet):
 			csvw = csv.writer(csvfile, delimiter=',')
 			csvw.writerow(header)
 
-		line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
+		line = [p.replace('\n','').replace('\"','') for p in re.split("( |\\\".*?\\\"|'.*?')", fp.readline()) if p.strip()]
 		count = 0
 		playerline = 0
 
@@ -95,7 +90,7 @@ def main(arg1,quiet):
 				del player_ids[-1]
 				del player_list[-1]
 			try:
-				line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
+				line = [p.replace('\n','').replace('\"','') for p in re.split("( |\\\".*?\\\"|'.*?')", fp.readline()) if p.strip()]
 			except:
 				print(f'{count} line error') # find broken lines
 			count = count + 1
@@ -107,7 +102,7 @@ def main(arg1,quiet):
 		# back to start of file
 		fp.seek(0)
 		count = 0
-		line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
+		line = [p.replace('\n','').replace('\"','') for p in re.split("( |\\\".*?\\\"|'.*?')", fp.readline()) if p.strip()] # from https://stackoverflow.com/questions/79968/split-a-string-by-spaces-preserving-quoted-substrings-in-python
 
 		# loop for assigning teams
 		# assumes at least 1 buff-type power is thrown in the match per person
@@ -154,7 +149,7 @@ def main(arg1,quiet):
 				buff_count = False
 
 			count = count + 1
-			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
+			line = [p.replace('\n','').replace('\"','') for p in re.split("( |\\\".*?\\\"|'.*?')", fp.readline()) if p.strip()]
 
 		team1 = 'BLU'
 		team2 = 'RED'
@@ -191,7 +186,7 @@ def main(arg1,quiet):
 
 		# back to start of file
 		fp.seek(0)
-		line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
+		line = [p.replace('\n','').replace('\"','') for p in re.split("( |\\\".*?\\\"|'.*?')", fp.readline()) if p.strip()]
 
 		# loop for determining start of match/end of buffs
 		# determine when 3 players on the same team are at least 20 yd from each other
@@ -234,7 +229,7 @@ def main(arg1,quiet):
 						if starttime < 1000:
 							starttime = 0
 
-			line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
+			line = [p.replace('\n','').replace('\"','') for p in re.split("( |\\\".*?\\\"|'.*?')", fp.readline()) if p.strip()]
 
 
 
@@ -242,7 +237,7 @@ def main(arg1,quiet):
 		fp.seek(0)
 		ms = -starttime
 		count = 0
-		line = shlex.split(fp.readline().replace('\\','').replace('\'',''))
+		line = [p.replace('\n','').replace('\"','') for p in re.split("( |\\\".*?\\\"|'.*?')", fp.readline()) if p.strip()]
 		lineuid = 0
 		t_bundle = 0.0
 
@@ -540,7 +535,7 @@ def main(arg1,quiet):
 						if 'EMOTE' in mov: # WEAPONBACK might be shared with some other sets
 							emotes.append([players[pid].name,mov,t])
 
-				line = shlex.split(fp.readline().replace('\\','').replace('\'','').replace('\"',''))
+				line = [p.replace('\n','').replace('\"','') for p in re.split("( |\\\".*?\\\"|'.*?')", fp.readline()) if p.strip()]
 				count = count + 1
 
 	for p in players.values(): # clean up, if target at end of match
