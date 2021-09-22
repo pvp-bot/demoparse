@@ -466,7 +466,7 @@ hittiming = { # :[delay,speed]
 	
 	'strangler':[16/30,1000000],
 	'echo chamber':[17/30,60],
-	'time stop':[29/30,1000000],
+	# 'time stop':[29/30,1000000],
 
 	# debuffs
 	'envenom':[25/30,66],
@@ -715,6 +715,7 @@ ignorecostume = [ # npc costumes used by players throwing off player detection
 # probably a better way to do this
 name_filter  = [
 	'Mu Guardian',
+	'Lightning Storm',
 	'Phantasm',
 	'Decoy Phantasm',
 	'Decoy',
