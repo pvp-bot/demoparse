@@ -1,3 +1,6 @@
+# DEPRECATED
+## use [the new demo site demos.chli.dog](https://demos.chli.dog/) for demo parsing ([repo](https://github.com/dannytaylor/uuralur))
+
 coh demo parser for team arena matches
 
 [example](https://datastudio.google.com/reporting/8f2f5aa8-23c7-418c-96b3-43141c8eff1a)
